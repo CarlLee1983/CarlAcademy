@@ -498,28 +498,6 @@ select {
 .reading {
   max-width: 880px;
 }
-.baseline-document {
-  padding-top: 32px;
-  padding-bottom: 64px;
-}
-.baseline-document h1 {
-  font-size: 64px;
-  letter-spacing: -2px;
-  line-height: 1.15;
-}
-.baseline-document nav ul {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  list-style: none;
-  padding: 0;
-}
-.baseline-document nav a {
-  min-height: 44px;
-}
-.baseline-document article {
-  max-width: 880px;
-}
 pre {
   max-width: 100%;
   overflow: auto;
@@ -623,8 +601,7 @@ code {
     grid-template-columns: 1fr;
     gap: 32px;
   }
-  h1,
-  .baseline-document h1 {
+  h1 {
     font-size: 40px;
     letter-spacing: -1px;
     line-height: 1.2;
