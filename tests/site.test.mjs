@@ -116,10 +116,16 @@ test('根路徑與子路徑的正式網站透過一般 HTTP 可直接閱讀，�
     const refs = await page.locator('[href], [src]').evaluateAll(nodes => nodes.flatMap(node => ['href', 'src'].map(attr => node.getAttribute(attr))).filter(Boolean));
     for (const ref of refs) {
       const url = new URL(ref, page.url());
-      if (url.origin === origin) assert.equal((await fetch(url)).status, 200, url.href);
+      if (url.origin === origin) {
+        const response = await fetch(url);
+        await response.arrayBuffer();
+        assert.equal(response.status, 200, url.href);
+      }
     }
     for (const internal of ['PLAN.md', 'GLOSSARY.md', 'docs/adr/0001-public-document-urls.md', 'docs/site-design.md']) {
-      assert.equal((await fetch(`${origin}${base}${internal}`)).status, 404, internal);
+      const response = await fetch(`${origin}${base}${internal}`);
+      await response.arrayBuffer();
+      assert.equal(response.status, 404, internal);
     }
     await page.close();
   }

@@ -72,5 +72,7 @@ HTTPS 保護傳輸中的資料，無法自行判斷筆記屬於誰。
 ## 相關文件
 
 - [Web 應用資安索引](README.md)：依資料流選擇後續主題。
+- [檔案上傳與內容處理邊界](file-uploads-and-content-handling.md)：外部檔案進入儲存、後端解析與瀏覽器呈現的邊界。
+- [SSRF 與伺服器對外請求邊界](ssrf-and-outbound-requests.md)：伺服器代使用者發起外部連線時的網路與身分邊界。
 - [介面、契約與責任](../api/interface-contract-responsibility.md)：辨認提供者與使用者的承諾。
 - [關聯式資料庫索引](../relational-databases/README.md)：區分資料約束、交易與應用授權。

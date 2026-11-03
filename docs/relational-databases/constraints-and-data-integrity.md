@@ -89,5 +89,7 @@ PostgreSQL 明確不支援用這種方式維護跨列約束。
 
 - [交易與隔離](transactions-and-isolation.md)：把多個有效步驟合成一致操作。
 - [正規化與資料依賴](normalization.md)：減少本可避免的重複事實。
+- [資料表結構演進與遷移](schema-evolution-and-migrations.md)：為既有資料表補上約束時，如何同時處理鎖定與相容性。
+- [檢視表、觸發器與資料庫內邏輯](views-functions-and-triggers.md)：比較宣告式約束與觸發器的責任邊界。
 - [API 輸入、輸出與失敗語意](../api/input-output-failure-semantics.md)：將約束失敗轉成清楚契約。
 - [關聯式資料庫索引](README.md)。

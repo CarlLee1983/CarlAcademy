@@ -66,5 +66,6 @@ Session 有效的乙仍不能讀甲的筆記。這些是預期行為，本文未
 ## 相關文件
 
 - [Web 應用的存取控制](access-control.md)：每次操作仍需授權。
+- [第三方登入、OAuth 與 OIDC 邊界](oauth-and-federated-login.md)：外部驗證完成後如何安全銜接本地 Session。
 - [機密與敏感資料](secrets-and-sensitive-data.md)：憑證與日誌的保護。
 - [Web 應用資安索引](README.md)。

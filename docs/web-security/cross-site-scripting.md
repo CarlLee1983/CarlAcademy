@@ -70,5 +70,6 @@ HttpOnly 能限制腳本直接讀取特定 Cookie，但惡意同源腳本仍可�
 ## 相關文件
 
 - [信任邊界](trust-boundaries.md)：保存資料與信任資料是不同判斷。
+- [檔案上傳與內容處理邊界](file-uploads-and-content-handling.md)：附件被瀏覽器當成同源 HTML 或 SVG 開啟時的風險。
 - [CSRF](csrf-and-browser-boundaries.md)：跨站請求與頁面內程式執行的差異。
 - [Web 應用資安索引](README.md)。

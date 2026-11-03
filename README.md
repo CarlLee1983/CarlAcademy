@@ -11,8 +11,8 @@
 - [Linux 知識索引](docs/linux/README.md)：已有索引所列的 14 篇文章，從系統與 Shell 基礎延伸至管理、儲存、效能與核心。
 - [AWS 知識索引](docs/aws/README.md)：已有索引所列的 20 篇文章，涵蓋雲端基礎、代表服務與服務組合。
 - [API 共通知識索引](docs/api/README.md)：已有 16 篇概念文章，涵蓋共通基礎、延伸議題、HTTP、REST、gRPC 與 GraphQL；語言實作按需求補充。
-- [關聯式資料庫索引](docs/relational-databases/README.md)：已有 7 篇基礎文章，涵蓋資料模型、鍵與關聯、SQL、約束、正規化、交易隔離與索引；產品範例明示適用範圍。
-- [Web 應用資安索引](docs/web-security/README.md)：已有 7 篇基礎文章，涵蓋信任邊界、登入與 Session、存取控制、SQL Injection、XSS、CSRF，以及機密與敏感資料管理。
+- [關聯式資料庫索引](docs/relational-databases/README.md)：已有 10 篇文章，涵蓋資料模型、鍵與關聯、SQL、約束、正規化、交易隔離、索引、MVCC 與鎖定、結構演進與遷移，以及檢視表與觸發器；產品範例明示適用範圍。
+- [Web 應用資安索引](docs/web-security/README.md)：已有 10 篇文章，涵蓋信任邊界、登入與 Session、存取控制、SQL Injection、XSS、CSRF、機密與敏感資料、檔案上傳、SSRF 與第三方登入（OAuth／OIDC）。
 
 各主題可以獨立閱讀與擴充，不要求先學完 Linux 才閱讀其他內容。需要其他主題的背景知識時，以相關文件連結補充。
 
