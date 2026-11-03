@@ -1,0 +1,33 @@
+---
+import { getDocuments, topicName } from '../utils/collections';
+import { withBase } from '../utils/urls';
+const indexes = (await getDocuments()).filter(entry => entry.data.isIndex);
+const base = import.meta.env.BASE_URL;
+const current = indexes.find(entry => Astro.url.pathname.startsWith(withBase(entry.data.route, base)));
+---
+<div class="shell">
+  <header class="site-header" data-pagefind-ignore>
+    <a class="wordmark" href={withBase('/', base)} aria-label="CarlAcademy 首頁">Carl<span>Academy</span></a>
+    <nav class="global-nav" aria-label="知識主題">{indexes.map(entry => <a href={withBase(entry.data.route, base)} aria-current={entry.id === current?.id ? 'page' : undefined}>{topicName(entry.data.title)}</a>)}</nav>
+    <div class="tools"><button type="button" class="search-open" data-search-open hidden>搜尋文件</button><label class="theme-control"><span>外觀</span><select id="theme" aria-label="外觀"><option value="system">系統</option><option value="light">淺色</option><option value="dark">深色</option></select></label></div>
+  </header>
+  <label class="topic-chooser" data-pagefind-ignore><span>切換主題</span><select id="topic-chooser" aria-label="切換主題"><option value={withBase('/', base)}>所有主題</option>{indexes.map(entry => <option value={withBase(entry.data.route, base)} selected={entry.id === current?.id}>{topicName(entry.data.title)}</option>)}</select></label>
+  <noscript><nav class="fallback-topics" aria-label="切換主題">{indexes.map(entry => <a href={withBase(entry.data.route, base)}>{topicName(entry.data.title)}</a>)}</nav></noscript>
+</div>
+<script>
+  const theme = document.querySelector<HTMLSelectElement>('#theme');
+  if (theme) {
+    try { theme.value = localStorage.getItem('academy-theme') || 'system'; } catch { /* Browser storage is optional. */ }
+    theme.addEventListener('change', () => {
+      try { localStorage.setItem('academy-theme', theme.value); } catch { /* Keep this page usable without storage. */ }
+      document.documentElement.dataset.theme = theme.value === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme.value;
+    });
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      if (theme.value === 'system') document.documentElement.dataset.theme = event.matches ? 'dark' : 'light';
+    });
+  }
+  document.querySelector<HTMLSelectElement>('#topic-chooser')?.addEventListener('change', event => {
+    const select = event.currentTarget as HTMLSelectElement;
+    location.assign(select.value);
+  });
+</script>

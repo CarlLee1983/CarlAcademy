@@ -1,0 +1,35 @@
+:is(#article-body, #topic-reading) .table-block { width:max(100%, min(880px, calc(100cqw - 264px))); margin:32px 0; }
+:is(#article-body, #topic-reading) .table-tools { display:none; }
+:is(#article-body, #topic-reading) .table-scroll { max-width:100%; overflow-x:auto; scrollbar-width:thin; }
+:is(#article-body, #topic-reading) .table-scroll table { display:table; width:max-content; min-width:100%; max-width:none; overflow:visible; margin:0; border-collapse:collapse; font-variant-numeric:tabular-nums; }
+:is(#article-body, #topic-reading) .table-scroll :is(th,td) { white-space:nowrap; }
+:is(#article-body, #topic-reading) .table-scroll :is(a,code) { overflow-wrap:normal; }
+:is(#article-body, #topic-reading) .table-scroll th { background:var(--wash); border-bottom:2px solid var(--ink); }
+:is(#article-body, #topic-reading) .table-scroll td:first-child { font-weight:600; }
+@media (max-width:1050px) {
+  :is(#article-body, #topic-reading) .table-block { width:max(100%, min(880px, calc(100cqw - 208px))); }
+}
+@media (max-width:700px) {
+  :is(#article-body, #topic-reading) .table-block { width:100%; }
+  :is(#article-body, #topic-reading) .table-tools { display:flex; justify-content:space-between; align-items:center; gap:8px; min-height:50px; margin-bottom:8px; padding-bottom:4px; border-bottom:2px solid var(--ink); font-size:14px; }
+  :is(#article-body, #topic-reading) .table-label { font-weight:500; color:var(--muted); }
+  :is(#article-body, #topic-reading) .table-toggle { flex:none; min-height:44px; padding:4px 8px; border:0; background:transparent; color:var(--accent); font:inherit; cursor:pointer; }
+  :is(#article-body, #topic-reading) .table-scroll { overflow:visible; }
+  :is(#article-body, #topic-reading) .table-scroll table { display:block; width:100%; min-width:0; }
+  :is(#article-body, #topic-reading) .table-scroll thead { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+  :is(#article-body, #topic-reading) .table-scroll :is(tbody,tr) { display:block; }
+  :is(#article-body, #topic-reading) .table-scroll tbody tr { padding:16px 0; border-bottom:1px solid var(--line); }
+  :is(#article-body, #topic-reading) .table-scroll td { display:block; min-width:0; padding:0; border:0; font-size:16px; white-space:normal; overflow-wrap:anywhere; }
+  :is(#article-body, #topic-reading) .table-scroll :is(a,code) { overflow-wrap:anywhere; }
+  :is(#article-body, #topic-reading) .table-scroll td + td { margin-top:12px; padding-left:12px; border-left:2px solid var(--line); }
+  :is(#article-body, #topic-reading) .table-scroll td:first-child { font-weight:700; }
+  :is(#article-body, #topic-reading) .table-scroll td + td::before { content:attr(data-label); display:block; margin-bottom:2px; color:var(--muted); font-size:14px; font-weight:400; }
+  :is(#article-body, #topic-reading) .table-block.is-comparing .table-scroll { width:calc(100% + 48px); max-width:none; margin:0 -24px; padding:0 24px; overflow-x:auto; }
+  :is(#article-body, #topic-reading) .is-comparing .table-scroll table { display:table; width:max-content; min-width:100%; }
+  :is(#article-body, #topic-reading) .is-comparing .table-scroll thead { position:static; display:table-header-group; width:auto; height:auto; overflow:visible; clip-path:none; }
+  :is(#article-body, #topic-reading) .is-comparing .table-scroll tbody { display:table-row-group; }
+  :is(#article-body, #topic-reading) .is-comparing .table-scroll tr { display:table-row; padding:0; }
+  :is(#article-body, #topic-reading) .is-comparing .table-scroll :is(th,td) { display:table-cell; min-width:140px; max-width:240px; padding:16px; border:0; border-bottom:1px solid var(--line); white-space:normal; }
+  :is(#article-body, #topic-reading) .is-comparing .table-scroll th { border-bottom:2px solid var(--ink); }
+  :is(#article-body, #topic-reading) .is-comparing .table-scroll td + td::before { display:none; }
+}

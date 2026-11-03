@@ -1,0 +1,21 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
+import { withBase } from '../utils/urls';
+interface Props {
+  headings: MarkdownHeading[];
+  articles: CollectionEntry<'documents'>[];
+  currentId: string;
+}
+const { headings, articles, currentId } = Astro.props;
+---
+<nav aria-label="本文目錄" class="article-toc" data-article-toc>
+  <p class="index-label">本文目錄</p>
+  <ol>{headings.map(heading => <li data-depth={heading.depth}><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ol>
+</nav>
+<details class="topic-documents">
+  <summary>本主題文件</summary>
+  <nav aria-label="本主題文件">
+    <ol>{articles.map(doc => <li><a href={withBase(doc.data.route, import.meta.env.BASE_URL)} aria-current={doc.id === currentId ? 'page' : undefined}>{doc.data.title}</a></li>)}</ol>
+  </nav>
+</details>

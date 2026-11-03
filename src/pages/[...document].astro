@@ -1,0 +1,16 @@
+---
+import Article from '../components/Article.astro';
+import TopicIndex from '../components/TopicIndex.astro';
+import DocumentLayout from '../layouts/DocumentLayout.astro';
+import { getDocuments } from '../utils/collections';
+export async function getStaticPaths() {
+  return (await getDocuments()).map(entry => ({ params: { document: entry.data.route.slice(1, -1) }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const documents = await getDocuments();
+const topicIndex = documents.find(doc => doc.data.topic === entry.data.topic && doc.data.isIndex)!;
+const articles = documents.filter(doc => doc.data.topic === entry.data.topic && !doc.data.isIndex);
+---
+<DocumentLayout title={entry.data.title}>
+  {entry.data.isIndex ? <TopicIndex entry={entry} /> : <Article entry={entry} topicIndex={topicIndex} articles={articles} />}
+</DocumentLayout>

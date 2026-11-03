@@ -1,0 +1,51 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import { getDocuments, topicName } from '../utils/collections';
+import { withBase } from '../utils/urls';
+import TableTools from './TableTools.astro';
+interface Props { entry: CollectionEntry<'documents'> }
+const { entry } = Astro.props;
+const { headings } = await render(entry);
+const titleHeading = headings.find(heading => heading.depth === 1)!;
+const documents = await getDocuments();
+const articles = documents.filter(doc => doc.data.topic === entry.data.topic && !doc.data.isIndex);
+const topicNumber = documents.filter(doc => doc.data.isIndex).findIndex(doc => doc.id === entry.id) + 1;
+const href = (route: string) => withBase(route, import.meta.env.BASE_URL);
+// Keep the original index's context and anchor targets without repeating its page title.
+const notes = (entry.rendered?.html ?? '').replace(/<h1[^>]*>[\s\S]*?<\/h1>/, '');
+---
+<div class="shell">
+  <section class="masthead topic-masthead">
+    <p class="kicker" data-topic-no={String(topicNumber).padStart(2, '0')}>知識主題</p>
+    <div class="masthead-grid">
+      <h1 id={titleHeading.slug}>{topicName(entry.data.title)}</h1>
+      <div class="abstract">
+        <p>{entry.data.summary}</p>
+        <p class="topic-meta">{articles.length} 篇文件</p>
+      </div>
+    </div>
+  </section>
+  <div class="topic-body">
+    <aside class="topic-context">
+      <h2>建議閱讀</h2>
+      <p>依主題索引的安排，從基礎概念建立認識，也可以直接查找需要的文件。</p>
+      <a href={href(articles[0].data.route)}>從 {articles[0].data.title} 開始</a>
+    </aside>
+    <nav aria-label="本主題文件">
+      <ol class="document-list">
+        {articles.map(doc => (
+          <li class="document-row">
+            <h2><a href={href(doc.data.route)}>{doc.data.title}</a></h2>
+            <p>{doc.data.summary}</p>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  </div>
+  <details class="topic-notes">
+    <summary>主題說明與延伸閱讀</summary>
+    <div class="reading" id="topic-reading" set:html={notes} />
+  </details>
+</div>
+
+<TableTools />

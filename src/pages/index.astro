@@ -1,0 +1,26 @@
+---
+import DocumentLayout from '../layouts/DocumentLayout.astro';
+import { getDocuments, topicName } from '../utils/collections';
+import { withBase } from '../utils/urls';
+const documents = await getDocuments();
+const indexes = documents.filter(entry => entry.data.isIndex);
+---
+<DocumentLayout title="首頁">
+  <div class="shell home-content">
+    <section class="home-masthead" aria-labelledby="home-title">
+      <p class="kicker">CARLACADEMY <span>知識文件</span></p>
+      <div class="masthead-grid"><h1 id="home-title">工程與技術<br />知識索引</h1><div class="abstract"><p class="abstract-label">閱讀起點</p><p>Linux、AWS、API、關聯式資料庫與 Web 應用資安。從基礎概念讀起，也能直接查找工作中的問題。</p></div></div>
+    </section>
+    <form class="home-search" role="search" data-search-form hidden data-pagefind-ignore>
+      <label for="home-query">查找概念、服務與問題</label>
+      <div><input id="home-query" name="query" type="search" placeholder="搜尋中文或英文關鍵字" /><button type="submit">搜尋</button></div>
+    </form>
+    <section class="home-catalogue" aria-labelledby="catalogue-title">
+      <div class="catalogue-heading"><h2 id="catalogue-title">依主題閱讀</h2><p>目前收錄 {documents.filter(entry => !entry.data.isIndex).length} 篇文件</p></div>
+      <div class="home-topic-list">{indexes.map(entry => {
+        const articles = documents.filter(doc => doc.data.topic === entry.data.topic && !doc.data.isIndex);
+        return <article class="topic-row"><div><h3 class="topic-name"><a href={withBase(entry.data.route, import.meta.env.BASE_URL)} aria-label={entry.data.title}>{topicName(entry.data.title)}</a></h3><p class="topic-description">{entry.data.summary}</p></div><div class="topic-end"><span class="topic-count">{articles.length} 篇文件</span><a class="topic-start" href={withBase(articles[0].data.route, import.meta.env.BASE_URL)}>從 {articles[0].data.title} 開始</a></div></article>;
+      })}</div>
+    </section>
+  </div>
+</DocumentLayout>

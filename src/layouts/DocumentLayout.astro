@@ -1,0 +1,37 @@
+---
+import { getDocuments, topicName } from '../utils/collections';
+import SearchDialog from '../components/SearchDialog.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import '../styles/site.css';
+import { withBase } from '../utils/urls';
+interface Props { title: string; topic?: string }
+const indexes = (await getDocuments()).filter(entry => entry.data.isIndex);
+const currentTopic = indexes.find(entry => Astro.url.pathname.startsWith(withBase(entry.data.route, import.meta.env.BASE_URL)));
+const { title, topic = currentTopic ? topicName(currentTopic.data.title) : '所有主題' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>{title} | CarlAcademy</title>
+    <meta data-pagefind-meta="topic[content]" content={topic} />
+    <link rel="stylesheet" href={withBase('/fonts/fonts.css', base)} />
+    <script is:inline>
+      (() => {
+        let choice = 'system';
+        try { choice = localStorage.getItem('academy-theme') || 'system'; } catch {}
+        document.documentElement.dataset.theme = ['light', 'dark'].includes(choice) ? choice : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">跳至內容</a>
+    <SiteHeader />
+    <SearchDialog />
+    <main id="main" tabindex="-1" data-pagefind-body><slot /></main>
+    <div class="shell"><footer class="page-footer" data-pagefind-ignore><span>CarlAcademy · 工程與技術知識</span><a href={withBase('/', base)}>所有主題</a><a href="#main">回到頁首</a></footer></div>
+  </body>
+</html>

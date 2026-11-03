@@ -39,4 +39,4 @@
 - [逾時、重試與冪等性](../api/timeouts-retries-and-idempotency.md)：提交結果不明時，重試不能等同重新建立一次。
 - [Web 應用程式安全](../web-security/README.md)：資料完整性與使用者授權是不同責任。
 - [SQL 注入](../web-security/sql-injection.md)：查詢語法正確之外，還要分開資料與 SQL 結構。
-- [現行規劃](../../PLAN.md)與[專案入口](../../README.md)：回到文件站範圍與其他主題。
+- [網站首頁](../../README.md)：回到文件站範圍與其他主題。
