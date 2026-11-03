@@ -1,6 +1,6 @@
 .article-breadcrumb { display:flex; flex-wrap:wrap; gap:16px; font-size:14px; color:var(--muted); margin-top:24px; }
 .article-breadcrumb a { min-height:24px; }
-.article-masthead { padding:40px 0 44px; }
+.article-page .article-masthead { padding:40px 0 44px; }
 .article-masthead .kicker { min-height:48px; margin:0; }
 .article-topic-number { margin-left:auto; font:700 64px/.75 "Academy Grotesk",sans-serif; letter-spacing:-2px; color:transparent; -webkit-text-stroke:1.5px var(--outline); }
 .article-masthead .masthead-grid { margin-top:24px; }
@@ -54,7 +54,7 @@
 }
 @media (max-width:700px) {
   .article-breadcrumb { display:none; }
-  .article-masthead { margin-top:16px; padding:24px 0 32px; }
+  .article-page .article-masthead { margin-top:16px; padding:24px 0 32px; }
   .article-masthead .kicker { min-height:32px; gap:12px; }
   .article-topic-number { font-size:40px; }
   .article-masthead .masthead-grid { margin-top:16px; }
