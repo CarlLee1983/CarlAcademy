@@ -1,14 +1,13 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { chromium } from "@playwright/test";
-import { fixture, build, serve } from "./helpers.mjs";
+import { baseline, serve } from "./helpers.mjs";
 
 test("首頁與主題頁提供實際閱讀起點及可持續的外觀選擇", async (t) => {
-  const directory = await fixture(t);
   const browser = await chromium.launch();
   t.after(() => browser.close());
   for (const base of ["/", "/academy/"]) {
-    const result = build(directory, base);
+    const { directory, result } = await baseline(t, base);
     assert.equal(result.status, 0, result.stdout + result.stderr);
     const url = await serve(t, directory, base);
     const page = await browser.newPage({

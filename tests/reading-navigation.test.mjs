@@ -1,14 +1,13 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { chromium, expect } from '@playwright/test';
-import { fixture, build, serve } from './helpers.mjs';
+import { baseline, serve } from './helpers.mjs';
 
 test('閱讀進度與目前章節跟隨正式文章的捲動位置', async t => {
-  const directory = await fixture(t);
   const browser = await chromium.launch();
   t.after(() => browser.close());
   for (const base of ['/', '/academy/']) {
-    const result = build(directory, base);
+    const { directory, result } = await baseline(t, base);
     assert.equal(result.status, 0, result.stdout + result.stderr);
     const url = await serve(t, directory, base);
     for (const colorScheme of ['light', 'dark']) {
@@ -34,11 +33,10 @@ test('閱讀進度與目前章節跟隨正式文章的捲動位置', async t => 
 });
 
 test('手機章節面板支援鍵盤返回與跳至標題後接續閱讀', async t => {
-  const directory = await fixture(t);
   const browser = await chromium.launch();
   t.after(() => browser.close());
   for (const base of ['/', '/academy/']) {
-    const result = build(directory, base);
+    const { directory, result } = await baseline(t, base);
     assert.equal(result.status, 0, result.stdout + result.stderr);
     const url = await serve(t, directory, base);
     for (const colorScheme of ['light', 'dark']) {

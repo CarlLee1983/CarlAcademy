@@ -2,24 +2,24 @@ import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 import { test } from 'node:test';
 import { load } from 'cheerio';
-import { fixture, build, serve } from './helpers.mjs';
+import { fixture, build, baseline, serve } from './helpers.mjs';
 
-test('公開文件在正式靜態產物中可直接閱讀', async () => {
-  const result = build(process.cwd());
+test('公開文件在正式靜態產物中可直接閱讀', async t => {
+  const { directory, result } = await baseline(t);
   assert.equal(result.status, 0, result.stdout + result.stderr);
-  const home = load(await readFile('dist/index.html', 'utf8'));
+  const home = load(await readFile(`${directory}/dist/index.html`, 'utf8'));
   assert.match(home('h1').text(), /工程與技術/);
   for (const topic of ['linux', 'aws', 'api', 'relational-databases', 'web-security']) {
     assert.equal(home(`a[href="/${topic}/"]`).length > 0, true, topic);
-    const sources = (await readdir(`docs/${topic}`)).filter(name => name.endsWith('.md'));
+    const sources = (await readdir(`${directory}/docs/${topic}`)).filter(name => name.endsWith('.md'));
     for (const source of sources) {
       const route = source === 'README.md' ? '' : `${source.slice(0, -3)}/`;
-      const html = load(await readFile(`dist/${topic}/${route}index.html`, 'utf8'));
+      const html = load(await readFile(`${directory}/dist/${topic}/${route}index.html`, 'utf8'));
       assert.equal(html('main h1').length, 1, `${topic}/${source}`);
       assert.ok(html('main').text().length > 100, `${topic}/${source}`);
     }
   }
-  const api = load(await readFile('dist/api/index.html', 'utf8'));
+  const api = load(await readFile(`${directory}/dist/api/index.html`, 'utf8'));
   assert.deepEqual(api('nav[aria-label="本主題文件"] ol a').map((_, node) => api(node).text()).get().slice(0, 6),
     ['介面、契約與責任', '輸入、輸出與失敗語意', '相容性與演進', '文件與契約描述', 'API 測試', '資源、表示與訊息']);
 });

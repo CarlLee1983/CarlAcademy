@@ -23,23 +23,23 @@
 
 ## 本機建置與驗證
 
-需要 Node.js 22.23.4 以上的受支援版本（本次驗證使用 Node.js 24.21.0）及 Python 3。
+需要 Node.js 22.23.4 以上的受支援版本（本次驗證使用 Node.js 24.21.0）、pnpm 12.0.0 及 Python 3。`packageManager` 固定 pnpm 版本，`pnpm-lock.yaml` 是唯一依賴鎖檔。`pnpm-workspace.yaml` 僅對遷移前已使用的 `astro@7.4.5` 保留發佈等待期例外，其餘套件沿用 pnpm 預設規則。
 
 ```sh
-npm ci
-npm run check
-npm run build
+pnpm install --frozen-lockfile
+pnpm run check
+pnpm run build
 python3 -m http.server 4321 --bind 127.0.0.1 --directory dist
 ```
 
 開啟 `http://127.0.0.1:4321/`。建置從現有公開主題 Markdown 讀取內容，並檢查標題、網址衝突、閱讀順序、公開輸出、站內連結與段落錨點；任何檢查失敗皆以非零狀態結束。文章保留單一 H1 作為頁面標題，新文章須由所屬主題索引連結，網址由英文來源路徑推導。
 
-開發時可使用 `npm run dev`；正式產物驗收使用上方的一般靜態伺服器，或 `npm run preview` 作人工預覽。
+開發時可使用 `pnpm run dev`；正式產物驗收使用上方的一般靜態伺服器，或 `pnpm run preview` 作人工預覽。
 
 以子路徑建置時，base path 也會套用到連結與資源：
 
 ```sh
-BASE_PATH=/academy/ npm run build
+BASE_PATH=/academy/ pnpm run build
 ```
 
 將輸出掛載在伺服器的 `/academy/` 下再開啟，例如：
@@ -53,20 +53,26 @@ python3 -m http.server 4321 --bind 127.0.0.1 --directory "$site_preview"
 
 開啟 `http://127.0.0.1:4321/academy/`。這是不同的建置設定，不能把根路徑產物直接搬過去。`BASE_PATH` 使用 `/` 或由英文、數字、連字號及底線組成的路徑段。尚未指定託管平台或網域。
 
-執行完整產物測試：
+執行完整驗證（Astro 檢查、正式建置、產物測試與變更檔案的空白檢查）：
 
 ```sh
-npx playwright install chromium
-npm test
+pnpm exec playwright install chromium
+pnpm run verify
 ```
+
+`verify` 依序執行檢查、從同一份來源快照各建置一次根路徑與 `/academy/`，再讓未修改來源的正向測試共用這兩份不可變產物。每個瀏覽器案例使用隔離的 HTTP 副本與瀏覽器狀態；修改來源的回歸案例仍各自建置。驗證與獨立的 `check`、`build`、`test` 使用工作區鎖，重疊執行會直接失敗，避免共享建置目錄互相覆寫。
 
 測試以正式建置及一般 Python HTTP 伺服器為邊界，包含根路徑與 `/academy/`、實際公開清單、全部文章的手機／桌面與淺／深外觀、全文搜尋與失敗重試、表格／程式碼工具、閱讀導覽、鍵盤及停用 JavaScript。錯誤標題、網址衝突、壞連結、壞錨點及漏列文章的回歸案例使用隔離副本，不修改原始文件。200% 文字縮放為 CSS 模擬；實機及真人試讀尚未執行。
 
 只重跑整合巡檢：
 
 ```sh
-node --test tests/integration.test.mjs
+pnpm run test:focused tests/integration.test.mjs
 ```
+
+`pnpm test` 會準備兩份 baseline 並執行全部測試；`test:focused` 只執行指定檔案，正向案例在沒有 suite 產物時自行建置隔離副本。只做空白檢查可執行 `pnpm run check:diff`，涵蓋未暫存、已暫存及未追蹤的新文字檔；不會修改檔案或安裝 hooks。
+
+GitHub Actions 在 `main` 的 push 與所有 pull request 上執行 `pnpm install --frozen-lockfile`、安裝 Chromium 與系統依賴，再執行 `pnpm run verify`，空白檢查比較 PR base 或 push 前的版本，亦檢查工作目錄。工作流程使用 Node.js 24.21.0、固定官方 actions SHA 與唯讀 repository contents 權限，不發布網站。
 
 工具版本、各測試涵蓋範圍與未驗證項目見 [網站驗收紀錄](docs/site-validation.md)。
 

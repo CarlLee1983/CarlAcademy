@@ -2,20 +2,17 @@
 
 2026-11-03；來源為整合基準 `4805ec01ddf1d364d1a22ffab8229f886f3ad574`（tickets 01–07）加本次 ticket 08 變更。本次 code-review 修正以 `5a7a5496c53cfd8c6696e65bf9e56c4636d1adab` 為基準，補足主題表格與標題錨點，移除舊樣式並沿用共用測試 helper。修正後已完成兩軸獨立複審；此紀錄描述本機正式產物，不代表已發布。
 
-環境：macOS arm64、Node.js 24.21.0、Python 3.9.6、Playwright 1.64.1 的 headless Chromium 156.0.8078.4；依賴由 `package-lock.json` 固定。沒有使用 Astro 開發伺服器替代產物驗收。
+環境：macOS arm64、Node.js 24.21.0、Python 3.9.6、Playwright 1.64.1 的 headless Chromium 156.0.8078.4；當時依賴由 `package-lock.json` 固定；目前已改用 `pnpm-lock.yaml` 與 pnpm 12.0.0。下方 npm 指令及 24 個測試結果是首版歷史證據，最新重跑請使用本節 pnpm 指令。沒有使用 Astro 開發伺服器替代產物驗收。
 
 ## 重跑
 
 ```sh
-npm ci
-npx playwright install chromium
-npm test
-npm run check
-npm run build
-git diff --check
+pnpm install --frozen-lockfile
+pnpm exec playwright install chromium
+pnpm run verify
 ```
 
-只重跑整合巡檢：`node --test tests/integration.test.mjs`。測試在隔離暫存副本分別以 `/` 與 `/academy/` 建置，掛載至 Python `http.server`；子路徑不是搬移根路徑產物。手動預覽命令見 [README](../README.md#本機建置與驗證)。
+只重跑整合巡檢：`pnpm run test:focused tests/integration.test.mjs`。測試在隔離暫存副本分別以 `/` 與 `/academy/` 建置，掛載至 Python `http.server`；子路徑不是搬移根路徑產物。手動預覽命令見 [README](../README.md#本機建置與驗證)。
 
 ## 覆蓋與結果
 

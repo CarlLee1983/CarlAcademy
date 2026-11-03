@@ -1,16 +1,15 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { chromium } from '@playwright/test';
-import { fixture, build, serve } from './helpers.mjs';
+import { baseline, serve } from './helpers.mjs';
 
 const capacity = 'aws/container-orchestration-and-compute-capacity/';
 
 test('手機表格在停用 JavaScript 時已有欄名、實際數量與可讀卡片', async t => {
-  const directory = await fixture(t);
   const browser = await chromium.launch();
   t.after(() => browser.close());
   for (const base of ['/', '/academy/']) {
-    const result = build(directory, base);
+    const { directory, result } = await baseline(t, base);
     assert.equal(result.status, 0, result.stdout + result.stderr);
     const url = await serve(t, directory, base);
     for (const colorScheme of ['light', 'dark']) {
@@ -36,11 +35,10 @@ test('手機表格在停用 JavaScript 時已有欄名、實際數量與可讀�
 });
 
 test('表格以鍵盤切換比較且工具列不跳動，桌面寬表格只在自身捲動', async t => {
-  const directory = await fixture(t);
   const browser = await chromium.launch();
   t.after(() => browser.close());
   for (const base of ['/', '/academy/']) {
-    const result = build(directory, base);
+    const { directory, result } = await baseline(t, base);
     assert.equal(result.status, 0, result.stdout + result.stderr);
     const url = await serve(t, directory, base);
     for (const colorScheme of ['light', 'dark']) {
@@ -102,11 +100,10 @@ test('表格以鍵盤切換比較且工具列不跳動，桌面寬表格只在�
 });
 
 test('展開主題說明後，所有主題表格支援無 JS 卡片與鍵盤比較', async t => {
-  const directory = await fixture(t);
   const browser = await chromium.launch();
   t.after(() => browser.close());
   for (const base of ['/', '/academy/']) {
-    const result = build(directory, base);
+    const { directory, result } = await baseline(t, base);
     assert.equal(result.status, 0, result.stdout + result.stderr);
     const url = await serve(t, directory, base);
     for (const colorScheme of ['light', 'dark']) {

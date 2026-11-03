@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { readdir, mkdir } from 'node:fs/promises';
 import { chromium, expect } from '@playwright/test';
-import { fixture, build, serve } from './helpers.mjs';
+import { baseline, serve } from './helpers.mjs';
 
 const topics = ['linux', 'aws', 'api', 'relational-databases', 'web-security'];
 const evidence = '/tmp/carlacademy-ticket08-evidence';
@@ -20,13 +20,12 @@ async function publicRoutes() {
 // The output verifier checks every local target and fragment during both builds.
 // This observes the same real inventory through ordinary HTTP and actual browser layout.
 test('全部公開頁面可直接 HTTP 開啟，所有文章在兩種部署、尺寸及外觀下不溢出', { timeout: 300000 }, async t => {
-  const directory = await fixture(t);
   const { articles, all } = await publicRoutes();
   const browser = await chromium.launch();
   t.after(() => browser.close());
   await mkdir(evidence, { recursive: true });
   for (const base of ['/', '/academy/']) {
-    const result = build(directory, base);
+    const { directory, result } = await baseline(t, base);
     assert.equal(result.status, 0, result.stdout + result.stderr);
     assert.match(result.stdout, new RegExp(`Verified ${all.length} static pages`));
     const url = await serve(t, directory, base);
@@ -98,8 +97,7 @@ async function doubleText(page) {
 // Text-only resize approximation: double each element's original computed font size.
 // This is deliberately not browser zoom, OS text scaling, or a physical device test.
 test('200% 文字縮放模擬保留正文及鍵盤主要流程', { timeout: 120000 }, async t => {
-  const directory = await fixture(t);
-  const result = build(directory);
+  const { directory, result } = await baseline(t);
   assert.equal(result.status, 0, result.stdout + result.stderr);
   const url = await serve(t, directory);
   const browser = await chromium.launch();

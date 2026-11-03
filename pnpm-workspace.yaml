@@ -1,0 +1,4 @@
+# Preserve the exact Astro version already used before the pnpm migration.
+# Other packages retain pnpm's default minimum release age policy.
+minimumReleaseAgeExclude:
+  - astro@7.4.5

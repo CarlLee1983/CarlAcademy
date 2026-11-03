@@ -2,6 +2,15 @@ import { spawnSync, spawn } from "node:child_process";
 import { mkdtemp, cp, symlink, rm, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { readArtifact } from "../scripts/test-artifacts.mjs";
+export async function baseline(t, base = "/") {
+  const shared = await readArtifact(base);
+  if (shared) return shared;
+  const directory = await fixture(t);
+  const result = build(directory, base);
+  if (result.status !== 0) throw new Error(result.stdout + result.stderr);
+  return { directory, result };
+}
 export async function fixture(t) {
   const directory = await mkdtemp(path.join(tmpdir(), "carlacademy-build-"));
   for (const name of [
@@ -12,6 +21,8 @@ export async function fixture(t) {
     "astro.config.ts",
     "tsconfig.json",
     "package.json",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
   ]) {
     try {
       await cp(name, path.join(directory, name), { recursive: true });
@@ -28,7 +39,7 @@ export async function fixture(t) {
   return directory;
 }
 export function build(directory, base = "/") {
-  return spawnSync("npm", ["run", "build"], {
+  return spawnSync("pnpm", ["run", "build"], {
     cwd: directory,
     env: { ...process.env, BASE_PATH: base },
     encoding: "utf8",

@@ -4,7 +4,7 @@ import { appendFile, readFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { load } from 'cheerio';
 import { chromium } from '@playwright/test';
-import { fixture, build, serve } from './helpers.mjs';
+import { fixture, build, baseline, serve } from './helpers.mjs';
 
 const resizeSource = 'printf "resize-to-fit: preserve this moderately long command while the viewport changes"\n';
 const source = 'printf "保留空白與換行"\n\t' + 'very-long-argument '.repeat(100) + '\n\n';
@@ -113,13 +113,12 @@ test('讀者可複製精確原文、操作超寬換行並取得真實捲動及�
 });
 
 test('既有框線圖在兩種路徑與外觀下保留原排版，無 JS 可局部捲動', async t => {
-  const directory = await fixture(t);
-  const markdown = await readFile(path.join(directory, 'docs/linux/what-is-linux.md'), 'utf8');
-  const diagram = markdown.match(/```(?:text)?\n([\s\S]*?[┌─│][\s\S]*?)```/)[1];
   const browser = await chromium.launch();
   t.after(() => browser.close());
   for (const base of ['/', '/academy/']) {
-    const result = build(directory, base);
+    const { directory, result } = await baseline(t, base);
+    const markdown = await readFile(path.join(directory, 'docs/linux/what-is-linux.md'), 'utf8');
+    const diagram = markdown.match(/```(?:text)?\n([\s\S]*?[┌─│][\s\S]*?)```/)[1];
     assert.equal(result.status, 0, result.stdout + result.stderr);
     const url = await serve(t, directory, base);
     for (const width of [390, 1440]) {

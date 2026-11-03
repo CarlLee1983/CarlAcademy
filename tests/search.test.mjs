@@ -1,14 +1,13 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { chromium, expect } from '@playwright/test';
-import { fixture, build, serve } from './helpers.mjs';
+import { baseline, serve } from './helpers.mjs';
 
 test('正式靜態搜尋可找到中文標題及英文正文，保留部署路徑', async (t) => {
-  const directory = await fixture(t);
   const browser = await chromium.launch();
   t.after(() => browser.close());
   for (const base of ['/', '/academy/']) {
-    const result = build(directory, base);
+    const { directory, result } = await baseline(t, base);
     assert.equal(result.status, 0, result.stdout + result.stderr);
     const url = await serve(t, directory, base);
     const page = await browser.newPage();
@@ -39,8 +38,7 @@ test('正式靜態搜尋可找到中文標題及英文正文，保留部署路�
 });
 
 test('搜尋可從首次模組與索引請求失敗重試，並支援首頁表單與手機鍵盤', async (t) => {
-  const directory = await fixture(t);
-  const result = build(directory);
+  const { directory, result } = await baseline(t);
   assert.equal(result.status, 0, result.stdout + result.stderr);
   const url = await serve(t, directory);
   const browser = await chromium.launch();
@@ -82,8 +80,7 @@ test('搜尋可從首次模組與索引請求失敗重試，並支援首頁表�
 });
 
 test('較早的非同步查詢不會蓋掉目前的輸入結果，停用腳本仍能閱讀', async (t) => {
-  const directory = await fixture(t);
-  const result = build(directory);
+  const { directory, result } = await baseline(t);
   assert.equal(result.status, 0, result.stdout + result.stderr);
   const url = await serve(t, directory);
   const browser = await chromium.launch();
