@@ -10,7 +10,7 @@ import { documentLink, sourceRoute, topics } from './urls';
 const parser = unified().use(remarkParse).use(remarkGfm);
 
 export async function readDocuments() {
-  const documents: { source: string; topic: string; route: string; title: string; body: string; links: string[]; isIndex: boolean; order: number }[] = [];
+  const documents: { source: string; topic: string; route: string; title: string; summary: string; body: string; links: string[]; isIndex: boolean; order: number }[] = [];
   const routes = new Map<string, string>();
   for (const topic of topics) {
     const dir = `docs/${topic}`;
@@ -24,12 +24,13 @@ export async function readDocuments() {
         throw new Error(`${source}: expected exactly one nonempty H1 title`);
       }
       const title = toString(headings[0]).trim();
+      const summary = toString(tree.children.find(node => node.type === 'paragraph') ?? { type: 'text', value: '' }).replace(/\s+/g, ' ').trim().split(/(?<=[。！？])/u)[0];
       const route = sourceRoute(source);
       if (routes.has(route)) throw new Error(`Public URL collision ${route}: ${routes.get(route)} and ${source}`);
       routes.set(route, source);
       const links: string[] = [];
       visit(tree, 'link', node => { links.push(node.url); });
-      documents.push({ source, topic, route, title, body, links, isIndex: name === 'README.md', order: -1 });
+      documents.push({ source, topic, route, title, summary, body, links, isIndex: name === 'README.md', order: -1 });
     }
   }
   for (const topic of topics) {

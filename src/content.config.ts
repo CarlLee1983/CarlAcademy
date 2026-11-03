@@ -33,7 +33,7 @@ const documents = defineCollection({
   },
   schema: z.object({
     source: z.string().min(1), topic: z.string().min(1), route: z.string().min(1),
-    title: z.string().min(1), isIndex: z.boolean(), order: z.number().int(),
+    title: z.string().min(1), summary: z.string(), isIndex: z.boolean(), order: z.number().int(),
   }),
 });
 export const collections = { documents };
