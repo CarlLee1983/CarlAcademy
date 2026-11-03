@@ -5,11 +5,39 @@ import SearchDialog from '../components/SearchDialog.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import '../styles/site.css';
 import { withBase } from '../utils/urls';
-interface Props { title: string; topic?: string; reading?: boolean }
+import { siteName, descriptionText, jsonLd } from '../utils/seo';
+interface Props { title: string; topic?: string; reading?: boolean; description?: string; breadcrumbs?: { name: string; route: string }[] }
 const indexes = (await getDocuments()).filter(entry => entry.data.isIndex);
 const currentTopic = indexes.find(entry => Astro.url.pathname.startsWith(withBase(entry.data.route, import.meta.env.BASE_URL)));
 const { title, reading = false, topic = currentTopic ? topicName(currentTopic.data.title) : '所有主題' } = Astro.props;
 const base = import.meta.env.BASE_URL;
+const description = descriptionText(Astro.props.description);
+const pageTitle = `${title} | ${siteName}`;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const image = Astro.site ? new URL(withBase('/social-card.png', base), Astro.site).href : undefined;
+const structuredData = canonical ? {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': reading ? 'TechArticle' : Astro.props.breadcrumbs ? 'CollectionPage' : 'WebSite',
+      '@id': canonical,
+      url: canonical,
+      name: pageTitle,
+      ...(reading ? { headline: title } : {}),
+      description,
+      inLanguage: 'zh-Hant',
+      image,
+      ...(reading ? { isPartOf: { '@type': 'WebSite', name: siteName, url: new URL(base, Astro.site).href } } : {}),
+    },
+    ...(Astro.props.breadcrumbs ? [{
+      '@type': 'BreadcrumbList',
+      itemListElement: Astro.props.breadcrumbs.map((item, index) => ({
+        '@type': 'ListItem', position: index + 1, name: item.name,
+        item: new URL(withBase(item.route, base), Astro.site).href,
+      })),
+    }] : []),
+  ],
+} : undefined;
 ---
 <!doctype html>
 <html lang="zh-Hant">
@@ -18,7 +46,32 @@ const base = import.meta.env.BASE_URL;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {reading && <ReadingPreferences />}
     <meta name="color-scheme" content="light dark" />
-    <title>{title} | CarlAcademy</title>
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    {!canonical && <meta name="robots" content="noindex, follow" />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="zh_TW" />
+    <meta property="og:type" content={reading ? 'article' : 'website'} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {image && <>
+      <meta property="og:image" content={image} />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content="CarlAcademy：工程與技術知識" />
+    </>}
+    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    {image && <>
+      <meta name="twitter:image" content={image} />
+      <meta name="twitter:image:alt" content="CarlAcademy：工程與技術知識" />
+    </>}
+    {canonical && <link rel="sitemap" type="application/xml" href={withBase('/sitemap.xml', base)} />}
+    {structuredData && <script type="application/ld+json" set:html={jsonLd(structuredData)} />}
     <meta data-pagefind-meta="topic[content]" content={topic} />
     <link rel="stylesheet" href={withBase('/fonts/fonts.css', base)} />
     <script is:inline>

@@ -2,7 +2,7 @@
 import Article from '../components/Article.astro';
 import TopicIndex from '../components/TopicIndex.astro';
 import DocumentLayout from '../layouts/DocumentLayout.astro';
-import { getDocuments } from '../utils/collections';
+import { getDocuments, topicName } from '../utils/collections';
 export async function getStaticPaths() {
   return (await getDocuments()).map(entry => ({ params: { document: entry.data.route.slice(1, -1) }, props: { entry } }));
 }
@@ -11,6 +11,11 @@ const documents = await getDocuments();
 const topicIndex = documents.find(doc => doc.data.topic === entry.data.topic && doc.data.isIndex)!;
 const articles = documents.filter(doc => doc.data.topic === entry.data.topic && !doc.data.isIndex);
 ---
-<DocumentLayout title={entry.data.title} reading={!entry.data.isIndex}>
+<DocumentLayout title={entry.data.title} description={entry.data.summary} reading={!entry.data.isIndex}
+  breadcrumbs={[
+    { name: '所有主題', route: '/' },
+    { name: topicName(topicIndex.data.title), route: topicIndex.data.route },
+    ...(!entry.data.isIndex ? [{ name: entry.data.title, route: entry.data.route }] : []),
+  ]}>
   {entry.data.isIndex ? <TopicIndex entry={entry} /> : <Article entry={entry} topicIndex={topicIndex} articles={articles} />}
 </DocumentLayout>
