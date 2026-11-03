@@ -1,6 +1,7 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
 import ArticleNavigation from './ArticleNavigation.astro';
+import TableTools from './TableTools.astro';
 import ReadingNavigation from './ReadingNavigation.astro';
 import { topicName } from '../utils/collections';
 import { topics, withBase } from '../utils/urls';
@@ -63,5 +64,5 @@ const base = import.meta.env.BASE_URL;
     </nav>
   </div>
 </article>
-
+<TableTools />
 <CodeTools />

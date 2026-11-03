@@ -3,6 +3,7 @@ import { unified } from '@astrojs/markdown-remark';
 import remarkCjkFriendly from 'remark-cjk-friendly';
 import remarkGfm from 'remark-gfm';
 import remarkDocumentLinks from './src/utils/remark-document-links';
+import rehypeTables from './src/utils/rehype-tables';
 import rehypeCodeTools from './src/utils/rehype-code-tools';
 import { normalizeBase } from './src/utils/urls';
 
@@ -15,7 +16,7 @@ export default defineConfig({
     processor: unified({
       gfm: false,
       smartypants: false,
-      rehypePlugins: [rehypeCodeTools],
+      rehypePlugins: [rehypeCodeTools, rehypeTables],
       remarkPlugins: [remarkCjkFriendly, [remarkGfm, { singleTilde: false }], [remarkDocumentLinks, { base }]],
     }),
     syntaxHighlight: false,

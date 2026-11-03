@@ -1,0 +1,19 @@
+---
+import '../styles/tables.css';
+---
+<script>
+  document.querySelectorAll<HTMLElement>('#article-body .table-block').forEach(block => {
+    const button = block.querySelector<HTMLButtonElement>('.table-toggle');
+    if (!button) return;
+    button.hidden = false;
+    button.addEventListener('click', () => {
+      const tools = block.querySelector<HTMLElement>('.table-tools')!;
+      const top = tools.getBoundingClientRect().top;
+      const comparing = block.classList.toggle('is-comparing');
+      button.setAttribute('aria-pressed', String(comparing));
+      button.textContent = comparing ? '改以卡片閱讀' : '改以原表格比較';
+      // Switching can shrink content near the page end and clamp the scroll offset.
+      window.scrollBy({ top: tools.getBoundingClientRect().top - top, behavior: 'instant' });
+    });
+  });
+</script>
