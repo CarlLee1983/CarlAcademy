@@ -243,4 +243,6 @@ AWS partition 之間另有獨立 IAM 邊界，opt-in Region 也有啟用與 IAM 
 - [AWS 與使用者的責任](shared-responsibility.md)：確認誰負責資料與權限設定。
 - [S3、EBS 與 EFS](s3-ebs-and-efs.md)：區分物件、區塊與檔案儲存的存取方式。
 - [如何存取 AWS 服務](accessing-aws-services.md)：區分 Console、CLI 與 SDK 的操作入口。
+- [KMS、Secrets Manager 與 Parameter Store](kms-secrets-manager-and-parameter-store.md)：對照 KMS Key Policy 與一般 IAM 政策的雙重授權要求。
+- [SQS、SNS 與 EventBridge](sqs-sns-and-eventbridge.md)：跨服務發布與消費訊息時的 resource-based policy 與條件鍵邊界。
 - [身分驗證與授權](../api/authentication-and-authorization.md)：回查跨產品的共通原理。

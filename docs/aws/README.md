@@ -3,7 +3,7 @@
 從雲端基礎建立整體認識，再依服務用途與實際問題查閱。
 本主題整理 AWS 特有的概念、服務及其關係，共通知識連回相關主題。
 
-**目前狀態：本索引列出的 20 篇文章已整理，涵蓋六篇雲端基礎、十篇服務分組與四篇服務關係。**
+**目前狀態：本索引列出的 22 篇文章已整理，涵蓋六篇雲端基礎、十二篇服務分組與四篇服務關係。**
 各篇標示來源、查證日期與驗證範圍，內容可依問題獨立閱讀。
 
 查證日期：2026-11-02。本次僅查閱官方文件，未建立 AWS 資源或驗證操作範例。
@@ -38,7 +38,8 @@ AWS 官方服務分類另見 [AWS services by category](https://docs.aws.amazon.
 ### 身分與存取
 
 - **[IAM 的身分與權限](iam-identities-and-permissions.md)**：整理誰能對哪些 AWS 資源執行哪些操作，以及驗證與授權的區別。
-- 官方入口：[IAM 導論](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html)。
+- **[KMS、Secrets Manager 與 Parameter Store：金鑰、機密與設定管理](kms-secrets-manager-and-parameter-store.md)**：分清加密主金鑰與信封加密、可自動輪替的機密憑證，以及階層式組態參數的授權邊界。
+- 官方入口：[IAM 導論](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html)與 [AWS KMS 導論](https://docs.aws.amazon.com/kms/latest/developerguide/overview.html)。
 
 ### 運算與容器
 
@@ -64,7 +65,8 @@ AWS 官方服務分類另見 [AWS services by category](https://docs.aws.amazon.
 ### 應用介面
 
 - **[API Gateway 與後端整合](api-gateway-and-backend-integration.md)**：認識建立與管理 API 的入口，以及它如何連接 Lambda 或其他後端。
-- 官方入口：[API Gateway 導論](https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html)。API 契約與 HTTP 語意連回 [API 共通知識索引](../api/README.md)。
+- **[SQS、SNS 與 EventBridge：佇列、發布訂閱與事件匯流排](sqs-sns-and-eventbridge.md)**：比較拉取佇列緩衝、一對多主題推播與結構化事件路由的分工，以及可見性逾時、DLQ 與跨服務授權。
+- 官方入口：[API Gateway 導論](https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html)與 [SQS 導論](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html)。API 契約與 HTTP 語意連回 [API 共通知識索引](../api/README.md)。
 
 ### 觀察、管理與成本
 

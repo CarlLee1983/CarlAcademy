@@ -13,7 +13,7 @@ test('文章以靜態目錄定位實際章節，依主題閱讀順序接續文�
     const page = await browser.newPage({ javaScriptEnabled: false });
     await page.goto(url + 'linux/what-is-linux/');
     assert.equal(await page.locator('main h1').count(), 1);
-    assert.match(await page.locator('.article-masthead').textContent(), /文件 01／14/);
+    assert.match(await page.locator('.article-masthead').textContent(), /文件 01／16/);
     const links = page.locator('.article-sidebar nav[aria-label="本文目錄"] a');
     assert.ok(await links.count() > 0, 'Static chapter links are present without JavaScript');
     const headings = await page.locator('#article-body :is(h2,h3,h4,h5,h6)').evaluateAll(nodes => nodes.map(node => ({ text: node.textContent, id: node.id })));

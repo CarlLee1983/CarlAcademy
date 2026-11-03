@@ -198,5 +198,6 @@ unset academy_pid academy_status
 - [服務與日誌](services-and-logs.md)：由服務管理器控制的生命週期與排查入口。
 - [效能觀察](performance-observation.md)：CPU、記憶體與 I/O 的進一步觀察。
 - [核心與系統呼叫](kernel-and-system-calls.md)：使用者空間如何請求核心服務。
+- [命名空間、cgroups 與容器隔離基礎](namespaces-cgroups-and-containers.md)：PID 命名空間如何隔離程序視角，以及 cgroup 如何限制資源與程序數。
 
 一手來源均於 **2026-11-02** 查閱：Linux man-pages 提供程序、執行緒與訊號的介面定義；GNU Bash 5.3 手冊由維護者 Chet Ramey 網站提供；procps-ng 官方儲存庫手冊說明 Linux `ps`／`top`，其主分支內容不代表每個發行版已安裝相同版本；Linux 核心文件用於核對不同等待機制。本文沒有啟動 Linux、安裝工具或以 macOS 外部工具結果替代 Linux 驗證。

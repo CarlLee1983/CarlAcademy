@@ -141,4 +141,6 @@ AWS 的做法以同一呼叫者及識別判斷重送，保存原參數，對同�
 - [輸入、輸出與失敗語意](input-output-failure-semantics.md)：理解失敗訊號與狀態影響的區別。
 - [方法與操作語意](methods-and-operation-semantics.md)：對照 HTTP 的安全與冪等方法。
 - [狀態碼與錯誤表示](status-codes-and-error-representations.md)：解讀可辨識原因、202 與錯誤內容。
+- [長時間執行操作與非同步 API 契約](long-running-operations-and-async-apis.md)：當操作耗時過長時，以操作資源與輪詢取代拉長同步等待期限。
+- [Webhook、事件回呼與反向通知契約](webhooks-and-event-callbacks.md)：事件主動推播時的退避重送與事件識別去重。
 - [API 共通知識索引](README.md)：回到跨語言概念與各協定分支。
