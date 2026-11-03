@@ -11,24 +11,36 @@ import '../styles/reading-settings.css';
     <h2 id="reading-settings-title">閱讀設定</h2>
     <button type="button" data-reading-settings-close autofocus>關閉</button>
   </div>
-  <p class="reading-settings-hint">調整後立即套用，同一瀏覽器跨文件保留。</p>
-  <label for="reading-font-size">字體大小</label>
-  <div class="reading-size-row">
-    <input id="reading-font-size" type="range" min={readingPreferences.sizes[0]} max={readingPreferences.sizes.at(-1)} step="2" value={readingPreferences.defaults.size} aria-describedby="reading-font-size-hint" />
-    <output for="reading-font-size" id="reading-size-output">18px</output>
+  <div class="reading-settings-body">
+    <section class="reading-preview" aria-label="閱讀排版預覽" tabindex="0">
+      <p class="reading-preview-caption">排版預覽 · 示範文字（可捲動）</p>
+      <div class="reading-preview-text">
+        <h3>檔案與目錄</h3>
+        <p>Linux 以一棵從根目錄 <code>/</code> 開始的樹狀結構組織檔案。目錄用來整理檔案，也可以包含其他目錄。</p>
+        <pre><code>pwd
+ls -la /home</code></pre>
+      </div>
+    </section>
+    <div class="reading-settings-controls">
+      <label for="reading-font-size">字體大小</label>
+      <div class="reading-size-row">
+        <input id="reading-font-size" type="range" min={readingPreferences.sizes[0]} max={readingPreferences.sizes.at(-1)} step="2" value={readingPreferences.defaults.size} aria-describedby="reading-font-size-hint" />
+        <output for="reading-font-size" id="reading-size-output">18px</output>
+      </div>
+      <p id="reading-font-size-hint" class="reading-settings-hint">16、18、20、22px；隨瀏覽器文字大小縮放。</p>
+      <label for="reading-line-height">行距</label>
+      <select id="reading-line-height">
+        <option value="1.7">標準 · 1.7</option>
+        <option value="1.8" selected>寬鬆 · 1.8</option>
+      </select>
+      <label for="reading-column-width">桌面欄寬</label>
+      <select id="reading-column-width" aria-describedby="reading-width-hint">
+        <option value="680">標準 · 680px</option>
+        <option value="800">寬版 · 800px</option>
+      </select>
+      <p class="reading-settings-hint" id="reading-width-hint">欄寬套用於背景文章；此處預覽字級與行距。手機正文自動配合螢幕。</p>
+    </div>
   </div>
-  <p id="reading-font-size-hint" class="reading-settings-hint">16、18、20、22px；隨瀏覽器文字大小縮放。</p>
-  <label for="reading-line-height">行距</label>
-  <select id="reading-line-height">
-    <option value="1.7">標準 · 1.7</option>
-    <option value="1.8" selected>寬鬆 · 1.8</option>
-  </select>
-  <label for="reading-column-width">桌面欄寬</label>
-  <select id="reading-column-width">
-    <option value="680">標準 · 680px</option>
-    <option value="800">寬版 · 800px</option>
-  </select>
-  <p class="reading-settings-hint">手機自動配合螢幕寬度。</p>
   <div class="reading-settings-actions">
     <button type="button" id="reading-settings-reset">還原預設</button>
     <button type="button" data-reading-settings-close>完成</button>

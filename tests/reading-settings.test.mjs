@@ -18,6 +18,17 @@ async function typography(page, { size, lineHeight, width }, { column = true } =
   if (column) assert.ok(Math.abs(metrics.width - width) < 1, `column width: ${metrics.width}`);
 }
 
+async function previewMatchesArticle(page, dialog) {
+  const preview = dialog.getByRole('region', { name: '閱讀排版預覽', exact: true });
+  await expect(preview).toBeVisible();
+  const metrics = await page.evaluate(() => {
+    const preview = getComputedStyle(document.querySelector('.reading-preview-text'));
+    const article = getComputedStyle(document.querySelector('#article-body'));
+    return { preview: [preview.fontSize, preview.lineHeight], article: [article.fontSize, article.lineHeight] };
+  });
+  assert.deepEqual(metrics.preview, metrics.article, 'preview uses the article font size and line height');
+}
+
 async function saved(page) {
   return page.evaluate(key => JSON.parse(localStorage.getItem(key)), storageKey);
 }
@@ -55,6 +66,7 @@ test('閱讀設定在根目錄與子路徑保留偏好、鍵盤操作與漸進�
       for (const trigger of await triggers.all()) await expect(trigger).toHaveAttribute('aria-controls', 'reading-settings');
       const dialog = await openSettings(page);
       await expect(dialog).toHaveAttribute('id', 'reading-settings');
+      await previewMatchesArticle(page, dialog);
       await page.screenshot({ path: `/tmp/carl-reading-settings-${base === '/' ? 'root' : 'academy'}-desktop.png` });
       const slider = dialog.getByLabel('字體大小');
       await expect(slider).toHaveAttribute('min', '16');
@@ -72,6 +84,7 @@ test('閱讀設定在根目錄與子路徑保留偏好、鍵盤操作與漸進�
       await dialog.getByLabel('桌面欄寬', { exact: true }).selectOption('800');
       const adjusted = { size: 22, lineHeight: 1.7, width: 800 };
       await typography(page, adjusted);
+      await previewMatchesArticle(page, dialog);
       assert.deepEqual(await saved(page), adjusted);
       await dialog.getByRole('button', { name: '完成', exact: true }).click();
       await expect(dialog).toBeHidden();
@@ -84,6 +97,7 @@ test('閱讀設定在根目錄與子路徑保留偏好、鍵盤操作與漸進�
       await expect(reopened.getByLabel('字體大小')).toHaveValue('22');
       await reopened.getByRole('button', { name: '還原預設', exact: true }).click();
       await typography(page, defaults);
+      await previewMatchesArticle(page, reopened);
       assert.deepEqual(await saved(page), defaults);
       await page.reload();
       await typography(page, defaults);
@@ -198,6 +212,43 @@ test('閱讀設定在根目錄與子路徑保留偏好、鍵盤操作與漸進�
       await expect(enlarged.getByRole('button', { name: '完成', exact: true })).toBeInViewport();
       await enlarged.getByRole('button', { name: '完成', exact: true }).click();
       await expect(enlarged).toBeHidden();
+    });
+
+    await t.test(`${base} 手機預覽可鍵盤捲動、設定可達且底部操作保持可見`, async t => {
+      for (const width of [360, 390]) {
+        for (const colorScheme of ['light', 'dark']) {
+          const context = await browser.newContext({ viewport: { width, height: 664 }, colorScheme, reducedMotion: 'reduce' });
+          t.after(() => context.close());
+          const page = await context.newPage();
+          await page.goto(url + articlePath);
+          const dialog = await openSettings(page);
+          await maximumSize(dialog);
+          await dialog.getByLabel('行距', { exact: true }).selectOption('1.7');
+          await previewMatchesArticle(page, dialog);
+          const preview = dialog.getByRole('region', { name: '閱讀排版預覽', exact: true });
+          await preview.focus();
+          await preview.press('End');
+          await expect.poll(() => preview.evaluate(node => node.scrollTop)).toBeGreaterThan(0);
+          const done = dialog.getByRole('button', { name: '完成', exact: true });
+          await expect(done).toBeInViewport();
+          const before = await done.boundingBox();
+          const column = dialog.getByLabel('桌面欄寬', { exact: true });
+          await column.focus();
+          await expect(column).toBeInViewport();
+          const after = await done.boundingBox();
+          assert.ok(Math.abs(after.y - before.y) < 1, 'scrolling settings leaves footer in place');
+          await page.addStyleTag({ content: 'html { font-size: 32px !important; }' });
+          await previewMatchesArticle(page, dialog);
+          for (const control of [dialog.getByLabel('字體大小'), dialog.getByLabel('行距', { exact: true }), column, done]) {
+            await control.focus();
+            await expect(control).toBeInViewport();
+          }
+          assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'preview does not widen the page at 200% root text size');
+          await done.click();
+          await expect(dialog).toBeHidden();
+          await context.close();
+        }
+      }
     });
 
     await t.test(`${base} 停用 JavaScript 仍可閱讀預設本文且不顯示設定入口`, async t => {
