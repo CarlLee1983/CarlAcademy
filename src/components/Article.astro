@@ -2,6 +2,7 @@
 import { render, type CollectionEntry } from 'astro:content';
 import ArticleNavigation from './ArticleNavigation.astro';
 import TableTools from './TableTools.astro';
+import ReadingSettings from './ReadingSettings.astro';
 import ReadingNavigation from './ReadingNavigation.astro';
 import { topicName } from '../utils/collections';
 import { topics, withBase } from '../utils/urls';
@@ -43,6 +44,7 @@ const base = import.meta.env.BASE_URL;
         <div class="abstract"><p class="abstract-label" data-pagefind-ignore>本文提要</p><Fragment set:html={introduction} /></div>
       </div>
     </header>
+    <ReadingSettings />
     <details class="mobile-chapters" data-pagefind-ignore>
       <summary>文件與本文目錄</summary>
       <ArticleNavigation headings={chapters} articles={articles} currentId={entry.id} />

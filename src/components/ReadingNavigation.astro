@@ -12,6 +12,7 @@ const { headings } = Astro.props;
       <span>目錄</span>
     </button>
     <p class="reading-bar-section">開頭</p>
+    <button type="button" class="reading-settings-trigger" data-reading-settings aria-haspopup="dialog" aria-controls="reading-settings" aria-expanded="false" hidden>閱讀設定</button>
     <span class="reading-bar-meter" aria-hidden="true"></span>
   </div>
   <dialog id="reading-chapters" class="toc-sheet" aria-labelledby="reading-chapters-title">

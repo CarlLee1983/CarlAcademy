@@ -11,6 +11,6 @@ const documents = await getDocuments();
 const topicIndex = documents.find(doc => doc.data.topic === entry.data.topic && doc.data.isIndex)!;
 const articles = documents.filter(doc => doc.data.topic === entry.data.topic && !doc.data.isIndex);
 ---
-<DocumentLayout title={entry.data.title}>
+<DocumentLayout title={entry.data.title} reading={!entry.data.isIndex}>
   {entry.data.isIndex ? <TopicIndex entry={entry} /> : <Article entry={entry} topicIndex={topicIndex} articles={articles} />}
 </DocumentLayout>

@@ -1,0 +1,40 @@
+---
+import { readingPreferences } from '../utils/reading-preferences';
+import '../styles/reading-settings.css';
+---
+<div class="reading-settings-entry" data-pagefind-ignore>
+  <span class="reading-settings-summary">18px · 寬鬆行距</span>
+  <button type="button" class="reading-settings-trigger" data-reading-settings aria-haspopup="dialog" aria-controls="reading-settings" aria-expanded="false" hidden>閱讀設定</button>
+</div>
+<dialog id="reading-settings" aria-labelledby="reading-settings-title" data-pagefind-ignore>
+  <div class="reading-settings-head">
+    <h2 id="reading-settings-title">閱讀設定</h2>
+    <button type="button" data-reading-settings-close autofocus>關閉</button>
+  </div>
+  <p class="reading-settings-hint">調整後立即套用，同一瀏覽器跨文件保留。</p>
+  <label for="reading-font-size">字體大小</label>
+  <div class="reading-size-row">
+    <input id="reading-font-size" type="range" min={readingPreferences.sizes[0]} max={readingPreferences.sizes.at(-1)} step="2" value={readingPreferences.defaults.size} aria-describedby="reading-font-size-hint" />
+    <output for="reading-font-size" id="reading-size-output">18px</output>
+  </div>
+  <p id="reading-font-size-hint" class="reading-settings-hint">16、18、20、22px；隨瀏覽器文字大小縮放。</p>
+  <label for="reading-line-height">行距</label>
+  <select id="reading-line-height">
+    <option value="1.7">標準 · 1.7</option>
+    <option value="1.8" selected>寬鬆 · 1.8</option>
+  </select>
+  <label for="reading-column-width">桌面欄寬</label>
+  <select id="reading-column-width">
+    <option value="680">標準 · 680px</option>
+    <option value="800">寬版 · 800px</option>
+  </select>
+  <p class="reading-settings-hint">手機自動配合螢幕寬度。</p>
+  <div class="reading-settings-actions">
+    <button type="button" id="reading-settings-reset">還原預設</button>
+    <button type="button" data-reading-settings-close>完成</button>
+  </div>
+  <p class="reading-settings-status" role="status" aria-live="polite"></p>
+</dialog>
+<script>
+  import '../scripts/reading-settings';
+</script>
