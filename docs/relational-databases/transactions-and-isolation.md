@@ -122,5 +122,6 @@ PostgreSQL 的 sequence 也有特例：已取用值不因交易回復而歸還�
 
 - [API 逾時、重試與冪等性](../api/timeouts-retries-and-idempotency.md)：處理結果未知與重送意圖。
 - [約束與資料完整性](constraints-and-data-integrity.md)：交易仍須有正確不變條件。
+- [多版本並行控制與鎖定](locking-and-mvcc.md)：快照如何實現讀寫不互擋，以及表級鎖、列級鎖與 `VACUUM` 的關係。
 - [索引與查詢計畫](indexes-and-query-plans.md)：索引改變成本，不替代隔離契約。
 - [關聯式資料庫索引](README.md)。

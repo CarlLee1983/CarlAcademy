@@ -130,4 +130,6 @@ PostgreSQL 的 `ANALYZE` 更新統計，與 `EXPLAIN ANALYZE` 執行查詢並觀
 - [SQL 查詢與資料變更](sql-queries-and-data-changes.md)：先理解列數與排序的語意。
 - [正規化與資料依賴](normalization.md)：先區分資料模型與查詢效能問題。
 - [交易與隔離](transactions-and-isolation.md)：效能與並行保證是不同問題。
+- [多版本並行控制與鎖定](locking-and-mvcc.md)：舊版 tuple 累積與 `VACUUM` 如何影響掃描成本。
+- [檢視表、觸發器與資料庫內邏輯](views-functions-and-triggers.md)：檢視表與物化檢視表的查詢成本差異。
 - [關聯式資料庫索引](README.md)。
