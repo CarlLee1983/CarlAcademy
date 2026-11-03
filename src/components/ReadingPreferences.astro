@@ -1,0 +1,22 @@
+---
+import { readingPreferences } from '../utils/reading-preferences';
+---
+<script is:inline define:vars={{ readingPreferences }}>
+  (() => {
+    const { defaults, sizes, lineHeights, widths, key } = readingPreferences;
+    let saved;
+    try { saved = JSON.parse(localStorage.getItem(key) || 'null'); } catch {}
+    const state = {
+      size: sizes.includes(saved?.size) ? saved.size : defaults.size,
+      lineHeight: lineHeights.includes(saved?.lineHeight) ? saved.lineHeight : defaults.lineHeight,
+      width: widths.includes(saved?.width) ? saved.width : defaults.width,
+    };
+    const root = document.documentElement;
+    root.dataset.readingSize = String(state.size);
+    root.dataset.readingLineHeight = String(state.lineHeight);
+    root.dataset.readingWidth = String(state.width);
+    root.style.setProperty('--reading-font-size', `${state.size / 16}rem`);
+    root.style.setProperty('--reading-line-height', String(state.lineHeight));
+    root.style.setProperty('--reading-column-width', `${state.width}px`);
+  })();
+</script>

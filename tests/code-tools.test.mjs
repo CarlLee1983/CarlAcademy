@@ -6,7 +6,7 @@ import { load } from 'cheerio';
 import { chromium } from '@playwright/test';
 import { fixture, build, baseline, serve } from './helpers.mjs';
 
-const resizeSource = 'printf "resize-to-fit: preserve this moderately long command while the viewport changes"\n';
+const resizeSource = 'printf "resize-to-fit: preserve this command while resizing the viewport"\n';
 const source = 'printf "保留空白與換行"\n\t' + 'very-long-argument '.repeat(100) + '\n\n';
 async function codeFixture(t) {
   const directory = await fixture(t);

@@ -108,7 +108,7 @@ test('200% 文字縮放模擬保留正文及鍵盤主要流程', { timeout: 1200
     await page.goto(url + 'aws/container-orchestration-and-compute-capacity/');
     await page.evaluate(() => document.fonts.ready);
     await doubleText(page);
-    assert.equal(await page.locator('#article-body p').first().evaluate(node => getComputedStyle(node).fontSize), '32px');
+    assert.equal(await page.locator('#article-body p').first().evaluate(node => getComputedStyle(node).fontSize), '36px');
     await page.screenshot({ path: `${evidence}/text200-${width}-opening.png` });
     const overflow = await page.evaluate(() => [...document.querySelectorAll('body *')].filter(node => node.getBoundingClientRect().right > innerWidth + 1 && !node.closest('pre,.table-scroll')).map(node => `${node.tagName}.${node.className}: ${Math.round(node.getBoundingClientRect().right)}`));
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${width}: enlarged text must stay within document: ${overflow.join(', ')}`);

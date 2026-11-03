@@ -33,3 +33,7 @@
   :is(#article-body, #topic-reading) .is-comparing .table-scroll th { border-bottom:2px solid var(--ink); }
   :is(#article-body, #topic-reading) .is-comparing .table-scroll td + td::before { display:none; }
 }
+
+@media(max-width:700px) {
+  #article-body .table-scroll td { font-size:var(--reading-font-size,1.125rem); }
+}
