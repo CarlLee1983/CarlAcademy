@@ -33,13 +33,15 @@ git diff --check
 
 200% 文字測試採 **CSS 文字縮放模擬**：在 390×664 與 1440×900 的容器文章頁，先取得各元素原本的 computed font-size，再逐一設為兩倍（正文由 16px 成為 32px）。檢查整頁不溢出，動態搜尋結果產生後會重新套用縮放，檢查搜尋框、關閉按鈕與結果仍可經焦點捲動觸及；以鍵盤操作跳至內容、搜尋與主題導航，保留焦點回復。外觀檢查涵蓋鍵盤焦點及 `selectOption` 切換狀態。此方法沒有改變 viewport，**不是原生瀏覽器縮放、系統字體設定或實機測試**，也不代表所有文章都完成 200% 測試。
 
+追加原生 Chrome 驗證：primary 對 ticket 08 完成後的正式產物快照，以獨立本機 HTTP 網址開啟自有測試分頁；先用 Tab 將焦點移至「外觀」，再以原生 macOS 空白鍵、方向鍵與 Return 依序選取深色、淺色並恢復系統。原生 accessibility tree 的選取值及實際頁面外觀均確認變更；這補足外觀選單鍵盤選項切換的證據，沒有將 headless 的選單模擬誤計為通過。此項沒有執行原生文字縮放。
+
 本次修正：文字放大時頁首改為可換行，避免手機工具列超出；手機文章標題平衡換行，保留 40px 字級，移除容器文章末字獨占一行。HTTP 測試伺服器捨棄逐請求 stderr 日誌，避免完整巡檢填滿未讀 pipe 而卡住。
 
 代表截圖由測試保存在 repo 外：`/tmp/carlacademy-ticket08-evidence/`（雙 base／尺寸／外觀文章開場及文字放大），`/tmp/carlacademy-ticket08-elb-*.png`、`/tmp/carlacademy-ticket08-closing-*.png`，並沿用各測試的表格、程式碼、面板與搜尋截圖。這些是可重建的本機證據，不是永久發布資產。
 
 ## 剩餘範圍
 
-- macOS headless Chromium 的原生 select 未對本次 Arrow／Home／End 鍵事件切換選項；主題以鍵盤 Latin typeahead 導向 Linux 已驗證，但外觀選單的原生鍵盤選項切換未能建立證據，仍待原生瀏覽器確認，不計為通過。
+- macOS headless Chromium 的原生 select 未對 Arrow／Home／End 事件切換選項；其鍵盤證據以 Latin typeahead 主題導航與上述原生 Chrome 外觀選項操作補足，兩種操作方式分開記錄。
 - 未執行 iOS Safari、Android Chrome 實機、原生 200% 文字縮放或真人試讀。Chromium 的 viewport 與外觀模擬不能代替上述證據。
 - 目前框線圖沿用既定過渡呈現，未全面重繪 SVG；工具選型仍見 [網站設計](site-design.md)。
 - 託管平台、網域、部署與實際發布未指定或執行；尚待整合後獨立 code review。
