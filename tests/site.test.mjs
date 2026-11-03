@@ -8,7 +8,7 @@ test('公開文件在正式靜態產物中可直接閱讀', async () => {
   const result = spawnSync('npm', ['run', 'build'], { encoding: 'utf8' });
   assert.equal(result.status, 0, result.stdout + result.stderr);
   const home = load(await readFile('dist/index.html', 'utf8'));
-  assert.match(home('h1').text(), /CarlAcademy/);
+  assert.match(home('h1').text(), /工程與技術/);
   for (const topic of ['linux', 'aws', 'api', 'relational-databases', 'web-security']) {
     assert.equal(home(`a[href="/${topic}/"]`).length > 0, true, topic);
     const sources = (await readdir(`docs/${topic}`)).filter(name => name.endsWith('.md'));
@@ -30,7 +30,7 @@ async function fixture(t) {
   const { tmpdir } = await import('node:os');
   const path = await import('node:path');
   const directory = await mkdtemp(path.join(tmpdir(), 'carlacademy-build-'));
-  for (const name of ['src', 'docs', 'scripts', 'astro.config.ts', 'tsconfig.json', 'package.json']) {
+  for (const name of ['src', 'docs', 'scripts', 'public', 'astro.config.ts', 'tsconfig.json', 'package.json']) {
     await cp(name, path.join(directory, name), { recursive: true });
   }
   await symlink(path.resolve('node_modules'), path.join(directory, 'node_modules'), 'dir');

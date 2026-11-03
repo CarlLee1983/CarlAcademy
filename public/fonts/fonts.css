@@ -1,0 +1,14 @@
+@font-face {
+  font-family: "Academy Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("./noto-sans-tc.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Academy Grotesk";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("./space-grotesk.woff2") format("woff2");
+}
