@@ -1,0 +1,15 @@
+---
+import { withBase } from '../utils/urls';
+import '../styles/search.css';
+---
+<dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title" data-pagefind-ignore data-search-base={import.meta.env.BASE_URL} data-search-module={withBase('/pagefind/pagefind.js', import.meta.env.BASE_URL)}>
+  <div class="search-heading"><h2 id="search-title">搜尋文件</h2><button type="button" data-search-close aria-label="關閉搜尋">關閉</button></div>
+  <label class="search-label" for="search-query">搜尋關鍵字</label>
+  <input id="search-query" type="search" autocomplete="off" placeholder="中文概念或英文技術名詞" aria-describedby="search-status" />
+  <p id="search-status" role="status" aria-live="polite">輸入關鍵字，搜尋標題與正文。</p>
+  <button type="button" data-search-retry hidden>重試搜尋</button>
+  <ol class="search-results" aria-label="搜尋結果"></ol>
+</dialog>
+<script>
+  import '../scripts/search';
+</script>
