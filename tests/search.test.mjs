@@ -45,7 +45,7 @@ test('搜尋可從首次模組與索引請求失敗重試，並支援首頁表�
   const url = await serve(t, directory);
   const browser = await chromium.launch();
   t.after(() => browser.close());
-  for (const failure of ['**/pagefind.js?*', '**/pagefind-entry.json?*']) {
+  for (const failure of ['**/pagefind.js?*', '**/pagefind-entry.json?*', '**/*.pf_meta', '**/*.pf_fragment']) {
     const page = await browser.newPage({viewport: {width:390,height:664}});
     let aborted = 0;
     await page.route(failure, route => { aborted++; return route.abort(); });

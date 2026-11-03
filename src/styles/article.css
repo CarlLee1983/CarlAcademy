@@ -58,7 +58,7 @@
   .article-masthead .kicker { min-height:32px; gap:12px; }
   .article-topic-number { font-size:40px; }
   .article-masthead .masthead-grid { margin-top:16px; }
-  .article-masthead h1 { font-size:40px; line-height:1.2; letter-spacing:-1px; }
+  .article-masthead h1 { font-size:40px; line-height:1.2; letter-spacing:-1px; text-wrap:balance; }
   .article-masthead .abstract,.article-sidebar,.document-position { display:none; }
   .mobile-chapters { display:block; margin-top:16px; padding-bottom:16px; border-bottom:1px solid var(--line); font-size:14px; }
   .mobile-chapters > summary { font-weight:700; }

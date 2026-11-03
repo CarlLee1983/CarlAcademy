@@ -57,6 +57,7 @@ test('定稿文章在桌面首屏開始正文，手機保留精簡開場與原�
         await page.evaluate(() => document.fonts.ready);
         const bodyTop = (await page.locator('#article-body').boundingBox()).y;
         assert.ok(bodyTop <= 610, `${route}: body starts at ${bodyTop}px`);
+        if (route === 'aws/load-balancing-and-cloudfront/') await page.screenshot({ path: `/tmp/carlacademy-ticket08-elb-${base === '/' ? 'root' : 'academy'}-${colorScheme}.png` });
         assert.match(await page.locator('.abstract strong').textContent(), /CloudFront/);
         assert.equal(await page.locator('.mobile-lede').isVisible(), false);
         assert.doesNotMatch(await page.locator('#article-body > p').first().textContent(), /網站有多台伺服器時|一個網站可以由 S3/);
@@ -75,6 +76,7 @@ test('定稿文章在桌面首屏開始正文，手機保留精簡開場與原�
         const sidebarBox = await page.locator('.article-sidebar').boundingBox();
         const nextBox = await page.locator('.article-next').boundingBox();
         assert.ok(sidebarBox.y + sidebarBox.height <= nextBox.y, 'Closing band does not overlap the TOC');
+        if (route === 'aws/load-balancing-and-cloudfront/') await page.screenshot({ path: `/tmp/carlacademy-ticket08-closing-${base === '/' ? 'root' : 'academy'}-${colorScheme}.png` });
       }
       await page.setViewportSize({ width: 390, height: 664 });
       await page.goto(url + 'aws/container-orchestration-and-compute-capacity/');

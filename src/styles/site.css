@@ -126,6 +126,7 @@ main:focus {
 }
 .site-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 24px;
@@ -148,6 +149,7 @@ main:focus {
 }
 .global-nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 24px;
   align-items: center;
   min-width: 0;
