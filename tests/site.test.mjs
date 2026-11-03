@@ -19,6 +19,9 @@ test('公開文件在正式靜態產物中可直接閱讀', async () => {
       assert.ok(html('main').text().length > 100, `${topic}/${source}`);
     }
   }
+  const api = load(await readFile('dist/api/index.html', 'utf8'));
+  assert.deepEqual(api('nav[aria-label="本主題文件"] ol a').map((_, node) => api(node).text()).get().slice(0, 6),
+    ['介面、契約與責任', '輸入、輸出與失敗語意', '相容性與演進', '文件與契約描述', 'API 測試', '資源、表示與訊息']);
 });
 
 // Each fixture is a complete independent build, observed only at its CLI/output boundary.
@@ -79,12 +82,25 @@ test('根路徑與子路徑的正式網站透過一般 HTTP 可直接閱讀，�
   const { chromium } = await import('@playwright/test');
   const dir = await fixture(t);
   const file = `${dir}/docs/linux/what-is-linux.md`;
-  await writeFile(file, (await readFile(file, 'utf8')).replace('# 認識 Linux', '# 認識 Linux 與核心'));
+  const renderingExamples = [
+    '', '## 管線驗收', '', '前文**單次查詢只需三次 I/O。**後文', '',
+    '3~4 層高，3~4 次 I/O', '',
+    '| 欄位 | 數值 |', '| --- | --- |', '| 範例 | 42 |', '',
+    '```text', 'echo "$HOME"', '  <tag> & value', '```', '',
+    '[驗收錨點](#管線驗收)', '', '## 管線驗收', '', '重複標題仍有獨立錨點。',
+  ].join('\n');
+  await writeFile(file, (await readFile(file, 'utf8')).replace('# 認識 Linux', '# 認識 Linux 與核心') + renderingExamples);
   const browser = await chromium.launch();
   t.after(() => browser.close());
   for (const base of ['/', '/academy/']) {
     const result = build(dir, base);
     assert.equal(result.status, 0, result.stdout + result.stderr);
+    const rendered = load(await readFile(`${dir}/dist/linux/what-is-linux/index.html`, 'utf8'));
+    assert.ok(rendered('strong').toArray().some(node => rendered(node).text() === '單次查詢只需三次 I/O。'));
+    assert.ok(rendered('p').toArray().some(node => rendered(node).text() === '3~4 層高，3~4 次 I/O'));
+    assert.ok(rendered('table').toArray().some(node => rendered(node).find('th').length === 2 && rendered(node).find('td').last().text() === '42'));
+    assert.ok(rendered('pre code').toArray().some(node => rendered(node).text() === 'echo "$HOME"\n  <tag> & value\n'));
+    assert.deepEqual(rendered('h2').toArray().filter(node => rendered(node).text() === '管線驗收').map(node => rendered(node).attr('id')), ['管線驗收', '管線驗收-1']);
     const mount = `${dir}/http${base}`;
     await mkdir(mount, { recursive: true });
     await cp(`${dir}/dist`, mount, { recursive: true });
@@ -123,5 +139,21 @@ test('根路徑與子路徑的正式網站透過一般 HTTP 可直接閱讀，�
     await page.close();
     server.kill();
     await once(server, 'exit');
+  }
+});
+
+test('目錄網址也檢查實際索引頁的段落錨點', async t => {
+  const { appendFile, writeFile } = await import('node:fs/promises');
+  const dir = await fixture(t);
+  const file = `${dir}/docs/linux/what-is-linux.md`;
+  const original = await readFile(file, 'utf8');
+  for (const base of ['/', '/academy/']) {
+    await writeFile(file, original + '\n[建議閱讀](/linux#建議閱讀順序)\n');
+    const valid = build(dir, base);
+    assert.equal(valid.status, 0, valid.stdout + valid.stderr);
+    await appendFile(file, '\n[不存在的章節](/linux#absent-section)\n');
+    const broken = build(dir, base);
+    assert.notEqual(broken.status, 0, 'Directory URL must not bypass anchor validation');
+    assert.match(broken.stdout + broken.stderr, /missing anchor: .*linux#absent-section/);
   }
 });

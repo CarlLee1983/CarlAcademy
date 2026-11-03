@@ -28,7 +28,7 @@ export async function readDocuments() {
       if (routes.has(route)) throw new Error(`Public URL collision ${route}: ${routes.get(route)} and ${source}`);
       routes.set(route, source);
       const links: string[] = [];
-      visit(tree, 'link', node => links.push(node.url));
+      visit(tree, 'link', node => { links.push(node.url); });
       documents.push({ source, topic, route, title, body, links, isIndex: name === 'README.md', order: -1 });
     }
   }

@@ -1,4 +1,4 @@
-import { readdir, readFile } from 'node:fs/promises';
+import { readdir, readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { load } from 'cheerio';
@@ -34,9 +34,14 @@ export async function verifyOutput(directory = 'dist', base = '/') {
           throw new Error(`${relative}: reference outside deployment base: ${ref}`);
         }
         const target = decodeURIComponent(url.pathname.slice(basePath.length));
-        const targetFile = path.resolve(root, target + (url.pathname.endsWith('/') ? 'index.html' : ''));
+        let targetFile = path.resolve(root, target + (url.pathname.endsWith('/') ? 'index.html' : ''));
         if (!targetFile.startsWith(root + path.sep)) throw new Error(`${relative}: unsafe reference: ${ref}`);
         if (!names.includes(path.relative(root, targetFile))) throw new Error(`${relative}: missing target: ${ref}`);
+        // Ordinary static servers redirect directory URLs to their index page.
+        if ((await stat(targetFile)).isDirectory()) {
+          targetFile = path.join(targetFile, 'index.html');
+          if (!pages.has(targetFile)) throw new Error(`${relative}: missing directory index: ${ref}`);
+        }
         if (url.hash && pages.has(targetFile)) {
           const fragment = decodeURIComponent(url.hash.slice(1));
           const targetPage = pages.get(targetFile);
