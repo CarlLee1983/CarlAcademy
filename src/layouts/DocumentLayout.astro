@@ -1,0 +1,30 @@
+---
+import { withBase } from '../utils/urls';
+interface Props { title: string }
+const { title } = Astro.props;
+---
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} | CarlAcademy</title>
+  </head>
+  <body>
+    <a href="#main">跳至內容</a>
+    <header><a href={withBase('/', import.meta.env.BASE_URL)}>CarlAcademy</a></header>
+    <main id="main"><slot /></main>
+  </body>
+</html>
+<style is:global>
+  :root { color-scheme: light dark; font-family: system-ui, sans-serif; line-height: 1.7; }
+  body { margin: auto; max-width: 76rem; padding: 1.5rem; }
+  main { max-width: 68rem; }
+  h1, h2, h3 { line-height: 1.35; overflow-wrap: anywhere; }
+  p, li { overflow-wrap: anywhere; }
+  pre { overflow: auto; padding: 1rem; background: light-dark(#eef2fa, #192438); }
+  table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+  th, td { padding: .5rem; border: 1px solid; }
+  a:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+  nav ul { display: flex; flex-wrap: wrap; gap: 1rem; padding: 0; list-style: none; }
+</style>

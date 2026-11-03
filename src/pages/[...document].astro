@@ -1,0 +1,22 @@
+---
+import { render } from 'astro:content';
+import DocumentLayout from '../layouts/DocumentLayout.astro';
+import { getDocuments } from '../utils/collections';
+import { withBase } from '../utils/urls';
+export async function getStaticPaths() {
+  return (await getDocuments()).map(entry => ({ params: { document: entry.data.route.slice(1, -1) }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const documents = await getDocuments();
+const topicIndex = documents.find(doc => doc.data.topic === entry.data.topic && doc.data.isIndex)!;
+const articles = documents.filter(doc => doc.data.topic === entry.data.topic && !doc.data.isIndex);
+---
+<DocumentLayout title={entry.data.title}>
+  <nav aria-label="主題"><ul>{documents.filter(doc => doc.data.isIndex).map(doc => <li><a href={withBase(doc.data.route, import.meta.env.BASE_URL)}>{doc.data.title}</a></li>)}</ul></nav>
+  <article><Content /></article>
+  <nav aria-label="本主題文件">
+    <h2><a href={withBase(topicIndex.data.route, import.meta.env.BASE_URL)}>{topicIndex.data.title}</a></h2>
+    <ol>{articles.map(doc => <li><a href={withBase(doc.data.route, import.meta.env.BASE_URL)} aria-current={doc.id === entry.id ? 'page' : undefined}>{doc.data.title}</a></li>)}</ol>
+  </nav>
+</DocumentLayout>

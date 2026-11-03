@@ -1,0 +1,13 @@
+---
+import DocumentLayout from '../layouts/DocumentLayout.astro';
+import { getDocuments } from '../utils/collections';
+import { withBase } from '../utils/urls';
+const documents = await getDocuments();
+const indexes = documents.filter(entry => entry.data.isIndex);
+---
+<DocumentLayout title="首頁">
+  <h1>CarlAcademy</h1>
+  <p>按主題整理工程與技術知識，從基礎概念逐步深入，也能直接查找需要的文件。</p>
+  <h2>依主題閱讀</h2>
+  <ul>{indexes.map(entry => <li><a href={withBase(entry.data.route, import.meta.env.BASE_URL)}>{entry.data.title}</a></li>)}</ul>
+</DocumentLayout>
