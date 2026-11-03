@@ -3,8 +3,8 @@
 從介面與契約理解 API，再依需要閱讀 HTTP、設計風格與具體技術。
 本索引不指定主要程式語言或框架。
 
-**目前狀態：本索引列出的 16 篇概念文章已整理；各語言、框架與服務的實作範例按需求另行補充。**
-內容涵蓋五篇共通基礎、三篇共通延伸、五篇 HTTP，以及 REST、gRPC、GraphQL 三篇專題。
+**目前狀態：本索引列出的 18 篇概念文章已整理；各語言、框架與服務的實作範例按需求另行補充。**
+內容涵蓋五篇共通基礎、五篇共通延伸、五篇 HTTP，以及 REST、gRPC、GraphQL 三篇專題。
 
 查證日期：2026-11-02。分類與閱讀順序是本站的編輯提案，並非通用標準分類。
 
@@ -61,6 +61,8 @@ GraphQL 定義查詢語言與執行語意，官方文件說明它不要求特定
 - **[身分驗證與授權](authentication-and-authorization.md)**：在有身分與存取控制需求時，整理身分、操作與資源的關係。
 - **[逾時、重試與冪等性](timeouts-retries-and-idempotency.md)**：以遠端操作為重點，整理重複執行、部分失敗及副作用。
 - **[集合查詢設計](collection-query-design.md)**：有集合介面時，整理篩選、排序、分頁與一致性的取捨。
+- **[長時間執行操作與非同步 API 契約](long-running-operations-and-async-apis.md)**：操作無法在單次請求期限內完成時，分離受理請求與完成工作，整理操作資源、輪詢、取消與保留期。
+- **[Webhook、事件回呼與反向通知契約](webhooks-and-event-callbacks.md)**：由事件來源主動推送通知時，整理角色反轉、至少一次投遞、簽章防重放與對外連線邊界。
 
 ## HTTP API
 
@@ -114,4 +116,5 @@ AWS 或其他服務若有專屬驗證、錯誤或重試規則，也在服務文�
 | [GraphQL October 2021 規格](https://spec.graphql.org/October2021/)／[HTTP 說明](https://graphql.org/learn/serving-over-http/) | 語言、執行模型與 HTTP 使用情境；此版不是最新版本的宣告 |
 | [OWASP Authorization Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html) | 身分、資源、操作與權限檢查 |
 | [AWS Builders' Library：重試與退避](https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/)／[冪等 API](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-apis/) | 遠端操作的時間限制、重試與去重契約 |
-| [Google AIP-132](https://google.aip.dev/132)／[AIP-158](https://google.aip.dev/158)／[AIP-160](https://google.aip.dev/160) | 集合查詢、分頁與篩選的具體設計指南，並非所有 API 的通用規定 |
+| [Google AIP-132](https://google.aip.dev/132)／[AIP-151](https://google.aip.dev/151)／[AIP-158](https://google.aip.dev/158)／[AIP-160](https://google.aip.dev/160) | 集合查詢、長時間操作、分頁與篩選的具體設計指南，並非所有 API 的通用規定 |
+| [RFC 2104](https://www.rfc-editor.org/rfc/rfc2104.html)／[OWASP SSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html) | Webhook 訊息驗證碼（HMAC）與伺服器對外回呼請求的防護邊界 |

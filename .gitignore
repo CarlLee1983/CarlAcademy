@@ -8,5 +8,6 @@ dist/
 
 # 本機工具輸出
 .playwright-mcp/
+.wrangler/
 .env
 .env.*

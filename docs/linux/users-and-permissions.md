@@ -152,6 +152,8 @@ root 傳統上是 UID 0 的超級使用者。Linux 又把許多特權拆成 capa
 - [檔案與目錄](files-and-directories.md)：目錄項目、路徑與刪除名稱。
 - [程序](processes-and-jobs.md)：程序帶著身分運作，以及前景、背景與訊號。
 - [服務與日誌](services-and-logs.md)：把權限問題放回服務執行身分與錯誤記錄理解。
+- [命名空間、cgroups 與容器隔離基礎](namespaces-cgroups-and-containers.md)：user namespace 的 UID 映射與 capabilities 特權拆分。
+- [SSH、遠端連線與存取邊界](ssh-and-remote-access.md)：遠端公鑰驗證與 `~/.ssh/authorized_keys` 的最小檔案權限要求。
 - [Linux man-pages](https://man7.org/linux/man-pages/index.html)：本文的憑證、路徑、刪除、umask、ACL 與 capabilities 規則。
 - [GNU Coreutils 9.11 手冊](https://www.gnu.org/software/coreutils/manual/coreutils.html)：`id`、`ls`、`chmod`、`chown` 與模式表示法；部分分頁直接擷取逾時，查證使用 GNU 官方搜尋擷取及完整手冊。
 - [sudo 官方專案手冊](https://github.com/sudo-project/sudo/blob/main/docs/sudo.man.in)：官方網站本次無法擷取，改讀同一專案的手冊原始檔。
