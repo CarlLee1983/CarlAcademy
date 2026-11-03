@@ -53,7 +53,23 @@ cp -R dist/. "$site_preview/academy/"
 python3 -m http.server 4321 --bind 127.0.0.1 --directory "$site_preview"
 ```
 
-開啟 `http://127.0.0.1:4321/academy/`。這是不同的建置設定，不能把根路徑產物直接搬過去。`BASE_PATH` 使用 `/` 或由英文、數字、連字號及底線組成的路徑段。尚未指定託管平台或網域。
+開啟 `http://127.0.0.1:4321/academy/`。這是不同的建置設定，不能把根路徑產物直接搬過去。`BASE_PATH` 使用 `/` 或由英文、數字、連字號及底線組成的路徑段。正式網域為 `https://academy.gravito.dev/`；尚未發布。
+
+## SEO 與社群分享
+
+正式網址預設為 `https://academy.gravito.dev/`，可在建置時以 `SITE_URL` 覆寫。此設定只接受 HTTP(S) origin；子路徑由 `BASE_PATH` 設定，不能放在 `SITE_URL` 中：
+
+```sh
+SITE_URL=https://academy.gravito.dev BASE_PATH=/academy/ pnpm run build
+```
+
+首頁、主題與文章各有摘要、canonical、Open Graph、X 卡片與 JSON-LD；文章與主題另有麵包屑結構化資料。摘要沿用 Markdown 第一段的首句，不另存重複內容。共用社群圖片為 `public/social-card.png`（1200×630），使用本站字型與配色；調整後以 `node scripts/generate-social-card.mjs` 重建，需已安裝 Playwright Chromium。
+
+`sitemap.xml` 只包含公開首頁、主題與文章，不虛構更新日期。`robots.txt` 宣告 sitemap；部署至子路徑時，搜尋引擎只會讀取 origin 根目錄的 `/robots.txt`，需由託管端整合這段宣告。預覽若不應索引，請用 `SITE_URL='' pnpm run build`：頁面會帶 `noindex`，不產生 canonical、絕對圖片或 JSON-LD，sitemap 為空，robots 禁止抓取。正式發布應使用正確網址重新建置。
+
+文章文末提供 LINE、Facebook、X、複製連結與支援裝置上的原生分享。停用 JavaScript 時仍可開啟平台分享連結；剪貼簿失敗時顯示可選取的完整網址。分享使用 canonical，不攜帶追蹤查詢參數與章節錨點。平台連結只在讀者點擊時開啟，不載入第三方 SDK。
+
+本機測試驗證 metadata 與分享資料，未向社群平台實際貼文，也尚未驗證正式網域的爬蟲抓取、平台快取與搜尋收錄。
 
 執行完整驗證（Astro 檢查、正式建置、產物測試與變更檔案的空白檢查）：
 

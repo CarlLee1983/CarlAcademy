@@ -1,0 +1,33 @@
+---
+import '../styles/share-tools.css';
+interface Props {
+  title: string;
+  description: string;
+  url?: string;
+}
+const { title, description, url } = Astro.props;
+const links = url ? [
+  { label: 'LINE', href: `https://social-plugins.line.me/lineit/share?${new URLSearchParams({ url })}` },
+  { label: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: url })}` },
+  { label: 'X', href: `https://twitter.com/intent/tweet?${new URLSearchParams({ text: title, url })}` },
+] : [];
+---
+<section class="share-tools" aria-label="分享本文" data-pagefind-ignore data-share-tools data-title={title} data-description={description} data-url={url}>
+  <p class="share-heading">分享本文</p>
+  <div class="share-actions">
+    <button type="button" data-share-copy hidden>複製連結</button>
+    <button type="button" data-share-native hidden>更多分享方式</button>
+    <span class="share-links" data-share-links>
+      {links.map(link => <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}<span class="share-sr-only">（在新分頁分享）</span></a>)}
+    </span>
+  </div>
+  <p class="share-status" role="status" aria-live="polite" aria-atomic="true"></p>
+  <label class="share-fallback" hidden>
+    手動複製本文連結
+    <input type="url" readonly aria-label="本文連結" />
+  </label>
+  {!url && <noscript><p class="share-note">您可以複製瀏覽器網址來分享本文。</p></noscript>}
+</section>
+<script>
+  import '../scripts/share-tools';
+</script>

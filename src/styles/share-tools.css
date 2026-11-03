@@ -1,0 +1,13 @@
+.share-tools { margin:48px 0 0; padding:24px 0; border-top:1px solid var(--line); color:var(--ink); }
+.share-heading { margin:0 0 12px; font-weight:700; }
+.share-actions, .share-links { display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+.share-actions button, .share-links a { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:8px 14px; border:1px solid var(--line); border-radius:4px; background:var(--paper); color:var(--ink); font:inherit; font-size:15px; text-decoration:none; cursor:pointer; }
+.share-actions button:hover, .share-links a:hover { color:var(--accent); border-color:var(--accent); }
+.share-actions button:disabled { opacity:.6; cursor:wait; }
+.share-actions [hidden], .share-fallback[hidden] { display:none; }
+.share-status, .share-note { margin:12px 0 0; color:var(--muted); font-size:14px; }
+.share-status:empty { display:none; }
+.share-fallback { display:block; margin-top:12px; font-size:14px; }
+.share-fallback input { display:block; margin-top:8px; padding:10px; width:100%; min-height:44px; border:1px solid var(--line); border-radius:4px; background:var(--paper); color:var(--ink); font:inherit; }
+.share-sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+@media(max-width:700px) { .share-tools { margin-top:32px; } }

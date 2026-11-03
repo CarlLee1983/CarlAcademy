@@ -41,7 +41,7 @@ pnpm run verify
 - macOS headless Chromium 的原生 select 未對 Arrow／Home／End 事件切換選項；其鍵盤證據以 Latin typeahead 主題導航與上述原生 Chrome 外觀選項操作補足，兩種操作方式分開記錄。
 - 未執行 iOS Safari、Android Chrome 實機、原生 200% 文字縮放或真人試讀。Chromium 的 viewport 與外觀模擬不能代替上述證據。
 - 目前框線圖沿用既定過渡呈現，未全面重繪 SVG；工具選型仍見 [網站設計](site-design.md)。
-- 託管平台、網域、部署與實際發布未指定或執行。
+- 正式網域已指定為 `https://academy.gravito.dev/`；部署與實際發布尚未執行。
 
 
 ## 獨立審查與結案
@@ -52,3 +52,10 @@ pnpm run verify
 - Spec：主題頁八張表格的卡片／比較工具、五個主題標題原始錨點均已補足。
 
 兩次複審皆在來源快照不變時完成；審查者以唯讀方式檢查程式與既有 70 頁產物，沒有重新執行會寫入產物的測試。完整 24／24 測試由實作工作樹執行，合併後已確認完整 tracked tree 相同（`c9fb7317bf9b464c5b63263a329d09623ec73a9b`），並序列重跑 root check／build／diff check。最終結案只更新本機 tracker 與此紀錄，產品程式及測試保持複審版本不變。
+
+
+## SEO 與社群分享追加驗收（2026-11-03）
+
+新增 `tests/seo.test.mjs`，對兩種 base 的所有公開頁面檢查摘要、canonical、Open Graph／X 卡片、JSON-LD 與 sitemap 一致性、PNG 圖片尺寸，並驗證無網域預覽與錯誤網域設定。`tests/share-tools.test.mjs` 在一般 HTTP 產物上驗證手機深色／桌面淺色、鍵盤複製、原生分享成功／取消／失敗、剪貼簿失敗與不存在、無 JS 平台連結、canonical 及 query／hash 清理。
+
+原生分享及剪貼簿結果以瀏覽器 API mock 驗證，不代表 iOS／Android 分享面板或各社群平台已驗收。正式網域尚未發布，本機檢查不能證明搜尋收錄或平台預覽快取結果；建置與部署設定見 [README](../README.md#seo-與社群分享)。

@@ -6,10 +6,12 @@ import remarkDocumentLinks from './src/utils/remark-document-links';
 import rehypeTables from './src/utils/rehype-tables';
 import rehypeCodeTools from './src/utils/rehype-code-tools';
 import { normalizeBase } from './src/utils/urls';
+import { siteOrigin } from './src/utils/seo';
 
 const base = normalizeBase(process.env.BASE_PATH ?? '/');
 export default defineConfig({
   output: 'static',
+  site: siteOrigin(process.env.SITE_URL ?? 'https://academy.gravito.dev/'),
   trailingSlash: 'always',
   base,
   markdown: {
