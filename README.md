@@ -18,7 +18,7 @@
 
 文件著重概念、原理與具體例子，依需要補上指令、圖解、常見問題與參考來源。每篇聚焦一個概念、服務或問題，讓讀者可以循序閱讀，也可以直接查找。
 
-目前已實作可瀏覽公開內容的基本靜態網站；定稿視覺、閱讀工具與全文搜尋尚待後續 tickets 完成，尚未發布。先前學習產品方向的歷史紀錄與適用界線見 [現行規劃](PLAN.md#目前狀態與文件入口)。
+目前已實作靜態網站、定稿視覺、表格與程式碼閱讀工具、章節導覽及全文搜尋，尚未發布。正式產物的驗收範圍與剩餘缺口見 [網站驗收紀錄](docs/site-validation.md)。先前學習產品方向的歷史紀錄與適用界線見 [現行規劃](PLAN.md#目前狀態與文件入口)。
 
 
 ## 本機建置與驗證
@@ -42,7 +42,16 @@ python3 -m http.server 4321 --bind 127.0.0.1 --directory dist
 BASE_PATH=/academy/ npm run build
 ```
 
-將輸出掛載在伺服器的 `/academy/` 下再開啟；這是不同的建置設定，不能把根路徑產物直接搬過去。`BASE_PATH` 使用 `/` 或由英文、數字、連字號及底線組成的路徑段。尚未指定託管平台或網域。
+將輸出掛載在伺服器的 `/academy/` 下再開啟，例如：
+
+```sh
+site_preview=$(mktemp -d)
+mkdir "$site_preview/academy"
+cp -R dist/. "$site_preview/academy/"
+python3 -m http.server 4321 --bind 127.0.0.1 --directory "$site_preview"
+```
+
+開啟 `http://127.0.0.1:4321/academy/`。這是不同的建置設定，不能把根路徑產物直接搬過去。`BASE_PATH` 使用 `/` 或由英文、數字、連字號及底線組成的路徑段。尚未指定託管平台或網域。
 
 執行完整產物測試：
 
@@ -51,6 +60,14 @@ npx playwright install chromium
 npm test
 ```
 
-測試會在隔離暫存副本建置根路徑與子路徑網站，透過 Python 靜態伺服器與停用 JavaScript 的 Chromium 操作，並驗證缺少標題、網址衝突、壞連結、壞錨點及未列入索引的文章會失敗；不修改原始文件。測試不代表已完成定稿視覺、全文搜尋、實機或真人試讀驗收。
+測試以正式建置及一般 Python HTTP 伺服器為邊界，包含根路徑與 `/academy/`、實際公開清單、全部文章的手機／桌面與淺／深外觀、全文搜尋與失敗重試、表格／程式碼工具、閱讀導覽、鍵盤及停用 JavaScript。錯誤標題、網址衝突、壞連結、壞錨點及漏列文章的回歸案例使用隔離副本，不修改原始文件。200% 文字縮放為 CSS 模擬；實機及真人試讀尚未執行。
+
+只重跑整合巡檢：
+
+```sh
+node --test tests/integration.test.mjs
+```
+
+工具版本、各測試涵蓋範圍與未驗證項目見 [網站驗收紀錄](docs/site-validation.md)。
 
 目前建站依據為 [Astro Content Collections](https://docs.astro.build/en/guides/content-collections/) 與 [Markdown 處理器文件](https://docs.astro.build/en/guides/markdown-content/)。採 Unified 管線整合相對連結轉換、CJK 粗體及 GFM；關閉單波浪刪除線，避免數字範圍被誤渲染。Cheerio 用於建置後 HTML 檢查，Playwright 用於靜態網站的瀏覽器驗收；Node 內建 test runner 執行測試，版本由 lockfile 固定。

@@ -52,7 +52,8 @@ export async function serve(t, directory, base = "/") {
       "--directory",
       root,
     ],
-    { stdio: ["ignore", "pipe", "pipe"] },
+    // Python logs every request to stderr; an unread pipe fills during a full-site sweep.
+    { stdio: ["ignore", "pipe", "ignore"] },
   );
   t.after(async () => {
     server.kill();
