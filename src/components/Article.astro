@@ -1,6 +1,7 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
 import ArticleNavigation from './ArticleNavigation.astro';
+import ReadingNavigation from './ReadingNavigation.astro';
 import { topicName } from '../utils/collections';
 import { topics, withBase } from '../utils/urls';
 import '../styles/article.css';
@@ -27,6 +28,7 @@ const checkedDate = entry.body?.match(/查證日期[：:]\s*(\d{4}-\d{2}-\d{2})/
 const base = import.meta.env.BASE_URL;
 ---
 <article class="article-page" data-pagefind-body>
+  <ReadingNavigation headings={chapters} />
   <div class="shell">
     <nav class="article-breadcrumb" aria-label="麵包屑" data-pagefind-ignore>
       <a href={withBase('/', base)}>所有主題</a>
