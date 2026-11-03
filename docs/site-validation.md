@@ -1,6 +1,6 @@
 # 首版靜態網站驗收
 
-2026-11-03；來源為整合基準 `4805ec01ddf1d364d1a22ffab8229f886f3ad574`（tickets 01–07）加本次 ticket 08 變更。本次 code-review 修正以 `5a7a5496c53cfd8c6696e65bf9e56c4636d1adab` 為基準，補足主題表格與標題錨點，移除舊樣式並沿用共用測試 helper。此紀錄只描述本機正式產物，不代表已發布或修正後已完成獨立複審。
+2026-11-03；來源為整合基準 `4805ec01ddf1d364d1a22ffab8229f886f3ad574`（tickets 01–07）加本次 ticket 08 變更。本次 code-review 修正以 `5a7a5496c53cfd8c6696e65bf9e56c4636d1adab` 為基準，補足主題表格與標題錨點，移除舊樣式並沿用共用測試 helper。修正後已完成兩軸獨立複審；此紀錄描述本機正式產物，不代表已發布。
 
 環境：macOS arm64、Node.js 24.21.0、Python 3.9.6、Playwright 1.64.1 的 headless Chromium 156.0.8078.4；依賴由 `package-lock.json` 固定。沒有使用 Astro 開發伺服器替代產物驗收。
 
@@ -44,4 +44,14 @@ git diff --check
 - macOS headless Chromium 的原生 select 未對 Arrow／Home／End 事件切換選項；其鍵盤證據以 Latin typeahead 主題導航與上述原生 Chrome 外觀選項操作補足，兩種操作方式分開記錄。
 - 未執行 iOS Safari、Android Chrome 實機、原生 200% 文字縮放或真人試讀。Chromium 的 viewport 與外觀模擬不能代替上述證據。
 - 目前框線圖沿用既定過渡呈現，未全面重繪 SVG；工具選型仍見 [網站設計](site-design.md)。
-- 託管平台、網域、部署與實際發布未指定或執行；尚待本次 code-review 修正後的獨立複審。
+- 託管平台、網域、部署與實際發布未指定或執行。
+
+
+## 獨立審查與結案
+
+固定初審範圍為 `ec97d90...5a7a549`；四項 findings 已在單一修正 worktree 處理。最終複審只看 `5a7a549...c4825d8039f7b4ad1e072c3ebb94408c7d39b09f` 與受影響呼叫端，兩位審查者均回報無剩餘 findings：
+
+- Standards：舊版未使用 CSS、重複測試 helper 均已解決。
+- Spec：主題頁八張表格的卡片／比較工具、五個主題標題原始錨點均已補足。
+
+兩次複審皆在來源快照不變時完成；審查者以唯讀方式檢查程式與既有 70 頁產物，沒有重新執行會寫入產物的測試。完整 24／24 測試由實作工作樹執行，合併後已確認完整 tracked tree 相同（`c9fb7317bf9b464c5b63263a329d09623ec73a9b`），並序列重跑 root check／build／diff check。最終結案只更新本機 tracker 與此紀錄，產品程式及測試保持複審版本不變。
