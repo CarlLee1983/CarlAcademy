@@ -74,5 +74,8 @@ HTTPS 保護傳輸中的資料，無法自行判斷筆記屬於誰。
 - [Web 應用資安索引](README.md)：依資料流選擇後續主題。
 - [檔案上傳與內容處理邊界](file-uploads-and-content-handling.md)：外部檔案進入儲存、後端解析與瀏覽器呈現的邊界。
 - [SSRF 與伺服器對外請求邊界](ssrf-and-outbound-requests.md)：伺服器代使用者發起外部連線時的網路與身分邊界。
+- [TLS、HTTPS 與傳輸安全邊界](tls-https-and-transport-boundaries.md)：傳輸加密、反向代理終止 TLS 與轉發標頭的邊界。
+- [限流、配額與資源耗盡防護](rate-limiting-and-abuse-prevention.md)：保護可用性目標與防止資源耗盡。
+- [軟體供應鏈、第三方套件與前端腳本邊界](supply-chain-and-dependency-security.md)：外部套件與第三方腳本進入信任邊界的風險。
 - [介面、契約與責任](../api/interface-contract-responsibility.md)：辨認提供者與使用者的承諾。
 - [關聯式資料庫索引](../relational-databases/README.md)：區分資料約束、交易與應用授權。
