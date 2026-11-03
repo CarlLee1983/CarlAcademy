@@ -4,6 +4,7 @@ import ArticleNavigation from './ArticleNavigation.astro';
 import { topicName } from '../utils/collections';
 import { topics, withBase } from '../utils/urls';
 import '../styles/article.css';
+import CodeTools from './CodeTools.astro';
 interface Props {
   entry: CollectionEntry<'documents'>;
   topicIndex: CollectionEntry<'documents'>;
@@ -60,3 +61,5 @@ const base = import.meta.env.BASE_URL;
     </nav>
   </div>
 </article>
+
+<CodeTools />
