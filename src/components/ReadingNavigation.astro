@@ -1,0 +1,29 @@
+---
+import type { MarkdownHeading } from 'astro';
+import '../styles/reading-navigation.css';
+interface Props { headings: MarkdownHeading[]; }
+const { headings } = Astro.props;
+---
+<div class="reading-navigation" data-pagefind-ignore>
+  <div class="reading-progress" role="progressbar" aria-label="本文閱讀進度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden></div>
+  <div class="reading-bar" hidden>
+    <button type="button" class="reading-bar-toc" aria-haspopup="dialog" aria-controls="reading-chapters" aria-expanded="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" /></svg>
+      <span>目錄</span>
+    </button>
+    <p class="reading-bar-section">開頭</p>
+    <span class="reading-bar-meter" aria-hidden="true"></span>
+  </div>
+  <dialog id="reading-chapters" class="toc-sheet" aria-labelledby="reading-chapters-title">
+    <div class="toc-sheet-head">
+      <h2 id="reading-chapters-title">本文目錄</h2>
+      <button type="button" class="toc-sheet-close" autofocus>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg><span>關閉</span>
+      </button>
+    </div>
+    <ol>{headings.map(heading => <li data-depth={heading.depth}><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ol>
+  </dialog>
+</div>
+<script>
+  import '../scripts/reading-navigation';
+</script>
