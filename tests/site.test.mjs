@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
 import { readFile, readdir } from 'node:fs/promises';
 import { test } from 'node:test';
 import { load } from 'cheerio';
+import { fixture, build, serve } from './helpers.mjs';
 
 test('公開文件在正式靜態產物中可直接閱讀', async () => {
-  const result = spawnSync('npm', ['run', 'build'], { encoding: 'utf8' });
+  const result = build(process.cwd());
   assert.equal(result.status, 0, result.stdout + result.stderr);
   const home = load(await readFile('dist/index.html', 'utf8'));
   assert.match(home('h1').text(), /工程與技術/);
@@ -23,24 +23,6 @@ test('公開文件在正式靜態產物中可直接閱讀', async () => {
   assert.deepEqual(api('nav[aria-label="本主題文件"] ol a').map((_, node) => api(node).text()).get().slice(0, 6),
     ['介面、契約與責任', '輸入、輸出與失敗語意', '相容性與演進', '文件與契約描述', 'API 測試', '資源、表示與訊息']);
 });
-
-// Each fixture is a complete independent build, observed only at its CLI/output boundary.
-async function fixture(t) {
-  const { mkdtemp, cp, symlink, rm } = await import('node:fs/promises');
-  const { tmpdir } = await import('node:os');
-  const path = await import('node:path');
-  const directory = await mkdtemp(path.join(tmpdir(), 'carlacademy-build-'));
-  for (const name of ['src', 'docs', 'scripts', 'public', 'astro.config.ts', 'tsconfig.json', 'package.json']) {
-    await cp(name, path.join(directory, name), { recursive: true });
-  }
-  await symlink(path.resolve('node_modules'), path.join(directory, 'node_modules'), 'dir');
-  t.after(() => rm(directory, { recursive: true, force: true }));
-  return directory;
-}
-
-function build(directory, base = '/') {
-  return spawnSync('npm', ['run', 'build'], { cwd: directory, env: { ...process.env, BASE_PATH: base }, encoding: 'utf8' });
-}
 
 for (const scenario of [
   { name: '缺少文章標題', edit: async dir => {
@@ -76,9 +58,7 @@ for (const scenario of [
 }
 
 test('根路徑與子路徑的正式網站透過一般 HTTP 可直接閱讀，標題變更不改網址', async t => {
-  const { writeFile, mkdir, cp } = await import('node:fs/promises');
-  const { spawn } = await import('node:child_process');
-  const { once } = await import('node:events');
+  const { writeFile } = await import('node:fs/promises');
   const { chromium } = await import('@playwright/test');
   const dir = await fixture(t);
   const file = `${dir}/docs/linux/what-is-linux.md`;
@@ -101,19 +81,8 @@ test('根路徑與子路徑的正式網站透過一般 HTTP 可直接閱讀，�
     assert.ok(rendered('table').toArray().some(node => rendered(node).find('th').length === 2 && rendered(node).find('td').last().text() === '42'));
     assert.ok(rendered('pre code').toArray().some(node => rendered(node).text() === 'echo "$HOME"\n  <tag> & value\n'));
     assert.deepEqual(rendered('h2').toArray().filter(node => rendered(node).text() === '管線驗收').map(node => rendered(node).attr('id')), ['管線驗收', '管線驗收-1']);
-    const mount = `${dir}/http${base}`;
-    await mkdir(mount, { recursive: true });
-    await cp(`${dir}/dist`, mount, { recursive: true });
-    const server = spawn('python3', ['-u', '-m', 'http.server', '0', '--bind', '127.0.0.1', '--directory', `${dir}/http`], { stdio: ['ignore', 'pipe', 'pipe'] });
-    t.after(() => server.kill());
-    let output = '';
-    for await (const chunk of server.stdout) {
-      output += chunk;
-      if (/port (\d+)/.test(output)) break;
-    }
-    const port = output.match(/port (\d+)/)?.[1];
-    assert.ok(port, output);
-    const origin = `http://127.0.0.1:${port}`;
+    const url = await serve(t, dir, base);
+    const origin = new URL(url).origin;
     const page = await browser.newPage({ javaScriptEnabled: false });
     const response = await page.goto(`${origin}${base}linux/what-is-linux/`);
     assert.equal(response.status(), 200);
@@ -127,6 +96,22 @@ test('根路徑與子路徑的正式網站透過一般 HTTP 可直接閱讀，�
     assert.equal(new URL(page.url()).pathname, `${base}linux/`);
     const order = await page.locator('nav[aria-label="本主題文件"] ol a').allTextContents();
     assert.deepEqual(order.slice(0, 3), ['認識 Linux 與核心', '終端與 Shell', '檔案與目錄']);
+    for (const [topic, fragment] of [
+      ['linux', 'linux-知識索引'],
+      ['aws', 'aws-知識索引'],
+      ['api', 'api-共通知識索引'],
+      ['relational-databases', '關聯式資料庫共通知識'],
+      ['web-security', 'web-應用資安知識索引'],
+    ]) {
+      await page.goto('about:blank');
+      const response = await page.goto(`${origin}${base}${topic}/#${fragment}`);
+      assert.equal(response.status(), 200);
+      const target = page.locator('h1');
+      assert.equal(await target.count(), 1);
+      assert.equal(await target.getAttribute('id'), fragment, `${topic}: original source title fragment`);
+      assert.equal(await target.evaluate(node => node.matches(':target')), true);
+    }
+    await page.goto(`${origin}${base}linux/`);
     // Fetch all linked resources and local URLs as the static server serves them.
     const refs = await page.locator('[href], [src]').evaluateAll(nodes => nodes.flatMap(node => ['href', 'src'].map(attr => node.getAttribute(attr))).filter(Boolean));
     for (const ref of refs) {
@@ -137,8 +122,6 @@ test('根路徑與子路徑的正式網站透過一般 HTTP 可直接閱讀，�
       assert.equal((await fetch(`${origin}${base}${internal}`)).status, 404, internal);
     }
     await page.close();
-    server.kill();
-    await once(server, 'exit');
   }
 });
 

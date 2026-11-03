@@ -1,9 +1,12 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import { render, type CollectionEntry } from 'astro:content';
 import { getDocuments, topicName } from '../utils/collections';
 import { withBase } from '../utils/urls';
+import TableTools from './TableTools.astro';
 interface Props { entry: CollectionEntry<'documents'> }
 const { entry } = Astro.props;
+const { headings } = await render(entry);
+const titleHeading = headings.find(heading => heading.depth === 1)!;
 const documents = await getDocuments();
 const articles = documents.filter(doc => doc.data.topic === entry.data.topic && !doc.data.isIndex);
 const topicNumber = documents.filter(doc => doc.data.isIndex).findIndex(doc => doc.id === entry.id) + 1;
@@ -15,7 +18,7 @@ const notes = (entry.rendered?.html ?? '').replace(/<h1[^>]*>[\s\S]*?<\/h1>/, ''
   <section class="masthead topic-masthead">
     <p class="kicker" data-topic-no={String(topicNumber).padStart(2, '0')}>知識主題</p>
     <div class="masthead-grid">
-      <h1>{topicName(entry.data.title)}</h1>
+      <h1 id={titleHeading.slug}>{topicName(entry.data.title)}</h1>
       <div class="abstract">
         <p>{entry.data.summary}</p>
         <p class="topic-meta">{articles.length} 篇文件</p>
@@ -41,6 +44,8 @@ const notes = (entry.rendered?.html ?? '').replace(/<h1[^>]*>[\s\S]*?<\/h1>/, ''
   </div>
   <details class="topic-notes">
     <summary>主題說明與延伸閱讀</summary>
-    <div class="reading" set:html={notes} />
+    <div class="reading" id="topic-reading" set:html={notes} />
   </details>
 </div>
+
+<TableTools />

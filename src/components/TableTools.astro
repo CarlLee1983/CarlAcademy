@@ -2,7 +2,7 @@
 import '../styles/tables.css';
 ---
 <script>
-  document.querySelectorAll<HTMLElement>('#article-body .table-block').forEach(block => {
+  document.querySelectorAll<HTMLElement>(':is(#article-body, #topic-reading) .table-block').forEach(block => {
     const button = block.querySelector<HTMLButtonElement>('.table-toggle');
     if (!button) return;
     button.hidden = false;

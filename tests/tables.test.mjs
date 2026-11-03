@@ -100,3 +100,77 @@ test('表格以鍵盤切換比較且工具列不跳動，桌面寬表格只在�
     }
   }
 });
+
+test('展開主題說明後，所有主題表格支援無 JS 卡片與鍵盤比較', async t => {
+  const directory = await fixture(t);
+  const browser = await chromium.launch();
+  t.after(() => browser.close());
+  for (const base of ['/', '/academy/']) {
+    const result = build(directory, base);
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    const url = await serve(t, directory, base);
+    for (const colorScheme of ['light', 'dark']) {
+      for (const [topic, count, label] of [
+        ['aws', 2, '內容邊界與官方閱讀入口'],
+        ['api', 4, '閱讀時要區分的概念'],
+        ['relational-databases', 1, '核心問題'],
+        ['web-security', 1, '要解決的問題'],
+      ]) {
+        for (const javaScriptEnabled of [false, true]) {
+          const page = await browser.newPage({ javaScriptEnabled, viewport: { width: 390, height: 664 }, colorScheme, reducedMotion: 'reduce' });
+          page.setDefaultTimeout(3000);
+          await page.goto(url + topic + '/');
+          await page.getByText('主題說明與延伸閱讀', { exact: true }).click();
+          await page.evaluate(() => document.fonts.ready);
+          const notes = page.locator('details[open]');
+          const blocks = notes.locator('.table-block');
+          assert.equal(await blocks.count(), count, topic);
+          assert.equal(await blocks.first().locator('tbody tr').first().locator('td').nth(1).getAttribute('data-label'), label);
+          for (const block of await blocks.all()) {
+            const tools = block.locator('.table-tools');
+            const button = tools.getByRole('button');
+            const cells = block.locator('tbody td');
+            assert.ok(await cells.evaluateAll(nodes => nodes.every(node => getComputedStyle(node).display === 'block')));
+            assert.equal(await cells.first().evaluate(node => getComputedStyle(node).fontWeight), '700');
+            assert.equal(await cells.nth(1).evaluate(node => getComputedStyle(node, '::before').content), `"${await cells.nth(1).getAttribute('data-label')}"`);
+            assert.equal(await button.isVisible(), javaScriptEnabled);
+            const original = await block.locator('tbody').textContent();
+            const evidence = `/tmp/carlacademy-review-${base === '/' ? 'root' : 'academy'}-${topic}-${colorScheme}-${javaScriptEnabled ? 'js' : 'nojs'}`;
+            if (!javaScriptEnabled) {
+              await tools.scrollIntoViewIfNeeded();
+              await page.screenshot({ path: `${evidence}-cards.png` });
+            } else {
+              await button.focus();
+              await page.evaluate(() => scrollBy(0, -120));
+              const top = (await tools.boundingBox()).y;
+              await page.screenshot({ path: `${evidence}-cards.png` });
+              await page.keyboard.press('Enter');
+              assert.equal(await button.getAttribute('aria-pressed'), 'true');
+              assert.ok(Math.abs((await tools.boundingBox()).y - top) <= 1, `${topic}: stable comparison toolbar`);
+              const scroll = block.locator('.table-scroll');
+              assert.equal(await scroll.evaluate(node => node.scrollWidth > node.clientWidth), true);
+              assert.equal(Math.round((await scroll.boundingBox()).width), 390);
+              assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+              await page.screenshot({ path: `${evidence}-comparison.png` });
+              await scroll.focus();
+              await page.keyboard.press('ArrowRight');
+              await page.waitForTimeout(200);
+              assert.ok(await scroll.evaluate(node => node.scrollLeft) > 0);
+              await button.focus();
+              const comparingTop = (await tools.boundingBox()).y;
+              await page.keyboard.press('Space');
+              assert.equal(await button.getAttribute('aria-pressed'), 'false');
+              assert.ok(Math.abs((await tools.boundingBox()).y - comparingTop) <= 1);
+              assert.equal(await block.locator('tbody').textContent(), original);
+            }
+          }
+          assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+          await page.setViewportSize({ width: 1440, height: 900 });
+          assert.ok(await notes.locator('table').evaluateAll(nodes => nodes.every(node => getComputedStyle(node).display === 'table')));
+          assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+          await page.close();
+        }
+      }
+    }
+  }
+});
