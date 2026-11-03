@@ -112,6 +112,7 @@ test('展開主題說明後，所有主題表格支援無 JS 卡片與鍵盤比�
         ['api', 4, '閱讀時要區分的概念'],
         ['relational-databases', 1, '核心問題'],
         ['web-security', 1, '要解決的問題'],
+        ['networking', 1, '要解決的問題'],
       ]) {
         for (const javaScriptEnabled of [false, true]) {
           const page = await browser.newPage({ javaScriptEnabled, viewport: { width: 390, height: 664 }, colorScheme, reducedMotion: 'reduce' });

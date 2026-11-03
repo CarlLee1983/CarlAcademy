@@ -13,6 +13,7 @@
 - [API 共通知識索引](docs/api/README.md)：已有 18 篇概念文章，涵蓋共通基礎、延伸議題（含長時間操作與 Webhook 事件回呼）、HTTP、REST、gRPC 與 GraphQL；語言實作按需求補充。
 - [關聯式資料庫索引](docs/relational-databases/README.md)：已有 13 篇文章，涵蓋資料模型、鍵與關聯、SQL、約束、正規化、交易隔離、索引、MVCC 與鎖定、結構演進與遷移、檢視表與觸發器、CTE 與視窗函數、JSONB 混合建模，以及分割表與連線資源管理；產品範例明示適用範圍。
 - [Web 應用資安索引](docs/web-security/README.md)：已有 13 篇文章，涵蓋信任邊界、登入與 Session、存取控制、SQL Injection、XSS、CSRF、機密與敏感資料、檔案上傳、SSRF、第三方登入（OAuth／OIDC）、TLS 與傳輸邊界、限流與配額防護，以及軟體供應鏈與第三方腳本邊界。
+- [電腦網路知識索引](docs/networking/README.md)：已有 6 篇文章，涵蓋封包交換與網路模型、IP 位址與 CIDR、路由與轉送生命週期、DNS 階層解析，以及 TCP 與 UDP 傳輸層契約。
 
 各主題可以獨立閱讀與擴充，不要求先學完 Linux 才閱讀其他內容。需要其他主題的背景知識時，以相關文件連結補充。
 
