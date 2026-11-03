@@ -132,4 +132,6 @@ PostgreSQL 的 `ANALYZE` 更新統計，與 `EXPLAIN ANALYZE` 執行查詢並觀
 - [交易與隔離](transactions-and-isolation.md)：效能與並行保證是不同問題。
 - [多版本並行控制與鎖定](locking-and-mvcc.md)：舊版 tuple 累積與 `VACUUM` 如何影響掃描成本。
 - [檢視表、觸發器與資料庫內邏輯](views-functions-and-triggers.md)：檢視表與物化檢視表的查詢成本差異。
+- [JSONB、半結構化資料與混合建模](jsonb-and-semi-structured-data.md)：表達式索引與 GIN 索引在半結構化欄位的取捨。
+- [資料表分割與連線資源管理](partitioning-and-connection-management.md)：大表分區略過與高並行連線的瓶頸區分。
 - [關聯式資料庫索引](README.md)。

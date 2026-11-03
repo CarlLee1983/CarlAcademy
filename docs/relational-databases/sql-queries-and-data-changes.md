@@ -123,4 +123,5 @@ WHERE course_id = 30;
 
 - [約束與資料完整性](constraints-and-data-integrity.md)：修改時最後由誰阻止無效狀態。
 - [索引與查詢計畫](indexes-and-query-plans.md)：查詢的實體成本與邏輯語意不同。
+- [通用資料表運算式與視窗函數](ctes-and-window-functions.md)：保留明細列的視窗計算、具名步驟與遞迴查詢。
 - [關聯式資料庫索引](README.md)。

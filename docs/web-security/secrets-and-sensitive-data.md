@@ -74,5 +74,7 @@ Base64 只是編碼，不提供機密性；快速的一般雜湊也不能替代�
 
 - [Web 應用的存取控制](access-control.md)：判斷誰能讀取敏感內容。
 - [SQL Injection](sql-injection.md)：限制資料庫憑證權限與保護查詢邊界。
+- [TLS、HTTPS 與傳輸安全邊界](tls-https-and-transport-boundaries.md)：傳輸層保護與伺服器私鑰管理。
+- [軟體供應鏈、第三方套件與前端腳本邊界](supply-chain-and-dependency-security.md)：防止套件腳本或外部前端資源讀取並外洩憑證。
 - [AWS 身分與權限](../aws/iam-identities-and-permissions.md)：雲端身分的具體情境。
 - [Web 應用資安索引](README.md)。

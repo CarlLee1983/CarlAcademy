@@ -107,4 +107,5 @@ BCNF 比 3NF 更嚴格：每個非平凡函數相依的決定項都必須是超�
 - [約束與資料完整性](constraints-and-data-integrity.md)：把設計依賴變成可執行規則。
 - [交易與隔離](transactions-and-isolation.md)：同時更新多處資料的責任。
 - [索引與查詢計畫](indexes-and-query-plans.md)：依證據評估查詢成本。
+- [JSONB、半結構化資料與混合建模](jsonb-and-semi-structured-data.md)：固定關聯欄位與彈性屬性如何劃分邊界。
 - [關聯式資料庫索引](README.md)。

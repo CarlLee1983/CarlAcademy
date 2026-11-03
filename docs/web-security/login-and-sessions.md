@@ -67,5 +67,7 @@ Session 有效的乙仍不能讀甲的筆記。這些是預期行為，本文未
 
 - [Web 應用的存取控制](access-control.md)：每次操作仍需授權。
 - [第三方登入、OAuth 與 OIDC 邊界](oauth-and-federated-login.md)：外部驗證完成後如何安全銜接本地 Session。
+- [TLS、HTTPS 與傳輸安全邊界](tls-https-and-transport-boundaries.md)：`Secure` Cookie、HSTS 與反向代理協定判斷。
+- [限流、配額與資源耗盡防護](rate-limiting-and-abuse-prevention.md)：登入防暴力破解與避免帳號鎖定型阻斷服務。
 - [機密與敏感資料](secrets-and-sensitive-data.md)：憑證與日誌的保護。
 - [Web 應用資安索引](README.md)。
