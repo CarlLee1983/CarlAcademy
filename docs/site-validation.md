@@ -12,7 +12,7 @@ pnpm exec playwright install chromium
 pnpm run verify
 ```
 
-只重跑整合巡檢：`pnpm run test:focused tests/integration.test.mjs`。測試在隔離暫存副本分別以 `/` 與 `/academy/` 建置，掛載至 Python `http.server`；子路徑不是搬移根路徑產物。手動預覽命令見 [README](../README.md#本機建置與驗證)。
+只重跑整合巡檢：`pnpm run test:focused tests/integration.test.mjs`。測試在隔離暫存副本建置，掛載至 Python `http.server`；子路徑不是搬移根路徑產物。各測試使用哪份內容與 base，見下方「[測試分層](#測試分層2026-11-04)」。手動預覽命令見 [README](../README.md#本機建置與驗證)。
 
 ## 覆蓋與結果
 
@@ -34,13 +34,14 @@ pnpm run verify
 
 本次修正：文字放大時頁首改為可換行，避免手機工具列超出；手機文章標題平衡換行，保留 40px 字級，移除容器文章末字獨占一行。HTTP 測試伺服器捨棄逐請求 stderr 日誌，避免完整巡檢填滿未讀 pipe 而卡住。
 
-代表截圖由測試保存在 repo 外：`/tmp/carlacademy-ticket08-evidence/`（雙 base／尺寸／外觀文章開場及文字放大），`/tmp/carlacademy-ticket08-elb-*.png`、`/tmp/carlacademy-ticket08-closing-*.png`，並沿用各測試的表格、程式碼、面板與搜尋截圖。主題說明的卡片（含無 JS）與比較截圖位於 `/tmp/carlacademy-review-{root|academy}-{topic}-{light|dark}-{js|nojs}-{cards|comparison}.png`，由表格測試產生；已檢視兩種 base 的無 JS 卡片與比較畫面。這些是可重建的本機證據，不是永久發布資產。
+以下首版截圖描述 2026-11-03 的測試；2026-11-04 精簡後，雙 base／外觀的文章開場截圖、ELB／closing 截圖與表格比較截圖已不再產生，現行測試只保留 200% 文字縮放等少數截圖。代表截圖由測試保存在 repo 外：`/tmp/carlacademy-ticket08-evidence/`（雙 base／尺寸／外觀文章開場及文字放大），`/tmp/carlacademy-ticket08-elb-*.png`、`/tmp/carlacademy-ticket08-closing-*.png`，並沿用各測試的表格、程式碼、面板與搜尋截圖。主題說明的卡片（含無 JS）與比較截圖位於 `/tmp/carlacademy-review-{root|academy}-{topic}-{light|dark}-{js|nojs}-{cards|comparison}.png`，由表格測試產生；已檢視兩種 base 的無 JS 卡片與比較畫面。這些是可重建的本機證據，不是永久發布資產。
 
 ## 剩餘範圍
 
 - macOS headless Chromium 的原生 select 未對 Arrow／Home／End 事件切換選項；其鍵盤證據以 Latin typeahead 主題導航與上述原生 Chrome 外觀選項操作補足，兩種操作方式分開記錄。
 - 未執行 iOS Safari、Android Chrome 實機、原生 200% 文字縮放或真人試讀。Chromium 的 viewport 與外觀模擬不能代替上述證據。
 - 目前框線圖沿用既定過渡呈現，未全面重繪 SVG；工具選型仍見 [網站設計](site-design.md)。
+- 真實內容在 1440px 桌面寬度下，118 篇文章中有 13 篇正文起點超過 610px（最高 661.67px，例如 `aws/kms-secrets-manager-and-parameter-store`、`relational-databases/jsonb-and-semi-structured-data`），精簡前即存在。610px 原本只對 ELB／CloudFront 兩篇驗收，是否適用全部文章、要調整版面或門檻，尚未決定。
 - 正式網域已指定為 `https://academy.gravito.dev/`；部署與實際發布尚未執行。
 
 
@@ -59,3 +60,46 @@ pnpm run verify
 新增 `tests/seo.test.mjs`，對兩種 base 的所有公開頁面檢查摘要、canonical、Open Graph／X 卡片、JSON-LD 與 sitemap 一致性、PNG 圖片尺寸，並驗證無網域預覽與錯誤網域設定。`tests/share-tools.test.mjs` 在一般 HTTP 產物上驗證手機深色／桌面淺色、鍵盤複製、原生分享成功／取消／失敗、剪貼簿失敗與不存在、無 JS 平台連結、canonical 及 query／hash 清理。
 
 原生分享及剪貼簿結果以瀏覽器 API mock 驗證，不代表 iOS／Android 分享面板或各社群平台已驗收。正式網域尚未發布，本機檢查不能證明搜尋收錄或平台預覽快取結果；建置與部署設定見 [README](../README.md#seo-與社群分享)。
+
+## 測試分層（2026-11-04）
+
+依 [測試套件精簡規格](../.scratch/test-suite-slimming/spec.md) 調整驗證方式；上方首版覆蓋表格保留為歷史證據，驗收範圍不變。來源為 `test/slim-suite` 整合分支（code review 修正後的最終提交）。
+
+分層原則（刻意的取捨，不是遺漏）：
+
+- **每項行為只在一處驗證**，用最便宜而可信的層級：HTML 層檢查 → 範例內容建置 → 瀏覽器 E2E。手機章節面板、表格鍵盤切換、無 JS 表格卡片與錯誤碼搜尋導向各只留一處；元件測試不再重複整頁溢出與字型載入斷言。
+- **只有三個檢查使用完整真實內容**：全部公開頁面 HTTP 開啟、搜尋索引等於公開清單、首頁、全部主題索引與全部文章在兩種 base × 390／1440 下不溢出且自行託管字型載入，並在兩種 base 經網站搜尋介面與主題切換驗證執行期 base（`tests/integration.test.mjs`）；全站 SEO 與網站地圖（`tests/seo.test.mjs`）；每篇公開文件有單一 H1 與正文，導覽順序等於主題索引的建議閱讀順序，每個主題索引標題的錨點 id 與產品使用的 `github-slugger` 一致（`tests/site.test.mjs`）。
+- **其餘測試使用手寫的範例內容**（`tests/fixtures/docs/`，每個檔案開頭註明觸發的網站功能）；範例沒有的主題自動補最小主題索引與一篇最小文件，因為主題頁需要至少一篇文件作為閱讀起點。預期值從範例內容與產品的主題定義讀出，不寫死真實文章。
+- **介面行為只在子路徑 `/academy/` 驗證**。base path 由三處負責：每次建置都執行的輸出驗證器、`tests/site.test.mjs` 的直開／重新整理／內部文件 404（兩種 base）、整合巡檢（兩種 base）。
+- **配色只在外觀測試切換**：整合巡檢與表格、程式碼工具、文章、閱讀導覽、閱讀設定預覽等元件測試只跑淺色；這些元件斷言只量排版與行為，外觀切換由 `tests/appearance.test.mjs` 驗證。
+- **不再產生首版的人工檢視截圖**（ticket 04／05／06／08 的文章開場、表格比較、程式碼、面板與搜尋截圖）；它們是當時人工檢視的依據，不是斷言。需要重新人工檢視時，另行產生。
+- **輸出驗證器的拒絕規則在 HTML 層驗證**（`tests/verify-output.test.mjs`，對手寫的產物目錄呼叫 `verifyOutput`，涵蓋全部拒絕規則與兩種 base）；建置階段的拒絕（缺少 H1、公開網址衝突、文件未列入主題索引）仍以修改範例內容後建置失敗驗證，同時證明檢查接在建置流程中。
+- 測試前由 suite 一次準備四份共用 baseline：真實內容 `/`、真實內容 `/academy/`、範例內容 `/academy/`（預設網域）與範例內容 `/academy/`（`SITE_URL` 為空）；建置一律不繼承呼叫端環境的 `SITE_URL`。範例內容屬於建置輸入，測試期間變更仍會使結果失效。
+- **桌面正文起點 ≤610px 只在範例文章驗證**：首版以 ELB／CloudFront 兩篇真實文章驗證；精簡後不再對真實長導言文章驗證，未決問題見「剩餘範圍」。
+
+| 測試 | 內容與 base | 主要範圍 |
+| --- | --- | --- |
+| `tests/integration.test.mjs` | 真實內容，兩種 base；200% 模擬用範例 `/academy/` | 全部網址 200、Pagefind 索引等於公開清單、首頁／主題索引／全部文章 390／1440 淺色不溢出與字型、搜尋介面命中與主題切換選項的 base；200% 文字縮放下正文、跳至內容、外觀、搜尋與主題導覽可鍵盤觸及 |
+| `tests/seo.test.mjs` | 真實內容，兩種 base；預覽用範例 `SITE_URL` 為空 | 全站摘要、canonical、Open Graph／X、JSON-LD、sitemap、社群圖片；無網域預覽與網域設定拒絕 |
+| `tests/site.test.mjs` | 真實內容 `/`；範例 fixture | 每篇單一 H1 與正文、導覽順序；渲染範例、標題變更不改網址、直開與重新整理、主題標題錨點、同源資源 200、內部文件 404（兩種 base）；三種建置階段拒絕 |
+| `tests/verify-output.test.mjs` | 手寫產物目錄 | 缺少目標、缺少段落與目錄網址錨點、內部來源、缺首頁、重複 id、部署路徑外與越界參照、缺目錄索引 |
+| `tests/article.test.mjs`、`tests/appearance.test.mjs` | 範例 `/academy/` | 首頁與主題起點、閱讀順序、文件序號與前後篇、外觀切換、可見焦點、跳至內容；桌面正文起點 ≤610px、680px 正文、固定目錄、文末收尾帶；手機精簡開場 |
+| `tests/tables.test.mjs` | 範例 `/academy/` | 無 JS 手機卡片與欄名；鍵盤切換、工具列不跳動；寬表格 680–880px 且只在自身捲動；主題索引收合區每張表格的卡片與切換工具（JS 開／關） |
+| `tests/code-tools.test.mjs` | 範例 `/academy/` | 語言標籤、精確原文複製、超寬換行與尺寸切換可逆、捲動提示、失敗回饋；框線圖保留排版、無 JS 局部捲動 |
+| `tests/reading-navigation.test.mjs`、`tests/reading-settings.test.mjs` | 範例 `/academy/` | 固定目錄、目前段落與進度；手機章節面板（唯一一處）；閱讀設定的保存、鍵盤、毀損值復原、儲存遭拒與無 JS |
+| `tests/search.test.mjs` | 範例 `/academy/` | 中文標題與正文、英文詞、主題標籤、零結果、安全文字、過期查詢；首次模組與索引失敗後重試及錯誤碼命中導向（唯一一處） |
+| `tests/share-tools.test.mjs` | 範例 `/academy/`，兩種 `SITE_URL` | 複製乾淨網址、原生分享成功／取消／失敗、剪貼簿失敗與不存在、無 JS 平台連結與瀏覽器分享提示 |
+
+首版覆蓋表格各列的去向：
+
+| 首版列 | 現行位置 |
+| --- | --- |
+| `npm run build`、`tests/site.test.mjs` | 頁數、單一來源與閱讀順序、站內目標與錨點：每次建置的輸出驗證器與 `tests/site.test.mjs`（真實內容）；主題標題錨點與 fragment 導航、直開與重新整理、內部文件排除：`tests/site.test.mjs`（範例內容，兩種 base）；拒絕規則：`tests/verify-output.test.mjs` 與建置階段拒絕測試 |
+| `tests/integration.test.mjs` | 同檔，真實內容；拿掉深色維度，增加首頁與主題索引頁 |
+| `tests/article.test.mjs`、`tests/appearance.test.mjs` | 同檔，範例 `/academy/`；ELB／CloudFront 正文起點改由範例文章 A 驗證 |
+| `tests/tables.test.mjs` | 同檔，範例 `/academy/`；主題索引表格以範例主題索引驗證 |
+| `tests/code-tools.test.mjs` | 同檔，範例 `/academy/`；超寬程式碼與框線圖移入範例文章 A |
+| `tests/reading-navigation.test.mjs` | 同檔，範例 `/academy/`；手機章節面板只在此驗證 |
+| `tests/search.test.mjs` | 同檔，範例 `/academy/`；根路徑搜尋的執行期 base 由 `tests/integration.test.mjs` 驗證 |
+
+本次結果：code review 修正後的最終版本 `pnpm run verify` 連續兩次 **56／56 通過**，牆鐘 60.6、57.9 秒（精簡前約 150 秒），macOS arm64 本機、無其他負載。CI 結果見整合分支的 PR。

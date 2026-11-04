@@ -58,6 +58,8 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec playwright install --with-deps chromium
+      # The runner image already ships Chrome's system libraries; --with-deps spent
+      # 8-30s in apt depending on the mirror. Tests only launch headless Chromium.
+      - run: pnpm exec playwright install --only-shell chromium
       # Node assigns whole test files to shards by their position in this sorted list.
       - run: node scripts/tasks.mjs test --test-shard=${{ matrix.shard }}/4 tests/*.test.mjs
