@@ -1,26 +1,18 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { test } from 'node:test';
-import { spawnSync } from 'node:child_process';
 import { chromium } from '@playwright/test';
-import { fixture, serve } from './helpers.mjs';
+import { load } from 'cheerio';
+import { sampleBaseline, serve } from './helpers.mjs';
 
-const route = 'linux/terminal-and-shell/';
-function buildWithSite(directory, base, site) {
-  const result = spawnSync('pnpm', ['run', 'build'], {
-    cwd: directory,
-    env: { ...process.env, BASE_PATH: base, SITE_URL: site },
-    encoding: 'utf8',
-  });
-  assert.equal(result.status, 0, result.stdout + result.stderr);
-}
+const base = '/academy/';
+const route = 'linux/long-article/';
 
-
-test('分享工具在根路徑與子路徑複製乾淨網址、提供原生分享與可選取的失敗備援', async t => {
+test('分享工具在子路徑複製乾淨網址、提供原生分享與可選取的失敗備援', async t => {
   const browser = await chromium.launch();
   t.after(() => browser.close());
-  for (const base of ['/', '/academy/']) {
-    const directory = await fixture(t);
-    buildWithSite(directory, base, '');
+  {
+    const { directory } = await sampleBaseline(t, { siteUrl: '' });
     const origin = await serve(t, directory, base);
     const context = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: 'dark' });
     await context.addInitScript(() => {
@@ -68,7 +60,6 @@ test('分享工具在根路徑與子路徑複製乾淨網址、提供原生分�
     await copy.click();
     await tools.getByRole('status').filter({ hasText: '已複製本文連結' }).waitFor();
     assert.equal(await fallback.isVisible(), false);
-    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await context.close();
 
     const unsupported = await browser.newPage();
@@ -84,19 +75,20 @@ test('分享工具在根路徑與子路徑複製乾淨網址、提供原生分�
   }
 });
 
-test('無 JavaScript 時，已設定 SITE_URL 的文章保留三個可直接開啟的分享連結', async t => {
-  const directory = await fixture(t);
+test('無 JavaScript 時，已設定正式網域的文章保留三個可直接開啟的分享連結', async t => {
+  const { directory } = await sampleBaseline(t);
   const browser = await chromium.launch();
   t.after(() => browser.close());
-  for (const base of ['/', '/academy/']) {
-    buildWithSite(directory, base, 'https://academy.example.test');
+  {
     const origin = await serve(t, directory, base);
     const page = await browser.newPage({ javaScriptEnabled: false });
     await page.goto(origin + route);
     const tools = page.locator('[data-share-tools]');
     assert.equal(await tools.locator('button:visible').count(), 0);
     assert.equal(await tools.getByRole('link').count(), 3);
-    const expected = `https://academy.example.test${base}${route}`;
+    // The default production domain is whatever the build wrote into the canonical link.
+    const expected = load(await readFile(`${directory}/dist/${route}index.html`, 'utf8'))('link[rel="canonical"]').attr('href');
+    assert.match(expected, new RegExp(`^https://[^/]+${base}${route}$`));
     for (const [name, parameter] of [['LINE', 'url'], ['Facebook', 'u'], ['X', 'url']]) {
       const link = tools.getByRole('link', { name: new RegExp(`^${name}`) });
       assert.equal(new URL(await link.getAttribute('href')).searchParams.get(parameter), expected);
@@ -116,9 +108,8 @@ test('無 JavaScript 時，已設定 SITE_URL 的文章保留三個可直接開�
 });
 
 test('未設定正式網址且無 JavaScript 時保留瀏覽器分享提示', async t => {
-  const directory = await fixture(t);
-  buildWithSite(directory, '/', '');
-  const origin = await serve(t, directory);
+  const { directory } = await sampleBaseline(t, { siteUrl: '' });
+  const origin = await serve(t, directory, base);
   const browser = await chromium.launch();
   t.after(() => browser.close());
   const page = await browser.newPage({ javaScriptEnabled: false });

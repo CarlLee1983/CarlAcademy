@@ -2,8 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 import { test } from 'node:test';
 import { load } from 'cheerio';
-import { spawnSync } from 'node:child_process';
-import { baseline, fixture } from './helpers.mjs';
+import { baseline, sampleBaseline, sampleDocsRoot } from './helpers.mjs';
 import { siteOrigin, descriptionText, jsonLd } from '../src/utils/seo.ts';
 
 const origin = 'https://academy.gravito.dev';
@@ -59,10 +58,9 @@ for (const base of ['/', '/academy/']) {
 }
 
 test('未設定正式網域的預覽不產生假的 canonical、社群圖片與網站地圖 URL', async t => {
-  const directory = await fixture(t);
-  const result = spawnSync('pnpm', ['run', 'build'], { cwd: directory, env: { ...process.env, SITE_URL: '', BASE_PATH: '/' }, encoding: 'utf8' });
-  assert.equal(result.status, 0, result.stdout + result.stderr);
-  const $ = load(await readFile(`${directory}/dist/linux/what-is-linux/index.html`, 'utf8'));
+  const { directory } = await sampleBaseline(t, { siteUrl: '' });
+  const [article] = (await readdir(`${sampleDocsRoot}/linux`)).filter(name => name.endsWith('.md') && name !== 'README.md');
+  const $ = load(await readFile(`${directory}/dist/linux/${article.slice(0, -3)}/index.html`, 'utf8'));
   assert.equal($('link[rel="canonical"], meta[property="og:url"], meta[property="og:image"], script[type="application/ld+json"]').length, 0);
   assert.equal($('meta[name="robots"]').attr('content'), 'noindex, follow');
   assert.equal(await readFile(`${directory}/dist/robots.txt`, 'utf8'), 'User-agent: *\nDisallow: /\n');
