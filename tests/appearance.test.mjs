@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
+import path from "node:path";
 import { test } from "node:test";
 import { chromium } from "@playwright/test";
 import { topics } from "../src/utils/urls.ts";
-import { sampleBaseline, serve } from "./helpers.mjs";
-import { readingOrder, title } from "./sample-content.mjs";
+import { sampleBaseline, sampleDocsRoot, serve } from "./helpers.mjs";
+import { h1Of, readingOrder } from "./sample-content.mjs";
 
 const base = "/academy/";
 
@@ -64,6 +65,6 @@ test("首頁與主題頁提供實際閱讀起點及可持續的外觀選擇", as
   await chooser.selectOption(`${base}api/`);
   await page.waitForURL("**/api/");
   assert.equal(await page.locator("h1").textContent(), apiName);
-  assert.match(await title("api/README.md"), new RegExp("^" + apiName));
+  assert.match(await h1Of(path.join(sampleDocsRoot, "api/README.md")), new RegExp("^" + apiName));
   await page.close();
 });

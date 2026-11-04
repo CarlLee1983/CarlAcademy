@@ -53,8 +53,7 @@ test('全部公開頁面可直接 HTTP 開啟，首頁、主題索引與所有�
     const runtimePage = await browser.newPage();
     await runtimePage.goto(url);
     const chooserValues = await runtimePage.locator('#topic-chooser option').evaluateAll(nodes => nodes.map(node => node.value));
-    assert.ok(chooserValues.length > topics.length, `${base} topic chooser lists every topic`);
-    for (const value of chooserValues) assert.ok(value.startsWith(base), `${base} chooser option ${value}`);
+    assert.deepEqual([...chooserValues].sort(), [base, ...topics.map(topic => `${base}${topic}/`)].sort(), `${base} topic chooser targets`);
     await runtimePage.getByRole('button', { name: '搜尋文件', exact: true }).click();
     const searchInput = runtimePage.getByRole('searchbox', { name: '搜尋關鍵字' });
     await expect(searchInput).toBeFocused();

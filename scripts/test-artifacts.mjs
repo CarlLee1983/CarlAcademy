@@ -19,6 +19,8 @@ export const artifactKeys = baselines.map(({ key }) => key);
 // Key of the baseline for `{ content: 'real', base }` or `{ content: 'sample', siteUrl }` (siteUrl '' means no production domain).
 export function artifactKey({ content, base, siteUrl }) {
   const sample = content === 'sample';
+  // Only the default domain and no domain have shared builds; any other siteUrl needs its own build.
+  if (sample && siteUrl !== undefined && siteUrl !== '') throw new Error(`No shared baseline for siteUrl ${siteUrl}`);
   const found = baselines.find(entry => entry.sample === sample && (sample ? entry.siteUrl === (siteUrl === '' ? '' : undefined) : entry.base === base));
   if (!found) throw new Error(`No shared baseline for ${JSON.stringify({ content, base, siteUrl })}`);
   return found.key;

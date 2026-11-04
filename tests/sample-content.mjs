@@ -13,10 +13,6 @@ export function sampleSource(relative) {
   return readFile(path.join(sampleDocsRoot, relative), 'utf8');
 }
 
-export async function title(relative) {
-  return (await sampleSource(relative)).match(/^# (.+)$/m)[1];
-}
-
 const parser = unified().use(remarkParse).use(remarkGfm);
 
 // H1 text of a Markdown file, the title the site publishes.

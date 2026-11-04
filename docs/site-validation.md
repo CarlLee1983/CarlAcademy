@@ -63,7 +63,7 @@ pnpm run verify
 
 ## 測試分層（2026-11-04）
 
-依 [測試套件精簡規格](../.scratch/test-suite-slimming/spec.md) 調整驗證方式；上方首版覆蓋表格保留為歷史證據，驗收範圍不變。來源為 `test/slim-suite` 整合分支 `923c234`。
+依 [測試套件精簡規格](../.scratch/test-suite-slimming/spec.md) 調整驗證方式；上方首版覆蓋表格保留為歷史證據，驗收範圍不變。來源為 `test/slim-suite` 整合分支（code review 修正後的最終提交）。
 
 分層原則（刻意的取捨，不是遺漏）：
 
@@ -102,4 +102,4 @@ pnpm run verify
 | `tests/reading-navigation.test.mjs` | 同檔，範例 `/academy/`；手機章節面板只在此驗證 |
 | `tests/search.test.mjs` | 同檔，範例 `/academy/`；根路徑搜尋的執行期 base 由 `tests/integration.test.mjs` 驗證 |
 
-本次結果：`pnpm run verify` 共五次 **56／56 通過**，牆鐘 56.9–64.0 秒（精簡前約 150 秒），macOS arm64 本機、無其他負載。CI 結果見整合分支的 PR。
+本次結果：code review 修正後的最終版本 `pnpm run verify` 連續兩次 **56／56 通過**，牆鐘 60.6、57.9 秒（精簡前約 150 秒），macOS arm64 本機、無其他負載。CI 結果見整合分支的 PR。

@@ -75,8 +75,7 @@ test('讀者可複製精確原文、操作超寬換行並取得真實捲動及�
   assert.equal(await frame.evaluate(node => getComputedStyle(node, '::after').content), 'none');
   assert.equal(await pre.textContent(), source);
   await page.setViewportSize({ width: 390, height: 664 });
-  await expect(wrap).toBeVisible();
-  assert.equal(await wrap.isVisible(), true, 'Wrapped overflow remains reversible after resize');
+  await expect(wrap, 'Wrapped overflow remains reversible after resize').toBeVisible();
   await wrap.click();
   assert.equal(await wrap.getAttribute('aria-pressed'), 'false');
   assert.ok(await pre.evaluate(node => node.scrollWidth > node.clientWidth));
