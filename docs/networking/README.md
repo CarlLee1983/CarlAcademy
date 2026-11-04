@@ -3,8 +3,8 @@
 從封包交換、位址與路由出發，理解資料如何在不同主機與網路邊界間可靠或低延遲地傳輸。
 本主題聚焦跨主機通訊的共同基礎概念；特定交換器設備指令、無線射頻調變細節不在本索引範圍。
 
-**目前狀態：已整理下列 12 篇基礎與進階架構文章。**
-查證日期：2026-11-04。依據 IETF RFC 規格標準（RFC 768、RFC 791、RFC 792、RFC 1034/1035、RFC 1122、RFC 1191、RFC 4291、RFC 4632、RFC 4787、RFC 4861、RFC 4862、RFC 5246、RFC 5389、RFC 6066、RFC 8200、RFC 8305、RFC 8445、RFC 8446、RFC 8656、RFC 9000、RFC 9112、RFC 9113、RFC 9114、RFC 9293）、MDN Web Docs 及文中列出的一手技術來源。
+**目前狀態：已整理下列 16 篇基礎與進階架構文章。**
+查證日期：2026-11-04。依據 IETF RFC 規格標準（RFC 768、RFC 791、RFC 792、RFC 1034/1035、RFC 1122、RFC 1191、RFC 4271、RFC 4291、RFC 4632、RFC 4786、RFC 4787、RFC 4861、RFC 4862、RFC 5246、RFC 5389、RFC 6066、RFC 6480、RFC 6811、RFC 7348、RFC 7871、RFC 8200、RFC 8305、RFC 8365、RFC 8445、RFC 8446、RFC 8656、RFC 8926、RFC 9000、RFC 9111、RFC 9112、RFC 9113、RFC 9114、RFC 9293）、NIST SP 800-207、SPIFFE 規範、MDN Web Docs 及文中列出的一手技術來源。
 各篇以抽象通訊原理為主，實務指令以現代 Linux 工具（`ip`, `ss`, `dig`, `tcpdump`, `traceroute`）輔助說明，不代表特定網通廠商硬體的私有配置指南。
 
 ## 閱讀入口
@@ -23,6 +23,10 @@
 | [網路診斷與觀測：ICMP、路徑追蹤與封包分析](network-troubleshooting-and-observability.md) | 當連線異常時如何分層排查？ICMP 控制訊息、PMTUD 黑洞、traceroute 原理與 tcpdump 簽章為何？ |
 | [NAT 穿透與防火牆：網路位址轉換的類型與穿透技術](nat-and-firewall-traversal.md) | 私有網路下的主機如何跨越邊界建立通訊？錐型與對稱型 NAT、STUN、TURN 與 ICE 打洞如何運作？ |
 | [IPv6 架構與過渡機制：定址、鄰居探索與雙堆疊](ipv6-architecture-and-transition.md) | 128 位元定址、簡化固定標頭與 NDP 帶來哪些改進？雙堆疊、Happy Eyeballs 與 SLAAC 如何運作？ |
+| [BGP 自治系統、跨域路由與 Anycast 架構](bgp-and-autonomous-systems.md) | 全球數萬個自治系統如何透過路徑向量協定路由？Anycast 如何實現就近導流與抗 DDoS？ |
+| [軟體定義網路與 Overlay 虛擬化：VXLAN 與 Geneve](sdn-and-overlay-networks.md) | 控制面與資料面如何解耦？MAC-in-UDP 封裝、EVPN-BGP 控制面與 MTU 挑戰為何？ |
+| [零信任網路架構與雙向 TLS (mTLS) 通訊實務](zero-trust-and-mtls.md) | 傳統邊界防禦為何失效？mTLS 交握驗證、SPIFFE/SPIRE 身分標準與服務網格如何落實？ |
+| [CDN 內容傳遞網路與邊緣運算架構](cdn-and-edge-delivery.md) | 邊緣節點如何縮減跨洋時延？階層快取、HTTP 快取控制、動態連線加速與邊緣運算為何？ |
 
 建議先從分層模型建立基礎概念，再依「定址與路由」、「傳輸與安全協定」及「進階網路架構與排查」循序理解。
 
@@ -40,6 +44,10 @@
 10. **[網路診斷與觀測：ICMP、路徑追蹤與封包分析](network-troubleshooting-and-observability.md)**：建立由下而上的分層排查心智模型，掌握 ICMP 控制訊息、PMTUD、traceroute 與 tcpdump 封包分析。
 11. **[NAT 穿透與防火牆：網路位址轉換的類型與穿透技術](nat-and-firewall-traversal.md)**：理解私有網路與防火牆後的連線追蹤、錐型與對稱型 NAT 行為，以及 STUN、TURN 與 ICE 打洞協商。
 12. **[IPv6 架構與過渡機制：定址、鄰居探索與雙堆疊](ipv6-architecture-and-transition.md)**：理解下一代網際網路的 128 位元定址、取消廣播的 NDP 協定、SLAAC 自動配置與 Happy Eyeballs 雙堆疊過渡技術。
+13. **[BGP 自治系統、跨域路由與 Anycast 架構](bgp-and-autonomous-systems.md)**：理解全球網際網路自治系統間的路徑向量路由、BGP Anycast 全球負載分流與 RPKI 防劫持。
+14. **[軟體定義網路與 Overlay 虛擬化：VXLAN 與 Geneve](sdn-and-overlay-networks.md)**：理解雲端與容器多租戶環境下的控制與資料面分離、MAC-in-UDP 封裝、EVPN-BGP 控制面與 MTU 規劃。
+15. **[零信任網路架構與雙向 TLS (mTLS) 通訊實務](zero-trust-and-mtls.md)**：理解「從不信任，始終驗證」的安全哲學，掌握雙向 TLS 密鑰協商、SPIFFE/SPIRE 工作負載身分標準與服務網格透明代理。
+16. **[CDN 內容傳遞網路與邊緣運算架構](cdn-and-edge-delivery.md)**：理解現代分散式內容傳遞體系，掌握 Anycast/GeoDNS 流量調度、階層式快取、條件請求驗證、動態長連線池化與邊緣運算。
 
 ## 與既有主題的分工
 
@@ -51,4 +59,4 @@
 
 ## 後續方向
 
-後續可視需要擴充進階主題，例如 BGP 自治系統與網際網路跨域路由、軟體定義網路（SDN）與 Overlay 網路（VXLAN / Geneve）、Zero Trust 網路架構與 mTLS 雙向認證實務。
+後續可視需要擴充其他進階通訊主題，例如衛星與行動通訊網路架構（5G SA / Core Network）、傳輸層壅塞控制演算法深研（BBR / Cubic 數學模型），或延伸至分散式系統跨節點通訊與共識協定。

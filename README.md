@@ -13,7 +13,7 @@
 - [API 共通知識索引](docs/api/README.md)：已有 18 篇概念文章，涵蓋共通基礎、延伸議題（含長時間操作與 Webhook 事件回呼）、HTTP、REST、gRPC 與 GraphQL；語言實作按需求補充。
 - [關聯式資料庫索引](docs/relational-databases/README.md)：已有 13 篇文章，涵蓋資料模型、鍵與關聯、SQL、約束、正規化、交易隔離、索引、MVCC 與鎖定、結構演進與遷移、檢視表與觸發器、CTE 與視窗函數、JSONB 混合建模，以及分割表與連線資源管理；產品範例明示適用範圍。
 - [Web 應用資安索引](docs/web-security/README.md)：已有 13 篇文章，涵蓋信任邊界、登入與 Session、存取控制、SQL Injection、XSS、CSRF、機密與敏感資料、檔案上傳、SSRF、第三方登入（OAuth／OIDC）、TLS 與傳輸邊界、限流與配額防護，以及軟體供應鏈與第三方腳本邊界。
-- [電腦網路知識索引](docs/networking/README.md)：已有 12 篇文章，涵蓋封包交換與網路模型、IP 位址與 CIDR、路由轉送、DNS 解析、TCP／UDP 傳輸、HTTP 協定演進（HTTP/1.1~HTTP/3 QUIC）、TLS 1.2／1.3 安全傳輸、L4／L7 負載平衡與反向代理、網路診斷與 ICMP／tcpdump 觀測、NAT 穿透（STUN／TURN／ICE）以及 IPv6 架構與雙堆疊過渡。
+- [電腦網路知識索引](docs/networking/README.md)：已有 16 篇文章，涵蓋封包交換與網路模型、IP 位址與 CIDR、路由轉送、DNS 解析、TCP／UDP 傳輸、HTTP 協定演進（HTTP/1.1~HTTP/3 QUIC）、TLS 1.2／1.3 安全傳輸、L4／L7 負載平衡與反向代理、網路診斷與 ICMP／tcpdump 觀測、NAT 穿透（STUN／TURN／ICE）、IPv6 架構與雙堆疊過渡、BGP 跨域路由與 Anycast、SDN 與 Overlay 虛擬化（VXLAN／Geneve）、零信任與 mTLS 雙向認證，以及 CDN 邊緣快取與動態傳遞架構。
 - [分散式系統知識索引](docs/distributed-systems/README.md)：完整主線規劃 18 篇，已撰寫前 4 篇，從部分失敗、冪等副作用、過載與背壓，建立時鐘及因果關係的基礎；後續依序深入一致性、複寫、共識與跨服務工作。
 
 各主題可以獨立閱讀與擴充，不要求先學完 Linux 才閱讀其他內容。需要其他主題的背景知識時，以相關文件連結補充。
