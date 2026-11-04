@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import { readdir, mkdir } from 'node:fs/promises';
 import { chromium, expect } from '@playwright/test';
 import { baseline, sampleBaseline, serve } from './helpers.mjs';
+import { readingOrder } from './sample-content.mjs';
 import { topics } from '../src/utils/urls.ts';
 
 const evidence = '/tmp/carlacademy-ticket08-evidence';
@@ -20,7 +21,7 @@ async function publicRoutes() {
 
 // The output verifier checks every local target and fragment during both builds.
 // This observes the same real inventory through ordinary HTTP and actual browser layout.
-test('全部公開頁面可直接 HTTP 開啟，所有文章在兩種部署、尺寸下不溢出', { timeout: 300000 }, async t => {
+test('全部公開頁面可直接 HTTP 開啟，首頁、主題索引與所有文章在兩種部署、尺寸下不溢出，搜尋與主題選單使用部署路徑', { timeout: 300000 }, async t => {
   const { articles, all } = await publicRoutes();
   const browser = await chromium.launch();
   t.after(() => browser.close());
@@ -47,13 +48,30 @@ test('全部公開頁面可直接 HTTP 開啟，所有文章在兩種部署、�
       assert.equal(response.status, 200, base + route);
       assert.match(await response.text(), /<main[ >]/);
     }
+    // The product's own runtime config (search dialog, topic chooser) must carry the deployment base.
+    const [firstArticle] = await readingOrder(topics[0], 'docs');
+    const runtimePage = await browser.newPage();
+    await runtimePage.goto(url);
+    const chooserValues = await runtimePage.locator('#topic-chooser option').evaluateAll(nodes => nodes.map(node => node.value));
+    assert.ok(chooserValues.length > topics.length, `${base} topic chooser lists every topic`);
+    for (const value of chooserValues) assert.ok(value.startsWith(base), `${base} chooser option ${value}`);
+    await runtimePage.getByRole('button', { name: '搜尋文件', exact: true }).click();
+    const searchInput = runtimePage.getByRole('searchbox', { name: '搜尋關鍵字' });
+    await expect(searchInput).toBeFocused();
+    await searchInput.fill(firstArticle.title);
+    const found = runtimePage.locator(`.search-results a[href="${base}${firstArticle.route}"]`);
+    await expect(found).toBeVisible();
+    const href = await found.getAttribute('href');
+    assert.ok(href.startsWith(base), href);
+    assert.equal((await fetch(new URL(href, url).href)).status, 200, href);
+    await runtimePage.close();
     for (const width of [390, 1440]) {
       {
         const page = await browser.newPage({ viewport: { width, height: width === 390 ? 664 : 900 }, colorScheme: 'light', reducedMotion: 'reduce' });
         const failures = [];
         page.on('requestfailed', request => failures.push(request.url()));
         page.on('response', response => { if (response.status() >= 400) failures.push(`${response.status()} ${response.url()}`); });
-        for (const route of articles) {
+        for (const route of all) {
           assert.equal((await page.goto(url + route)).status(), 200);
           await page.evaluate(() => document.fonts.ready);
           const metrics = await page.evaluate(() => ({
@@ -70,7 +88,7 @@ test('全部公開頁面可直接 HTTP 開啟，所有文章在兩種部署、�
       }
     }
   }
-  t.diagnostic(`${all.length} public routes; ${articles.length * 4} article/layout combinations after document.fonts.ready`);
+  t.diagnostic(`${all.length} public routes; ${all.length * 4} page/layout combinations after document.fonts.ready`);
 });
 
 async function doubleText(page) {

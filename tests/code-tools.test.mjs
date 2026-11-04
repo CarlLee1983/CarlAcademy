@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { load } from 'cheerio';
-import { chromium } from '@playwright/test';
+import { chromium, expect } from '@playwright/test';
 import { sampleBaseline, serve } from './helpers.mjs';
 import { codeBlock, readingOrder } from './sample-content.mjs';
 
@@ -38,8 +38,7 @@ test('建置產物提供程式碼標籤與工具列，無 JS 保留精確原文�
   assert.ok(await pre.evaluate(node => node.scrollWidth > node.clientWidth));
   await pre.focus();
   await page.keyboard.press('ArrowRight');
-  await page.waitForTimeout(100);
-  assert.ok(await pre.evaluate(node => node.scrollLeft > 0));
+  await expect.poll(() => pre.evaluate(node => node.scrollLeft)).toBeGreaterThan(0);
   await page.close();
 });
 
@@ -68,8 +67,7 @@ test('讀者可複製精確原文、操作超寬換行並取得真實捲動及�
   await page.getByRole('button', { name: '已複製', exact: true }).waitFor();
   assert.equal(await page.evaluate(() => navigator.clipboard.readText()), source);
   await pre.evaluate(node => { node.scrollLeft = node.scrollWidth; });
-  await page.waitForTimeout(50);
-  assert.equal(await frame.evaluate(node => getComputedStyle(node, '::after').content), 'none');
+  await expect.poll(() => frame.evaluate(node => getComputedStyle(node, '::after').content)).toBe('none');
   await wrap.focus();
   await page.keyboard.press('Space');
   assert.equal(await wrap.getAttribute('aria-pressed'), 'true');
@@ -77,7 +75,7 @@ test('讀者可複製精確原文、操作超寬換行並取得真實捲動及�
   assert.equal(await frame.evaluate(node => getComputedStyle(node, '::after').content), 'none');
   assert.equal(await pre.textContent(), source);
   await page.setViewportSize({ width: 390, height: 664 });
-  await page.waitForTimeout(100);
+  await expect(wrap).toBeVisible();
   assert.equal(await wrap.isVisible(), true, 'Wrapped overflow remains reversible after resize');
   await wrap.click();
   assert.equal(await wrap.getAttribute('aria-pressed'), 'false');

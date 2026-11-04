@@ -6,6 +6,7 @@ import {
   buildEnv,
   copyRealSite,
   copySampleSite,
+  artifactKey,
   readArtifact,
   sampleDocsRoot,
 } from "../scripts/test-artifacts.mjs";
@@ -13,17 +14,17 @@ import {
 export { sampleDocsRoot };
 // Shared baseline of the REAL content at `base`, or a fresh build when run standalone.
 export async function baseline(t, base = "/") {
-  const shared = await readArtifact(base);
+  const shared = await readArtifact(artifactKey({ content: "real", base }));
   if (shared) return shared;
-  return buildFresh(t, await workspace(t, copyRealSite), base);
+  return buildFresh(await workspace(t, copyRealSite), base);
 }
 // Shared baseline of the SAMPLE content at /academy/. `siteUrl: ""` means no production domain.
 export async function sampleBaseline(t, { siteUrl } = {}) {
-  const shared = await readArtifact(siteUrl === "" ? "sample:no-site-url" : "sample");
+  const shared = await readArtifact(artifactKey({ content: "sample", siteUrl }));
   if (shared) return shared;
-  return buildFresh(t, await fixture(t), "/academy/", { siteUrl });
+  return buildFresh(await fixture(t), "/academy/", { siteUrl });
 }
-function buildFresh(t, directory, base, options) {
+function buildFresh(directory, base, options) {
   const result = build(directory, base, options);
   if (result.status !== 0) throw new Error(result.stdout + result.stderr);
   return { directory, result };

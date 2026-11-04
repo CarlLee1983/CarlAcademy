@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { chromium } from '@playwright/test';
+import { chromium, expect } from '@playwright/test';
 import { topics } from '../src/utils/urls.ts';
 import { sampleBaseline, serve } from './helpers.mjs';
 import { markdownTables, readingOrder } from './sample-content.mjs';
@@ -68,8 +68,7 @@ test('表格以鍵盤切換比較且工具列不跳動，桌面寬表格只在�
   assert.equal(Math.round((await scroll.boundingBox()).width), 390);
   await scroll.focus();
   await page.keyboard.press('ArrowRight');
-  await page.waitForTimeout(200);
-  assert.ok(await scroll.evaluate(node => node.scrollLeft) > 0, 'Keyboard can scroll the comparison region');
+  await expect.poll(() => scroll.evaluate(node => node.scrollLeft), { message: 'Keyboard can scroll the comparison region' }).toBeGreaterThan(0);
   await button.focus();
   const comparingTop = (await tools.boundingBox()).y;
   await page.keyboard.press('Space');
@@ -101,7 +100,11 @@ test('展開主題說明後，所有主題表格都有卡片與切換工具', as
   const url = await serve(t, directory, base);
   let checked = 0;
   for (const topic of topics) {
-    const [first, ...rest] = await markdownTables(`${topic}/README.md`).catch(() => []);
+    // A topic without a sample README has no sample tables; any other failure is real.
+    const [first, ...rest] = await markdownTables(`${topic}/README.md`).catch(error => {
+      if (error.code === 'ENOENT') return [];
+      throw error;
+    });
     if (!first) continue;
     const count = rest.length + 1;
     checked++;

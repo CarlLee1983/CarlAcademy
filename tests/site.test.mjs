@@ -1,50 +1,19 @@
 import assert from 'node:assert/strict';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
-import path from 'node:path';
 import { test } from 'node:test';
 import { load } from 'cheerio';
-import { toString } from 'mdast-util-to-string';
-import remarkGfm from 'remark-gfm';
-import remarkParse from 'remark-parse';
-import { unified } from 'unified';
-import { visit } from 'unist-util-visit';
+import GithubSlugger from 'github-slugger';
 import { topics } from '../src/utils/urls.ts';
 import { baseline, build, fixture, serve } from './helpers.mjs';
+import { h1Of, readingOrder } from './sample-content.mjs';
 
-const parser = unified().use(remarkParse).use(remarkGfm);
-
-async function markdownTree(file) {
-  return parser.parse(await readFile(file, 'utf8'));
-}
-
-async function titleOf(file) {
-  const tree = await markdownTree(file);
-  return toString(tree.children.find(node => node.type === 'heading' && node.depth === 1)).trim();
-}
-
-// The reading order is the topic index's relative document links, deduplicated, as src/utils/documents.ts defines it.
-async function readingOrderTitles(root, topic) {
-  const directory = path.join(root, 'docs', topic);
-  const links = [];
-  visit(await markdownTree(path.join(directory, 'README.md')), 'link', node => { links.push(node.url); });
-  const files = [];
-  for (const link of links) {
-    if (/^(?:[a-z][a-z\d+.-]*:|\/\/|#)/i.test(link)) continue;
-    const file = path.resolve(directory, decodeURIComponent(link.split(/[?#]/)[0]));
-    if (path.dirname(file) !== directory || !file.endsWith('.md') || file === path.join(directory, 'README.md')) continue;
-    if (!files.includes(file)) files.push(file);
-  }
-  return Promise.all(files.map(titleOf));
-}
+// Heading ids as Astro's Markdown pipeline makes them.
+const slug = text => new GithubSlugger().slug(text);
+const readingOrderTitles = async (root, topic) => (await readingOrder(topic, `${root}/docs`)).map(entry => entry.title);
 
 async function navTitles(directory, topic) {
   const page = load(await readFile(`${directory}/dist/${topic}/index.html`, 'utf8'));
   return page('nav[aria-label="本主題文件"] ol a').map((_, node) => page(node).text()).get();
-}
-
-// Heading ids follow GitHub-style slugs: lowercase, punctuation dropped, spaces become hyphens.
-function slug(text) {
-  return text.toLowerCase().replace(/[^\p{L}\p{N}\p{M}\s_-]/gu, '').replace(/ /g, '-');
 }
 
 test('公開文件在正式靜態產物中可直接閱讀', async t => {
@@ -61,6 +30,8 @@ test('公開文件在正式靜態產物中可直接閱讀', async t => {
       assert.equal(html('main h1').length, 1, `${topic}/${source}`);
       assert.ok(html('main').text().length > 100, `${topic}/${source}`);
     }
+    const topicPage = load(await readFile(`${directory}/dist/${topic}/index.html`, 'utf8'));
+    assert.equal(topicPage('main h1').attr('id'), slug(await h1Of(`${directory}/docs/${topic}/README.md`)), `${topic}: H1 id follows the github-slugger slug of the real title`);
     assert.deepEqual(await navTitles(directory, topic), await readingOrderTitles(directory, topic), `${topic}: navigation follows the index reading order`);
   }
 });
@@ -109,7 +80,7 @@ test('根路徑與子路徑的正式網站透過一般 HTTP 可直接閱讀，�
   await writeFile(`${dir}/PLAN.md`, '# 範例計畫\n');
   await writeFile(`${dir}/GLOSSARY.md`, '# 範例詞彙表\n');
   const internalFiles = ['PLAN.md', 'GLOSSARY.md', 'docs/adr/0001-sample.md', 'docs/site-design.md', 'docs/notes.md', 'adr/0001-sample.md', 'linux/graphql-short.md'];
-  const linuxTitle = await titleOf(`${dir}/docs/linux/README.md`);
+  const linuxTitle = await h1Of(`${dir}/docs/linux/README.md`);
   const browser = await chromium.launch();
   t.after(() => browser.close());
   for (const base of ['/', '/academy/']) {
@@ -137,7 +108,7 @@ test('根路徑與子路徑的正式網站透過一般 HTTP 可直接閱讀，�
     const order = await page.locator('nav[aria-label="本主題文件"] ol a').allTextContents();
     assert.deepEqual(order, await readingOrderTitles(dir, 'linux'));
     for (const topic of topics) {
-      const fragment = slug(await titleOf(`${dir}/docs/${topic}/README.md`));
+      const fragment = slug(await h1Of(`${dir}/docs/${topic}/README.md`));
       await page.goto('about:blank');
       const response = await page.goto(`${origin}${base}${topic}/#${fragment}`);
       assert.equal(response.status(), 200);

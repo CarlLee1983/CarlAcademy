@@ -8,14 +8,21 @@ import { topics } from '../src/utils/urls.ts';
 // Sample content is a build input too: editing it must invalidate the suite snapshot.
 export const sampleDocsRoot = 'tests/fixtures/docs';
 const inputs = ['src', 'docs', sampleDocsRoot, 'public', 'scripts', 'astro.config.ts', 'tsconfig.json', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml'];
-// Keys of the shared baselines: real content at each base, then sample content at /academy/.
-export const artifactKeys = ['/', '/academy/', 'sample', 'sample:no-site-url'];
+// Shared baselines: real content at each base, then sample content at /academy/.
 const baselines = [
   { key: '/', base: '/', sample: false },
   { key: '/academy/', base: '/academy/', sample: false },
   { key: 'sample', base: '/academy/', sample: true },
   { key: 'sample:no-site-url', base: '/academy/', sample: true, siteUrl: '' },
 ];
+export const artifactKeys = baselines.map(({ key }) => key);
+// Key of the baseline for `{ content: 'real', base }` or `{ content: 'sample', siteUrl }` (siteUrl '' means no production domain).
+export function artifactKey({ content, base, siteUrl }) {
+  const sample = content === 'sample';
+  const found = baselines.find(entry => entry.sample === sample && (sample ? entry.siteUrl === (siteUrl === '' ? '' : undefined) : entry.base === base));
+  if (!found) throw new Error(`No shared baseline for ${JSON.stringify({ content, base, siteUrl })}`);
+  return found.key;
+}
 
 // siteUrl omitted means the product default domain, so an inherited SITE_URL must not leak in.
 export function buildEnv(base, siteUrl, env = process.env) {

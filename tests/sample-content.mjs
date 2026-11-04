@@ -1,5 +1,10 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { toString } from 'mdast-util-to-string';
+import remarkGfm from 'remark-gfm';
+import remarkParse from 'remark-parse';
+import { unified } from 'unified';
+import { visit } from 'unist-util-visit';
 import { sampleDocsRoot } from './helpers.mjs';
 
 // Expected values for UI tests are read from the sample Markdown, never typed into the tests.
@@ -12,11 +17,31 @@ export async function title(relative) {
   return (await sampleSource(relative)).match(/^# (.+)$/m)[1];
 }
 
-// Articles of a topic in the order its index recommends, as { title, source, route } (route has no base).
-export async function readingOrder(topic = 'linux') {
-  const readme = await sampleSource(`${topic}/README.md`);
-  const section = readme.split(/^## /m).find(part => part.startsWith('建議閱讀順序'));
-  return [...section.matchAll(/\[([^\]]+)\]\(([^)]+)\.md\)/g)].map(([, text, file]) => ({ title: text, source: `${topic}/${file}.md`, route: `${topic}/${file}/` }));
+const parser = unified().use(remarkParse).use(remarkGfm);
+
+// H1 text of a Markdown file, the title the site publishes.
+export async function h1Of(file) {
+  const tree = parser.parse(await readFile(file, 'utf8'));
+  return toString(tree.children.find(node => node.type === 'heading' && node.depth === 1)).trim();
+}
+
+// Intentionally independent restatement of the product rule in src/utils/documents.ts: every relative link in the whole topic README, deduplicated, first occurrence first.
+// Articles of a topic in reading order as { title, source, route } (source and route have no docs root or base).
+export async function readingOrder(topic = 'linux', docsRoot = sampleDocsRoot) {
+  const directory = path.resolve(docsRoot, topic);
+  const links = [];
+  visit(parser.parse(await readFile(path.join(directory, 'README.md'), 'utf8')), 'link', node => { links.push(node.url); });
+  const files = [];
+  for (const link of links) {
+    if (/^(?:[a-z][a-z\d+.-]*:|\/\/|#)/i.test(link)) continue;
+    const file = path.resolve(directory, decodeURIComponent(link.split(/[?#]/)[0]));
+    if (!file.startsWith(directory + path.sep) || !file.endsWith('.md') || file === path.join(directory, 'README.md')) continue;
+    if (!files.includes(file)) files.push(file);
+  }
+  return Promise.all(files.map(async file => {
+    const relative = path.relative(path.resolve(docsRoot), file).split(path.sep).join('/');
+    return { title: await h1Of(file), source: relative, route: `${relative.slice(0, -3)}/` };
+  }));
 }
 
 // Markdown tables in a sample file as { header, rows }, outside code fences.
