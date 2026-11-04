@@ -41,6 +41,7 @@ pnpm run verify
 - macOS headless Chromium 的原生 select 未對 Arrow／Home／End 事件切換選項；其鍵盤證據以 Latin typeahead 主題導航與上述原生 Chrome 外觀選項操作補足，兩種操作方式分開記錄。
 - 未執行 iOS Safari、Android Chrome 實機、原生 200% 文字縮放或真人試讀。Chromium 的 viewport 與外觀模擬不能代替上述證據。
 - 目前框線圖沿用既定過渡呈現，未全面重繪 SVG；工具選型仍見 [網站設計](site-design.md)。
+- 真實內容在 1440px 桌面寬度下，118 篇文章中有 13 篇正文起點超過 610px（最高 661.67px，例如 `aws/kms-secrets-manager-and-parameter-store`、`relational-databases/jsonb-and-semi-structured-data`），精簡前即存在。610px 原本只對 ELB／CloudFront 兩篇驗收，是否適用全部文章、要調整版面或門檻，尚未決定。
 - 正式網域已指定為 `https://academy.gravito.dev/`；部署與實際發布尚未執行。
 
 
@@ -62,21 +63,23 @@ pnpm run verify
 
 ## 測試分層（2026-11-04）
 
-依 [測試套件精簡規格](../.scratch/test-suite-slimming/spec.md) 調整驗證方式；上方首版覆蓋表格保留為歷史證據，驗收範圍不變。來源為 `test/slim-suite` 整合分支 `9418fe8`。
+依 [測試套件精簡規格](../.scratch/test-suite-slimming/spec.md) 調整驗證方式；上方首版覆蓋表格保留為歷史證據，驗收範圍不變。來源為 `test/slim-suite` 整合分支 `923c234`。
 
 分層原則（刻意的取捨，不是遺漏）：
 
 - **每項行為只在一處驗證**，用最便宜而可信的層級：HTML 層檢查 → 範例內容建置 → 瀏覽器 E2E。手機章節面板、表格鍵盤切換、無 JS 表格卡片與錯誤碼搜尋導向各只留一處；元件測試不再重複整頁溢出與字型載入斷言。
-- **只有三個檢查使用完整真實內容**：全部公開頁面 HTTP 開啟、搜尋索引等於公開清單、全部文章在兩種 base × 390／1440 下不溢出且自行託管字型載入（`tests/integration.test.mjs`）；全站 SEO 與網站地圖（`tests/seo.test.mjs`）；每篇公開文件有單一 H1 與正文，導覽順序等於主題索引的建議閱讀順序（`tests/site.test.mjs`）。
+- **只有三個檢查使用完整真實內容**：全部公開頁面 HTTP 開啟、搜尋索引等於公開清單、首頁、全部主題索引與全部文章在兩種 base × 390／1440 下不溢出且自行託管字型載入，並在兩種 base 經網站搜尋介面與主題切換驗證執行期 base（`tests/integration.test.mjs`）；全站 SEO 與網站地圖（`tests/seo.test.mjs`）；每篇公開文件有單一 H1 與正文，導覽順序等於主題索引的建議閱讀順序，每個主題索引標題的錨點 id 與產品使用的 `github-slugger` 一致（`tests/site.test.mjs`）。
 - **其餘測試使用手寫的範例內容**（`tests/fixtures/docs/`，每個檔案開頭註明觸發的網站功能）；範例沒有的主題自動補最小主題索引與一篇最小文件，因為主題頁需要至少一篇文件作為閱讀起點。預期值從範例內容與產品的主題定義讀出，不寫死真實文章。
 - **介面行為只在子路徑 `/academy/` 驗證**。base path 由三處負責：每次建置都執行的輸出驗證器、`tests/site.test.mjs` 的直開／重新整理／內部文件 404（兩種 base）、整合巡檢（兩種 base）。
-- **整合巡檢只跑淺色**；外觀切換由 `tests/appearance.test.mjs` 驗證。
+- **配色只在外觀測試切換**：整合巡檢與表格、程式碼工具、文章、閱讀導覽、閱讀設定預覽等元件測試只跑淺色；這些元件斷言只量排版與行為，外觀切換由 `tests/appearance.test.mjs` 驗證。
+- **不再產生首版的人工檢視截圖**（ticket 04／05／06／08 的文章開場、表格比較、程式碼、面板與搜尋截圖）；它們是當時人工檢視的依據，不是斷言。需要重新人工檢視時，另行產生。
 - **輸出驗證器的拒絕規則在 HTML 層驗證**（`tests/verify-output.test.mjs`，對手寫的產物目錄呼叫 `verifyOutput`，涵蓋全部拒絕規則與兩種 base）；建置階段的拒絕（缺少 H1、公開網址衝突、文件未列入主題索引）仍以修改範例內容後建置失敗驗證，同時證明檢查接在建置流程中。
-- 測試前由 suite 一次準備四份共用 baseline：真實內容 `/`、真實內容 `/academy/`、範例內容 `/academy/`（預設網域）與範例內容 `/academy/`（`SITE_URL` 為空）；範例內容屬於建置輸入，測試期間變更仍會使結果失效。
+- 測試前由 suite 一次準備四份共用 baseline：真實內容 `/`、真實內容 `/academy/`、範例內容 `/academy/`（預設網域）與範例內容 `/academy/`（`SITE_URL` 為空）；建置一律不繼承呼叫端環境的 `SITE_URL`。範例內容屬於建置輸入，測試期間變更仍會使結果失效。
+- **桌面正文起點 ≤610px 只在範例文章驗證**：首版以 ELB／CloudFront 兩篇真實文章驗證；精簡後不再對真實長導言文章驗證，未決問題見「剩餘範圍」。
 
 | 測試 | 內容與 base | 主要範圍 |
 | --- | --- | --- |
-| `tests/integration.test.mjs` | 真實內容，兩種 base；200% 模擬用範例 `/academy/` | 全部網址 200、Pagefind 索引等於公開清單、全部文章 390／1440 淺色不溢出與字型；200% 文字縮放下正文、跳至內容、外觀、搜尋與主題導覽可鍵盤觸及 |
+| `tests/integration.test.mjs` | 真實內容，兩種 base；200% 模擬用範例 `/academy/` | 全部網址 200、Pagefind 索引等於公開清單、首頁／主題索引／全部文章 390／1440 淺色不溢出與字型、搜尋介面命中與主題切換選項的 base；200% 文字縮放下正文、跳至內容、外觀、搜尋與主題導覽可鍵盤觸及 |
 | `tests/seo.test.mjs` | 真實內容，兩種 base；預覽用範例 `SITE_URL` 為空 | 全站摘要、canonical、Open Graph／X、JSON-LD、sitemap、社群圖片；無網域預覽與網域設定拒絕 |
 | `tests/site.test.mjs` | 真實內容 `/`；範例 fixture | 每篇單一 H1 與正文、導覽順序；渲染範例、標題變更不改網址、直開與重新整理、主題標題錨點、同源資源 200、內部文件 404（兩種 base）；三種建置階段拒絕 |
 | `tests/verify-output.test.mjs` | 手寫產物目錄 | 缺少目標、缺少段落與目錄網址錨點、內部來源、缺首頁、重複 id、部署路徑外與越界參照、缺目錄索引 |
@@ -87,4 +90,16 @@ pnpm run verify
 | `tests/search.test.mjs` | 範例 `/academy/` | 中文標題與正文、英文詞、主題標籤、零結果、安全文字、過期查詢；首次模組與索引失敗後重試及錯誤碼命中導向（唯一一處） |
 | `tests/share-tools.test.mjs` | 範例 `/academy/`，兩種 `SITE_URL` | 複製乾淨網址、原生分享成功／取消／失敗、剪貼簿失敗與不存在、無 JS 平台連結與瀏覽器分享提示 |
 
-本次結果：`pnpm run verify` 連續三次 **56／56 通過**，牆鐘 58.8、64.0、56.9 秒（精簡前約 150 秒），macOS arm64 本機、無其他負載。CI 結果見整合分支的 PR。
+首版覆蓋表格各列的去向：
+
+| 首版列 | 現行位置 |
+| --- | --- |
+| `npm run build`、`tests/site.test.mjs` | 頁數、單一來源與閱讀順序、站內目標與錨點：每次建置的輸出驗證器與 `tests/site.test.mjs`（真實內容）；主題標題錨點與 fragment 導航、直開與重新整理、內部文件排除：`tests/site.test.mjs`（範例內容，兩種 base）；拒絕規則：`tests/verify-output.test.mjs` 與建置階段拒絕測試 |
+| `tests/integration.test.mjs` | 同檔，真實內容；拿掉深色維度，增加首頁與主題索引頁 |
+| `tests/article.test.mjs`、`tests/appearance.test.mjs` | 同檔，範例 `/academy/`；ELB／CloudFront 正文起點改由範例文章 A 驗證 |
+| `tests/tables.test.mjs` | 同檔，範例 `/academy/`；主題索引表格以範例主題索引驗證 |
+| `tests/code-tools.test.mjs` | 同檔，範例 `/academy/`；超寬程式碼與框線圖移入範例文章 A |
+| `tests/reading-navigation.test.mjs` | 同檔，範例 `/academy/`；手機章節面板只在此驗證 |
+| `tests/search.test.mjs` | 同檔，範例 `/academy/`；根路徑搜尋的執行期 base 由 `tests/integration.test.mjs` 驗證 |
+
+本次結果：`pnpm run verify` 共五次 **56／56 通過**，牆鐘 56.9–64.0 秒（精簡前約 150 秒），macOS arm64 本機、無其他負載。CI 結果見整合分支的 PR。
