@@ -1,11 +1,27 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { cp, lstat, mkdtemp, readFile, readdir, realpath, rm, symlink, writeFile } from 'node:fs/promises';
+import { cp, lstat, mkdir, mkdtemp, readFile, readdir, realpath, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { topics } from '../src/utils/urls.ts';
 
-const inputs = ['src', 'docs', 'public', 'scripts', 'astro.config.ts', 'tsconfig.json', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml'];
-export const bases = ['/', '/academy/'];
+// Sample content is a build input too: editing it must invalidate the suite snapshot.
+export const sampleDocsRoot = 'tests/fixtures/docs';
+const inputs = ['src', 'docs', sampleDocsRoot, 'public', 'scripts', 'astro.config.ts', 'tsconfig.json', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml'];
+// Keys of the shared baselines: real content at each base, then sample content at /academy/.
+export const artifactKeys = ['/', '/academy/', 'sample', 'sample:no-site-url'];
+const baselines = [
+  { key: '/', base: '/', sample: false },
+  { key: '/academy/', base: '/academy/', sample: false },
+  { key: 'sample', base: '/academy/', sample: true },
+  { key: 'sample:no-site-url', base: '/academy/', sample: true, siteUrl: '' },
+];
+
+// siteUrl omitted means the product default domain, so an inherited SITE_URL must not leak in.
+export function buildEnv(base, siteUrl, env = process.env) {
+  const { SITE_URL: _inherited, ...rest } = env;
+  return { ...rest, BASE_PATH: base, ...(siteUrl === undefined ? {} : { SITE_URL: siteUrl }) };
+}
 
 export async function fingerprint(root) {
   const hash = createHash('sha256');
@@ -30,10 +46,30 @@ export async function fingerprint(root) {
   return hash.digest('hex');
 }
 
-export async function copyInputs(source, destination) {
-  for (const name of inputs) {
+export async function copyInputs(source, destination, names = inputs) {
+  for (const name of names) {
     try { await cp(path.join(source, name), path.join(destination, name), { recursive: true }); }
     catch (error) { if (error.code !== 'ENOENT') throw error; }
+  }
+}
+
+// Site copy with the real docs/; sample content is not part of it.
+export function copyRealSite(source, destination) {
+  return copyInputs(source, destination, inputs.filter(name => name !== sampleDocsRoot));
+}
+
+// Site copy whose docs/ is the sample content; topics the sample lacks get a minimal index.
+export async function copySampleSite(source, destination) {
+  await copyInputs(source, destination, inputs.filter(name => name !== 'docs' && name !== sampleDocsRoot));
+  await cp(path.join(source, sampleDocsRoot), path.join(destination, 'docs'), { recursive: true });
+  for (const topic of topics) {
+    const directory = path.join(destination, 'docs', topic);
+    try { await lstat(path.join(directory, 'README.md')); continue; }
+    catch (error) { if (error.code !== 'ENOENT') throw error; }
+    // The site cannot render a topic without a document (start link and counts), so each stub has one.
+    await mkdir(directory, { recursive: true });
+    await writeFile(path.join(directory, 'README.md'), `# ${topic}\n\n測試用的最小主題索引。\n\n[最小文件](stub.md)\n`);
+    await writeFile(path.join(directory, 'stub.md'), '# 最小文件\n\n測試用的最小文件。\n');
   }
 }
 
@@ -48,17 +84,18 @@ export async function prepareArtifacts(root, run) {
     }
     const token = randomUUID();
     const artifacts = {};
-    for (const [index, base] of bases.entries()) {
-      const directory = path.join(owned, `base-${index}`);
-      await copyInputs(snapshot, directory);
+    for (const [index, { key, base, sample, siteUrl }] of baselines.entries()) {
+      const directory = path.join(owned, `baseline-${index}`);
+      if (sample) await copySampleSite(snapshot, directory);
+      else await copyRealSite(snapshot, directory);
       await symlink(path.join(root, 'node_modules'), path.join(directory, 'node_modules'), 'dir');
-      console.log(`Preparing baseline ${base}`);
-      const result = await run('pnpm', ['run', 'build'], { cwd: directory, env: { ...process.env, BASE_PATH: base }, capture: true });
-      artifacts[base] = { directory, result };
+      console.log(`Preparing baseline ${key}`);
+      const result = await run('pnpm', ['run', 'build'], { cwd: directory, env: buildEnv(base, siteUrl), capture: true });
+      artifacts[key] = { directory, result };
     }
     const revision = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' });
     const manifest = path.join(owned, 'manifest.json');
-    await writeFile(manifest, JSON.stringify({ schema: 1, token, source: before, revision: revision.status === 0 ? revision.stdout.trim() : null, artifacts }));
+    await writeFile(manifest, JSON.stringify({ schema: 2, token, source: before, revision: revision.status === 0 ? revision.stdout.trim() : null, artifacts }));
     return { manifest, token, source: before, cleanup: () => rm(owned, { recursive: true, force: true }) };
   } catch (error) {
     if (!error.retainArtifacts) await rm(owned, { recursive: true, force: true });
@@ -67,7 +104,7 @@ export async function prepareArtifacts(root, run) {
   }
 }
 
-export async function readArtifact(base, env = process.env) {
+export async function readArtifact(key, env = process.env) {
   const manifest = env.CARLACADEMY_ARTIFACT_MANIFEST;
   const token = env.CARLACADEMY_ARTIFACT_TOKEN;
   if (!manifest && !token) return null;
@@ -75,9 +112,9 @@ export async function readArtifact(base, env = process.env) {
   const manifestPath = await realpath(manifest);
   const owned = path.dirname(manifestPath);
   const data = JSON.parse(await readFile(manifestPath, 'utf8'));
-  const artifact = data.artifacts?.[base];
-  if (data.schema !== 1 || data.token !== token || !bases.includes(base) || !artifact || artifact.result?.status !== 0 || typeof artifact.result.stdout !== 'string' || typeof artifact.result.stderr !== 'string') {
-    throw new Error('Invalid suite artifacts: schema, invocation, base or build evidence mismatch.');
+  const artifact = data.artifacts?.[key];
+  if (data.schema !== 2 || data.token !== token || !artifactKeys.includes(key) || !artifact || artifact.result?.status !== 0 || typeof artifact.result.stdout !== 'string' || typeof artifact.result.stderr !== 'string') {
+    throw new Error('Invalid suite artifacts: schema, invocation, baseline or build evidence mismatch.');
   }
   const directory = await realpath(artifact.directory);
   const relative = path.relative(owned, directory);

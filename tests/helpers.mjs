@@ -2,46 +2,51 @@ import { spawnSync, spawn } from "node:child_process";
 import { mkdtemp, cp, symlink, rm, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { readArtifact } from "../scripts/test-artifacts.mjs";
+import {
+  buildEnv,
+  copyRealSite,
+  copySampleSite,
+  readArtifact,
+  sampleDocsRoot,
+} from "../scripts/test-artifacts.mjs";
+// Where tests read sample content (relative to the repo root, the tests' cwd).
+export { sampleDocsRoot };
+// Shared baseline of the REAL content at `base`, or a fresh build when run standalone.
 export async function baseline(t, base = "/") {
   const shared = await readArtifact(base);
   if (shared) return shared;
-  const directory = await fixture(t);
-  const result = build(directory, base);
+  return buildFresh(t, await workspace(t, copyRealSite), base);
+}
+// Shared baseline of the SAMPLE content at /academy/. `siteUrl: ""` means no production domain.
+export async function sampleBaseline(t, { siteUrl } = {}) {
+  const shared = await readArtifact(siteUrl === "" ? "sample:no-site-url" : "sample");
+  if (shared) return shared;
+  return buildFresh(t, await fixture(t), "/academy/", { siteUrl });
+}
+function buildFresh(t, directory, base, options) {
+  const result = build(directory, base, options);
   if (result.status !== 0) throw new Error(result.stdout + result.stderr);
   return { directory, result };
 }
-export async function fixture(t) {
+// A mutable copy of the site whose docs/ is the sample content.
+export function fixture(t) {
+  return workspace(t, copySampleSite);
+}
+async function workspace(t, copy) {
   const directory = await mkdtemp(path.join(tmpdir(), "carlacademy-build-"));
-  for (const name of [
-    "src",
-    "docs",
-    "scripts",
-    "public",
-    "astro.config.ts",
-    "tsconfig.json",
-    "package.json",
-    "pnpm-lock.yaml",
-    "pnpm-workspace.yaml",
-  ]) {
-    try {
-      await cp(name, path.join(directory, name), { recursive: true });
-    } catch (error) {
-      if (name !== "public" || error.code !== "ENOENT") throw error;
-    }
-  }
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  await copy(process.cwd(), directory);
   await symlink(
     path.resolve("node_modules"),
     path.join(directory, "node_modules"),
     "dir",
   );
-  t.after(() => rm(directory, { recursive: true, force: true }));
   return directory;
 }
-export function build(directory, base = "/") {
+export function build(directory, base = "/", { siteUrl } = {}) {
   return spawnSync("pnpm", ["run", "build"], {
     cwd: directory,
-    env: { ...process.env, BASE_PATH: base },
+    env: buildEnv(base, siteUrl),
     encoding: "utf8",
   });
 }

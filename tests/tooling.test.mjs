@@ -1,15 +1,24 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { spawn, spawnSync } from 'node:child_process';
-import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { fixture, sampleDocsRoot } from './helpers.mjs';
+import { topics } from '../src/utils/urls.ts';
 
 async function project(t) {
   const root = await mkdtemp(path.join(tmpdir(), 'carlacademy-task-test-'));
   t.after(() => rm(root, { recursive: true, force: true }));
   await cp('scripts', path.join(root, 'scripts'), { recursive: true });
   for (const name of ['src', 'tests', 'node_modules/astro/bin']) await mkdir(path.join(root, name), { recursive: true });
+  // The harness reads the product's topic list and the sample content as build inputs.
+  await mkdir(path.join(root, 'src/utils'), { recursive: true });
+  await writeFile(path.join(root, 'src/utils/urls.ts'), "export const topics = ['linux', 'aws'] as const;");
+  await mkdir(path.join(root, 'tests/fixtures/docs/linux'), { recursive: true });
+  await writeFile(path.join(root, 'tests/fixtures/docs/linux/README.md'), '# sample');
+  await mkdir(path.join(root, 'docs/linux'), { recursive: true });
+  await writeFile(path.join(root, 'docs/linux/README.md'), '# real');
   await writeFile(path.join(root, 'package.json'), JSON.stringify({ type: 'module', scripts: { build: 'node scripts/tasks.mjs build' } }));
   await writeFile(path.join(root, 'node_modules/astro/package.json'), '{"type":"module"}');
   await writeFile(path.join(root, 'node_modules/astro/bin/astro.mjs'), `
@@ -23,8 +32,9 @@ async function project(t) {
     if (process.env.TASK_TEST_WAIT) { console.log('ready'); await new Promise(resolve => setTimeout(resolve, 30000)); }
     if (process.env.TASK_TEST_FAIL) process.exit(7);
     if (process.argv[2] === 'build') {
+      const {readdirSync} = await import('node:fs');
       await mkdir('dist', {recursive:true}); await writeFile('dist/index.html', process.env.BASE_PATH || '/');
-      if (process.env.TASK_TEST_LOG) await appendFile(process.env.TASK_TEST_LOG, process.env.BASE_PATH + '\\n');
+      if (process.env.TASK_TEST_LOG) await appendFile(process.env.TASK_TEST_LOG, [process.env.BASE_PATH, process.env.SITE_URL === undefined ? '<unset>' : process.env.SITE_URL || '<empty>', readdirSync('docs').join(',')].join(' ') + '\\n');
       console.log('actual build ' + process.env.BASE_PATH);
     }
   `);
@@ -37,7 +47,7 @@ function invoke(root, command, args = [], env = {}) {
   return spawnSync(process.execPath, ['scripts/tasks.mjs', command, ...args], { cwd: root, env: childEnv, encoding: 'utf8' });
 }
 
-test('suite prepares exactly two baselines, validates supplied evidence, and cleans owned artifacts', async t => {
+test('suite prepares exactly four baselines, validates supplied evidence, and cleans owned artifacts', async t => {
   const root = await project(t);
   const log = path.join(root, 'builds.log');
   const evidence = path.join(root, 'evidence.json');
@@ -46,9 +56,12 @@ test('suite prepares exactly two baselines, validates supplied evidence, and cle
     import { writeFile } from 'node:fs/promises';
     import { readArtifact } from '../scripts/test-artifacts.mjs';
     const root = await readArtifact('/'); const sub = await readArtifact('/academy/');
+    const sample = await readArtifact('sample'); const bare = await readArtifact('sample:no-site-url');
     assert.match(root.result.stdout, /actual build \\/\\n/);
     assert.match(sub.result.stdout, /actual build \\/academy\\//);
-    assert.notEqual(root.directory, sub.directory);
+    assert.match(sample.result.stdout, /actual build \\/academy\\//);
+    assert.equal(new Set([root, sub, sample, bare].map(item => item.directory)).size, 4);
+    await assert.rejects(readArtifact('/other/'), /Invalid suite/);
     await assert.rejects(readArtifact('/', {...process.env, CARLACADEMY_ARTIFACT_TOKEN:'wrong'}), /Invalid suite/);
     await assert.rejects(readArtifact('/', {CARLACADEMY_ARTIFACT_MANIFEST:process.env.CARLACADEMY_ARTIFACT_MANIFEST}), /together/);
     await writeFile(${JSON.stringify(evidence)}, JSON.stringify({manifest: process.env.CARLACADEMY_ARTIFACT_MANIFEST}));
@@ -57,9 +70,15 @@ test('suite prepares exactly two baselines, validates supplied evidence, and cle
     // Restore source so the runner's independent final fingerprint can pass.
     const {rm} = await import('node:fs/promises'); await rm('src/changed');
   `);
-  const result = invoke(root, 'test', ['tests/probe.test.mjs'], { TASK_TEST_LOG: log });
+  const result = invoke(root, 'test', ['tests/probe.test.mjs'], { TASK_TEST_LOG: log, SITE_URL: 'https://inherited.example/' });
   assert.equal(result.status, 0, result.stdout + result.stderr);
-  assert.deepEqual((await readFile(log, 'utf8')).trim().split('\n'), ['/', '/academy/']);
+  // An inherited SITE_URL never leaks in. Real content at both bases, then sample content (docs/ holds only its topics) with and without a domain.
+  assert.deepEqual((await readFile(log, 'utf8')).trim().split('\n'), [
+    '/ <unset> linux',
+    '/academy/ <unset> linux',
+    '/academy/ <unset> aws,linux',
+    '/academy/ <empty> aws,linux',
+  ]);
   const { manifest } = JSON.parse(await readFile(evidence, 'utf8'));
   await assert.rejects(readFile(manifest), { code: 'ENOENT' });
   assert.equal(invoke(root, 'check').status, 0, 'lock released after suite');
@@ -151,4 +170,23 @@ test('interruption during artifact cleanup remains nonzero and completes cleanup
   assert.equal(await closed, 143);
   await assert.rejects(readFile(path.join(directory, 'manifest.json')), {code:'ENOENT'});
   assert.equal(invoke(root, 'check').status, 0);
+});
+
+test('sample fixture holds no real docs and gets a minimal index for topics the sample lacks', async t => {
+  const directory = await fixture(t);
+  const topicsWithDocs = (await readdir(path.join(directory, 'docs'))).sort();
+  assert.deepEqual(topicsWithDocs, [...topics].sort(), 'every product topic has a directory');
+  const sampleTopics = await readdir(sampleDocsRoot);
+  for (const topic of topics) {
+    const files = await readdir(path.join(directory, 'docs', topic));
+    if (sampleTopics.includes(topic)) {
+      assert.deepEqual(files.sort(), (await readdir(path.join(sampleDocsRoot, topic))).sort(), topic);
+    } else {
+      assert.deepEqual(files.sort(), ['README.md', 'stub.md'], topic);
+      assert.match(await readFile(path.join(directory, 'docs', topic, 'README.md'), 'utf8'), /^# .+/, topic);
+    }
+  }
+  // None of the real docs leak in: the real linux article does not exist in the copy.
+  await assert.rejects(readFile(path.join(directory, 'docs/linux/what-is-linux.md')), { code: 'ENOENT' });
+  await assert.rejects(readFile(path.join(directory, 'docs/site-design.md')), { code: 'ENOENT' });
 });
