@@ -4,7 +4,7 @@ import { readdir, mkdir } from 'node:fs/promises';
 import { chromium, expect } from '@playwright/test';
 import { baseline, serve } from './helpers.mjs';
 
-const topics = ['linux', 'aws', 'api', 'relational-databases', 'web-security', 'networking', 'distributed-systems'];
+const topics = ['linux', 'aws', 'api', 'relational-databases', 'web-security', 'networking', 'distributed-systems', 'event-driven-architecture'];
 const evidence = '/tmp/carlacademy-ticket08-evidence';
 
 async function publicRoutes() {

@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-export const topics = ['linux', 'aws', 'api', 'relational-databases', 'web-security', 'networking', 'distributed-systems'] as const;
+export const topics = ['linux', 'aws', 'api', 'relational-databases', 'web-security', 'networking', 'distributed-systems', 'event-driven-architecture'] as const;
 
 export function normalizeBase(base = '/') {
   if (!/^\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]*\/?$/.test(base)) {

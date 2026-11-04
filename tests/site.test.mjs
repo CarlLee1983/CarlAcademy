@@ -9,7 +9,7 @@ test('公開文件在正式靜態產物中可直接閱讀', async t => {
   assert.equal(result.status, 0, result.stdout + result.stderr);
   const home = load(await readFile(`${directory}/dist/index.html`, 'utf8'));
   assert.match(home('h1').text(), /工程與技術/);
-  for (const topic of ['linux', 'aws', 'api', 'relational-databases', 'web-security', 'networking', 'distributed-systems']) {
+  for (const topic of ['linux', 'aws', 'api', 'relational-databases', 'web-security', 'networking', 'distributed-systems', 'event-driven-architecture']) {
     assert.equal(home(`a[href="/${topic}/"]`).length > 0, true, topic);
     const sources = (await readdir(`${directory}/docs/${topic}`)).filter(name => name.endsWith('.md'));
     for (const source of sources) {
@@ -19,6 +19,12 @@ test('公開文件在正式靜態產物中可直接閱讀', async t => {
       assert.ok(html('main').text().length > 100, `${topic}/${source}`);
     }
   }
+  const events = load(await readFile(`${directory}/dist/event-driven-architecture/index.html`, 'utf8'));
+  assert.deepEqual(events('nav[aria-label="本主題文件"] ol a').map((_, node) => events(node).text()).get(),
+    ['同步呼叫與非同步工作邊界', '命令、工作與事件', 'Queue、Pub/Sub 與持久日誌', '發布確認與消費確認',
+      '消費並行、分區與順序', '重試、死信與安全重送', '資料庫與訊息的原子缺口', '事件封套、Schema 與相容演進',
+      '訂閱拓樸、路由與隔離', '重播、投影與歷史資料', '積壓、觀測與故障驗證', '整合案例：匯出完成後的多下游處理']);
+  assert.match(events('main').text(), /主線 12 篇已全數撰寫/);
   const api = load(await readFile(`${directory}/dist/api/index.html`, 'utf8'));
   assert.deepEqual(api('nav[aria-label="本主題文件"] ol a').map((_, node) => api(node).text()).get().slice(0, 6),
     ['介面、契約與責任', '輸入、輸出與失敗語意', '相容性與演進', '文件與契約描述', 'API 測試', '資源、表示與訊息']);
@@ -104,6 +110,7 @@ test('根路徑與子路徑的正式網站透過一般 HTTP 可直接閱讀，�
       ['web-security', 'web-應用資安知識索引'],
       ['networking', '電腦網路知識索引'],
       ['distributed-systems', '分散式系統知識索引'],
+      ['event-driven-architecture', '訊息佇列與事件驅動架構知識索引'],
     ]) {
       await page.goto('about:blank');
       const response = await page.goto(`${origin}${base}${topic}/#${fragment}`);
