@@ -3,7 +3,7 @@
 DNS 將人類易記的階層式網域名稱轉換為機器路由所需的 IP 位址，是網際網路最核心的全球分散式階層資料庫。
 如果沒有 DNS，所有網路連線都必須手動輸入不易記憶的 IPv4 或 IPv6 數值位址，且服務遷移伺服器時將造成全體用戶連線中斷。
 
-本文接續[IP 位址、子網路遮罩與 CIDR](ip-addressing-and-subnets.md)與[路由、轉送與封包生命週期](routing-and-packet-forwarding.md)，並在資安邊界銜接[SSRF 與伺服器對外請求邊界](../web-security/ssrf-and-outbound-requests.md)。
+本文接續[UDP 與無連線傳輸](udp-and-connectionless-transport.md)、[TCP 基礎：連線生命週期與流量控制](tcp-connection-and-flow-control.md)與[IP 位址、子網路遮罩與 CIDR](ip-addressing-and-subnets.md)，並在資安邊界銜接[SSRF 與伺服器對外請求邊界](../web-security/ssrf-and-outbound-requests.md)。
 
 ## 階層式樹狀網域名稱空間
 

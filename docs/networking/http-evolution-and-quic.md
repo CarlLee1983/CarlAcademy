@@ -3,7 +3,7 @@
 HTTP 是全球資訊網的應用層基礎，歷經三十餘年的演進，其底層通訊架構從早期明文、短連線與管道化，走向二進位多路複用，最終在 HTTP/3 突破 TCP 限制，轉移至基於 UDP 的 QUIC 傳輸協定。
 理解這段演進過程，能清楚看見現代分散式系統與 Web 應用如何在吞吐量、往返延遲（RTT）與隊頭阻塞（Head-of-Line Blocking）之間做出工程權衡。
 
-本文接續[TCP 基礎：連線生命週期與流量控制](tcp-connection-and-flow-control.md)與[UDP 與無連線傳輸](udp-and-connectionless-transport.md)，並與應用層[資源、表示與訊息](../api/resources-representations-and-messages.md)及[逾時、重試與冪等性](../api/timeouts-retries-and-idempotency.md)對照。
+本文接續[TLS 傳輸層安全：交握協商、密鑰交換與安全通道](tls-and-secure-transport.md)、[TCP 基礎：連線生命週期與流量控制](tcp-connection-and-flow-control.md)與[UDP 與無連線傳輸](udp-and-connectionless-transport.md)，並與應用層[資源、表示與訊息](../api/resources-representations-and-messages.md)及[逾時、重試與冪等性](../api/timeouts-retries-and-idempotency.md)對照。
 
 ## HTTP/1.0 與 HTTP/1.1：文字協定與長連線
 

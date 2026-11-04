@@ -3,7 +3,7 @@
 TCP 是傳輸層中提供可靠、雙向全雙工、循序位元組流傳遞的連線導向協定，透過序號、確認應答與滑動視窗克服不可靠 IP 網路的限制。
 底層的 IP 網路本質上是「盡力而為（Best-Effort）」的，封包可能會遺失、延遲、重複或順序錯亂；TCP 的使命便是在不可靠的傳輸介質之上，向應用程式提供如同有線電話般穩固的位元組串流通道。
 
-本文接續[封包交換與網路分層模型](packet-switching-and-network-models.md)，並與低延遲替代方案[UDP 與無連線傳輸](udp-and-connectionless-transport.md)以及應用層[逾時、重試與冪等性](../api/timeouts-retries-and-idempotency.md)對照。
+本文接續[路由、轉送與封包生命週期](routing-and-packet-forwarding.md)與[封包交換與網路分層模型](packet-switching-and-network-models.md)，並與低延遲替代方案[UDP 與無連線傳輸](udp-and-connectionless-transport.md)以及應用層[逾時、重試與冪等性](../api/timeouts-retries-and-idempotency.md)對照。
 
 ## TCP 的核心特徵與承諾
 

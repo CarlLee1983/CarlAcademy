@@ -3,7 +3,7 @@
 在不可靠且未經加密的網際網路中，傳輸層安全協定（Transport Layer Security, TLS）透過非對稱密碼學、數位憑證與對稱加密通道，為端對端通訊建立機密性、完整性與身分驗證防護。
 無論是網頁瀏覽（HTTPS）、安全郵件（SMTPS）還是 API 調用，TLS 皆作為承接傳輸層（TCP / QUIC）與應用層（HTTP）之間的關鍵安全護盾。
 
-本文接續[TCP 基礎：連線生命週期與流量控制](tcp-connection-and-flow-control.md)與[HTTP 演進：從 HTTP/1.1、HTTP/2 到 HTTP/3 (QUIC)](http-evolution-and-quic.md)，並與 Web 資安[信任邊界與威脅思考](../web-security/trust-boundaries.md)及[機密與敏感資料的生命週期](../web-security/secrets-and-sensitive-data.md)對照。
+本文接續[TCP 基礎：連線生命週期與流量控制](tcp-connection-and-flow-control.md)與[DNS 網域名稱解析系統](dns-resolution-and-records.md)，為後續[HTTP 演進：從 HTTP/1.1、HTTP/2 到 HTTP/3 (QUIC)](http-evolution-and-quic.md)建立安全傳輸基礎，並與 Web 資安[信任邊界與威脅思考](../web-security/trust-boundaries.md)及[機密與敏感資料的生命週期](../web-security/secrets-and-sensitive-data.md)對照。
 
 ## TLS 的三大安全承諾
 
