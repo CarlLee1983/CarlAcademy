@@ -8,10 +8,14 @@ on:
 permissions:
   contents: read
 
+# Same checks as `pnpm run verify`, split across runners for wall-clock time.
+# The suite cannot run concurrently inside one workspace: fixtures symlink the
+# shared node_modules, so parallel Astro builds collide in node_modules/.astro.
+# Each shard is a separate runner with its own node_modules instead.
 jobs:
-  verify:
+  static:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -27,7 +31,33 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm run verify
+      - run: pnpm run check
+      - run: pnpm run check:diff
         env:
           CARLACADEMY_DIFF_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    name: test (${{ matrix.shard }}/4)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Set up pnpm
+        uses: pnpm/action-setup@a8198c4bff370c8506180b035930dea56dbd5288 # v5
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.21.0'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      # Node assigns whole test files to shards by their position in this sorted list.
+      - run: node scripts/tasks.mjs test --test-shard=${{ matrix.shard }}/4 tests/*.test.mjs
