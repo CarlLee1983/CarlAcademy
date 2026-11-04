@@ -9,7 +9,7 @@ test('公開文件在正式靜態產物中可直接閱讀', async t => {
   assert.equal(result.status, 0, result.stdout + result.stderr);
   const home = load(await readFile(`${directory}/dist/index.html`, 'utf8'));
   assert.match(home('h1').text(), /工程與技術/);
-  for (const topic of ['linux', 'aws', 'api', 'relational-databases', 'web-security', 'networking']) {
+  for (const topic of ['linux', 'aws', 'api', 'relational-databases', 'web-security', 'networking', 'distributed-systems']) {
     assert.equal(home(`a[href="/${topic}/"]`).length > 0, true, topic);
     const sources = (await readdir(`${directory}/docs/${topic}`)).filter(name => name.endsWith('.md'));
     for (const source of sources) {
@@ -103,6 +103,7 @@ test('根路徑與子路徑的正式網站透過一般 HTTP 可直接閱讀，�
       ['relational-databases', '關聯式資料庫共通知識'],
       ['web-security', 'web-應用資安知識索引'],
       ['networking', '電腦網路知識索引'],
+      ['distributed-systems', '分散式系統知識索引'],
     ]) {
       await page.goto('about:blank');
       const response = await page.goto(`${origin}${base}${topic}/#${fragment}`);

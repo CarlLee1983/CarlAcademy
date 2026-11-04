@@ -18,7 +18,7 @@ test("首頁與主題頁提供實際閱讀起點及可持續的外觀選擇", as
     assert.match(await page.locator("h1").textContent(), /工程與技術/);
     await page.keyboard.press("Tab");
     assert.equal(await page.locator(":focus").textContent(), "跳至內容");
-    assert.equal(await page.locator(".topic-row").count(), 6);
+    assert.equal(await page.locator(".topic-row").count(), 7);
     assert.match(
       await page.locator(".topic-start").first().textContent(),
       /從 認識 Linux 開始/,
