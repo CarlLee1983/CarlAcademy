@@ -1,6 +1,6 @@
 # 測試套件精簡
 
-Status: ready-for-agent
+Status: in-progress
 
 ## Problem Statement
 
@@ -147,3 +147,7 @@ CarlAcademy 是純內容型文件站，但每次 CI 仍要約 166 秒（4 個 sh
   - fresh build 共 20 次：site 11、share-tools 5、code-tools 3、seo 1。
 - 用語沿用 [詞彙表](../../GLOSSARY.md)（主題、文件、主題索引、網站首頁）。「範例內容」「baseline」是測試用語，不列入詞彙表。
 - 網址與 base path 契約依 [ADR 0001](../../docs/adr/0001-public-document-urls.md)，本次不改變。
+
+## Comments
+
+2026-11-04：實作中偏離一處。範例內容缺少的主題不能只補「只有標題」的主題索引：主題頁與網站首頁以主題的第一篇文件作為閱讀起點，沒有文件會使建置失敗；在不改產品程式碼的前提下，改為補最小主題索引加一篇最小文件。
