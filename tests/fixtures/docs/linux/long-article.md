@@ -1,4 +1,4 @@
-<!-- 範例內容：長篇文章 A。觸發本文提要與粗體、3 個以上 h2 與巢狀標題、3 欄 3 列表格、超過 680px 的 4 列寬表格、超寬程式碼、框線圖、英文錯誤碼與中文詞的搜尋。 -->
+<!-- 範例內容：長篇文章 A。觸發本文提要與粗體、3 個以上 h2 與巢狀標題、3 欄 3 列表格、超過 680px 的 4 列寬表格、超寬程式碼（含 tab、空白與結尾空行）、框線圖、視窗縮放時才溢出的程式碼、不溢出的短程式碼、英文錯誤碼與中文詞的搜尋。 -->
 # 範例長篇文章
 
 容器啟動前必須先**拉取映像**，拉取失敗時任務會停在啟動之前。
@@ -45,7 +45,9 @@
 下列指令刻意拉長，用來驗證超寬程式碼的換行與捲動。
 
 ```bash
-printf "%s\n" very-long-argument-one very-long-argument-two very-long-argument-three very-long-argument-four very-long-argument-five very-long-argument-six very-long-argument-seven very-long-argument-eight very-long-argument-nine very-long-argument-ten
+printf "保留空白與換行"
+	very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument very-long-argument 
+
 ```
 
 下圖保留框線排版：
@@ -59,6 +61,18 @@ printf "%s\n" very-long-argument-one very-long-argument-two very-long-argument-t
 ┌──────────────┐
 │ 核心         │
 └──────────────┘
+```
+
+縮放視窗時，下列指令必須保持原樣：
+
+```sh
+printf "resize-to-fit: preserve this command while resizing the viewport"
+```
+
+短指令沒有溢出，不應出現換行按鈕：
+
+```sh
+pwd
 ```
 
 結尾段落回到[GraphQL 範例短文](graphql-short.md)。
