@@ -32,6 +32,11 @@ test('全部公開頁面可直接 HTTP 開啟，首頁、主題索引與所有�
     const url = await serve(t, directory, base);
     const indexPage = await browser.newPage();
     await indexPage.goto(url);
+    for (const selector of ['.wordmark img', '.home-illustration']) {
+      const image = indexPage.locator(selector);
+      assert.equal(await image.evaluate(node => node.complete && node.naturalWidth > 0), true, `${base}: ${selector} loads`);
+      assert.ok((await image.getAttribute('src')).startsWith(base), `${base}: image stays within deployment base`);
+    }
     const indexed = await indexPage.evaluate(async baseUrl => {
       const engine = await import(`${baseUrl}pagefind/pagefind.js`);
       await engine.options({ baseUrl: new URL(baseUrl).pathname });

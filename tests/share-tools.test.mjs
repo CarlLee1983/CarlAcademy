@@ -24,6 +24,7 @@ test('分享工具在子路徑複製乾淨網址、提供原生分享與可選�
     const page = await context.newPage();
     await page.goto(origin + route + '?source=test#article-body');
     const tools = page.locator('[data-share-tools]');
+    assert.equal(await tools.locator('.share-links a svg').count(), 3, '預覽模式沿用完整圖示按鈕');
     const expected = await tools.getAttribute('data-url') || origin + route;
     assert.equal(await tools.getAttribute('data-pagefind-ignore'), '');
     const copy = tools.getByRole('button', { name: '複製連結' });

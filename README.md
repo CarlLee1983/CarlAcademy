@@ -73,6 +73,10 @@ SITE_URL=https://academy.gravito.dev BASE_PATH=/academy/ pnpm run build
 
 文章文末提供 LINE、Facebook、X、複製連結與支援裝置上的原生分享。停用 JavaScript 時仍可開啟平台分享連結；剪貼簿失敗時顯示可選取的完整網址。分享使用 canonical，不攜帶追蹤查詢參數與章節錨點。平台連結只在讀者點擊時開啟，不載入第三方 SDK。
 
+全站分頁圖示為 `public/favicon.svg`，沿用鈷藍與幾何 C 識別，資源路徑支援 `BASE_PATH`。分享區以藍底複製按鈕與細線平台按鈕區分操作層次，支援淺深外觀、鍵盤焦點與手機換行；內嵌圖示採 Lucide，授權見 `public/licenses/lucide.txt`。
+
+頁首品牌標誌為 `public/logo.svg`；首頁紙層插畫源檔為 `src/assets/knowledge-folio.png`（內建 imagegen 生成），由 Astro 輸出為 WebP，不呼叫外部圖片服務。插畫僅作品牌裝飾，與正文知識圖解分開。
+
 本機測試驗證 metadata 與分享資料，未向社群平台實際貼文，也尚未驗證正式網域的爬蟲抓取、平台快取與搜尋收錄。
 
 執行完整驗證（Astro 檢查、正式建置、產物測試與變更檔案的空白檢查）：

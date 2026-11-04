@@ -2,6 +2,8 @@
 import DocumentLayout from '../layouts/DocumentLayout.astro';
 import { getDocuments, topicName } from '../utils/collections';
 import { withBase } from '../utils/urls';
+import { Image } from 'astro:assets';
+import knowledgeFolio from '../assets/knowledge-folio.png';
 const documents = await getDocuments();
 const indexes = documents.filter(entry => entry.data.isIndex);
 ---
@@ -9,7 +11,7 @@ const indexes = documents.filter(entry => entry.data.isIndex);
   <div class="shell home-content">
     <section class="home-masthead" aria-labelledby="home-title">
       <p class="kicker">CARLACADEMY <span>知識文件</span></p>
-      <div class="masthead-grid"><h1 id="home-title">工程與技術<br />知識索引</h1><div class="abstract"><p class="abstract-label">閱讀起點</p><p>Linux、AWS、API、關聯式資料庫與 Web 應用資安。從基礎概念讀起，也能直接查找工作中的問題。</p></div></div>
+      <div class="masthead-grid"><h1 id="home-title">工程與技術<br />知識索引</h1><div class="home-intro"><Image src={knowledgeFolio} width={480} format="webp" alt="" aria-hidden="true" class="home-illustration" loading="eager" /><div class="abstract"><p class="abstract-label">閱讀起點</p><p>Linux、AWS、API、關聯式資料庫與 Web 應用資安。從基礎概念讀起，也能直接查找工作中的問題。</p></div></div></div>
     </section>
     <form class="home-search" role="search" data-search-form hidden data-pagefind-ignore>
       <label for="home-query">查找概念、服務與問題</label>

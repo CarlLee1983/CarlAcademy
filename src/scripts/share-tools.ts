@@ -17,14 +17,10 @@ for (const tools of document.querySelectorAll<HTMLElement>('[data-share-tools]')
       ['Facebook', `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: shareUrl })}`],
       ['X', `https://twitter.com/intent/tweet?${new URLSearchParams({ text: title, url: shareUrl })}`],
     ]) {
-      const link = document.createElement('a');
+      const link = links.querySelector<HTMLAnchorElement>(`[data-share-platform="${label}"]`)!;
       link.href = href;
-      link.textContent = label;
-      link.setAttribute('aria-label', `${label}（在新分頁分享）`);
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      links.append(link);
     }
+    links.hidden = false;
   }
   const copy = tools.querySelector<HTMLButtonElement>('[data-share-copy]')!;
   copy.hidden = false;

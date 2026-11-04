@@ -1,24 +1,25 @@
 ---
 import '../styles/share-tools.css';
+import ShareIcon from './ShareIcon.astro';
 interface Props {
   title: string;
   description: string;
   url?: string;
 }
 const { title, description, url } = Astro.props;
-const links = url ? [
-  { label: 'LINE', href: `https://social-plugins.line.me/lineit/share?${new URLSearchParams({ url })}` },
-  { label: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: url })}` },
-  { label: 'X', href: `https://twitter.com/intent/tweet?${new URLSearchParams({ text: title, url })}` },
-] : [];
+const links = [
+  { label: 'LINE', href: `https://social-plugins.line.me/lineit/share?${new URLSearchParams({ url: url ?? '' })}` },
+  { label: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: url ?? '' })}` },
+  { label: 'X', href: `https://twitter.com/intent/tweet?${new URLSearchParams({ text: title, url: url ?? '' })}` },
+];
 ---
 <section class="share-tools" aria-label="分享本文" data-pagefind-ignore data-share-tools data-title={title} data-description={description} data-url={url}>
-  <p class="share-heading">分享本文</p>
+  <div class="share-intro"><p class="share-heading">分享本文</p><p class="share-caption">把知識，傳給下一位讀者。</p></div>
   <div class="share-actions">
-    <button type="button" data-share-copy hidden>複製連結</button>
-    <button type="button" data-share-native hidden>更多分享方式</button>
-    <span class="share-links" data-share-links>
-      {links.map(link => <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}<span class="share-sr-only">（在新分頁分享）</span></a>)}
+    <button type="button" data-share-copy hidden><ShareIcon name="copy" />複製連結</button>
+    <button type="button" data-share-native hidden><ShareIcon name="share" />更多分享方式</button>
+    <span class="share-links" data-share-links hidden={!url}>
+      {links.map(link => <a href={link.href} data-share-platform={link.label} target="_blank" rel="noopener noreferrer">{link.label}<ShareIcon name="external" /><span class="share-sr-only">（在新分頁分享）</span></a>)}
     </span>
   </div>
   <p class="share-status" role="status" aria-live="polite" aria-atomic="true"></p>

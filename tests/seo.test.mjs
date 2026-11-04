@@ -19,6 +19,8 @@ for (const base of ['/', '/academy/']) {
       const $ = load(await readFile(`${directory}/dist/${name}`, 'utf8'));
       const url = origin + base + name.replace(/index\.html$/, '');
       assert.equal($('link[rel="canonical"]').attr('href'), url, name);
+      assert.equal($('link[rel="icon"]').attr('href'), base + 'favicon.svg', name);
+      assert.equal($('link[rel="icon"]').attr('type'), 'image/svg+xml', name);
       assert.ok(locations.includes(url), name);
       const description = $('meta[name="description"]').attr('content');
       assert.ok(description?.length > 10, name);
@@ -49,6 +51,11 @@ for (const base of ['/', '/academy/']) {
       }
     }
     assert.ok(descriptions.size > names.length * .9, 'Page-specific summaries');
+    const iconLicense = await readFile(`${directory}/dist/licenses/lucide.txt`, 'utf8');
+    assert.match(iconLicense, /Lucide Contributors/);
+    assert.match(iconLicense, /Permission to use, copy, modify/);
+    const favicon = load(await readFile(`${directory}/dist/favicon.svg`, 'utf8'), { xmlMode: true });
+    assert.equal(favicon('svg').attr('viewBox'), '0 0 32 32');
     assert.match(await readFile(`${directory}/dist/robots.txt`, 'utf8'), new RegExp(`Sitemap: ${origin}${base}sitemap.xml`));
     const png = await readFile(`${directory}/dist/social-card.png`);
     assert.equal(png.subarray(1, 4).toString(), 'PNG');
