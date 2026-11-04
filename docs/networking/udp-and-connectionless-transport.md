@@ -3,7 +3,7 @@
 UDP 是一種極簡的無連線傳輸層協定，僅在 IP 之上提供連接埠多工與可選的資料同位檢查，不保證送達、不保證順序且無連線狀態開銷。
 相較於 TCP 複雜的連線握手、重傳與流量控制，UDP 追求的是極致的低延遲、精簡的通訊標頭與對底層封包傳送節奏的直接控制力。
 
-本文接續[封包交換與網路分層模型](packet-switching-and-network-models.md)並與[TCP 基礎：連線生命週期與流量控制](tcp-connection-and-flow-control.md)深度對照；同時為依賴 UDP 的應用如[DNS 網域名稱解析系統](dns-resolution-and-records.md)提供底層通訊原理。
+本文接續[TCP 基礎：連線生命週期與流量控制](tcp-connection-and-flow-control.md)並與[封包交換與網路分層模型](packet-switching-and-network-models.md)對照；同時為後續依賴 UDP 的應用如[DNS 網域名稱解析系統](dns-resolution-and-records.md)提供底層通訊原理。
 
 ## UDP 的設計哲學與標頭結構
 
