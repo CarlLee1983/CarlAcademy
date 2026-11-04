@@ -170,8 +170,10 @@ test('200% 文字縮放模擬保留正文及鍵盤主要流程', { timeout: 1200
     await page.screenshot({ path: `${evidence}/text200-${width}-opening.png` });
     if (width === 390) {
       await page.getByLabel('切換主題', { exact: true }).focus();
+      // Keep typeahead inside the native picker until the full choice is confirmed.
+      await page.keyboard.press('Space');
       await page.keyboard.type('API');
-      await page.keyboard.press('Tab');
+      await page.keyboard.press('Enter');
       await page.waitForURL(url + 'api/');
     } else {
       await page.getByRole('navigation', { name: '知識主題', exact: true }).getByRole('link', { name: 'API', exact: true }).focus();
