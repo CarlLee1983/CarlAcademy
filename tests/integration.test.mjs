@@ -32,6 +32,11 @@ test('全部公開頁面可直接 HTTP 開啟，首頁、主題索引與所有�
     const url = await serve(t, directory, base);
     const indexPage = await browser.newPage();
     await indexPage.goto(url);
+    for (const selector of ['.wordmark img', '.home-illustration']) {
+      const image = indexPage.locator(selector);
+      assert.equal(await image.evaluate(node => node.complete && node.naturalWidth > 0), true, `${base}: ${selector} loads`);
+      assert.ok((await image.getAttribute('src')).startsWith(base), `${base}: image stays within deployment base`);
+    }
     const indexed = await indexPage.evaluate(async baseUrl => {
       const engine = await import(`${baseUrl}pagefind/pagefind.js`);
       await engine.options({ baseUrl: new URL(baseUrl).pathname });
@@ -165,8 +170,10 @@ test('200% 文字縮放模擬保留正文及鍵盤主要流程', { timeout: 1200
     await page.screenshot({ path: `${evidence}/text200-${width}-opening.png` });
     if (width === 390) {
       await page.getByLabel('切換主題', { exact: true }).focus();
+      // Keep typeahead inside the native picker until the full choice is confirmed.
+      await page.keyboard.press('Space');
       await page.keyboard.type('API');
-      await page.keyboard.press('Tab');
+      await page.keyboard.press('Enter');
       await page.waitForURL(url + 'api/');
     } else {
       await page.getByRole('navigation', { name: '知識主題', exact: true }).getByRole('link', { name: 'API', exact: true }).focus();
