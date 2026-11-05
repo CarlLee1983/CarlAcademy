@@ -182,7 +182,7 @@ Markdown 管線還須納入中文標點旁的粗體、數字範圍、表格與�
 
 ### 下一個主題：訊息佇列與事件驅動架構
 
-2026-11-04，分散式系統首批內容以 PR #10 合併後，選定「訊息佇列與事件驅動架構」為下一個主題。已完善 [12 篇內容規劃](docs/research/event-driven-architecture-plan.md)，並依[一手來源查核](docs/research/event-driven-architecture-sources.md)完成全部 12 篇與[公開主題索引](docs/event-driven-architecture/README.md)。主線涵蓋工作邊界、命令與事件、傳遞模型、確認、順序、重試與死信、Outbox、Schema、訂閱隔離、重播、觀測與整合。分散式系統剩餘 14 篇的待寫狀態繼續由其索引維護，不因切換主題而視為完成。
+2026-11-04，分散式系統首批內容以 PR #10 合併後，選定「訊息佇列與事件驅動架構」為下一個主題。已完善 [12 篇內容規劃](docs/research/event-driven-architecture-plan.md)，並依[一手來源查核](docs/research/event-driven-architecture-sources.md)完成全部 12 篇與[公開主題索引](docs/event-driven-architecture/README.md)。主線涵蓋工作邊界、命令與事件、傳遞模型、確認、順序、重試與死信、Outbox、Schema、訂閱隔離、重播、觀測與整合。分散式系統後續篇章的完成狀態繼續由其索引維護，不因切換主題而視為完成。
 
 ## 目前狀態與文件入口
 
@@ -193,7 +193,7 @@ Markdown 管線還須納入中文標點旁的粗體、數字範圍、表格與�
 - [關聯式資料庫索引](docs/relational-databases/README.md)：已完成索引所列的 13 篇文章及一手來源；共通概念與 PostgreSQL 範例分開標示，本次未執行資料庫操作或效能測試。
 - [Web 應用資安索引](docs/web-security/README.md)：已完成索引所列的 13 篇文章及一手來源；聚焦 Web 信任邊界與防護原理，本次未部署應用或執行攻擊測試，不代表完整安全驗收。
 - [電腦網路知識索引](docs/networking/README.md)：已完成索引所列的 16 篇基礎與進階架構文章及官方 RFC 來源，涵蓋封包交換、IP/CIDR、路由轉送、TCP/UDP、DNS、TLS 1.2/1.3 安全傳輸、HTTP 演進（HTTP/1.1~HTTP/3）、L4/L7 負載平衡與反向代理、ICMP 與 tcpdump 診斷觀測、NAT 穿透技術、IPv6 雙堆疊架構、BGP 跨域路由與 Anycast、SDN 與 Overlay 虛擬化（VXLAN/Geneve）、零信任與 mTLS 雙向認證，以及 CDN 階層快取與邊緣傳遞。
-- [分散式系統知識索引](docs/distributed-systems/README.md)：已撰寫第一與第二階段共 8 篇，完整 18 篇主線的其餘方向與狀態由索引維護；僅做文件查證，未執行分散式部署或故障實驗。
+- [分散式系統知識索引](docs/distributed-systems/README.md)：完整五階段共 18 篇已撰寫，於 2026-11-05 補齊原子提交、Saga、Outbox／Inbox、CRDT、故障歷程驗證與匯出整合案例。第三至第五階段由 agy 搜集整理研究與草稿，再由主編核對來源及改寫；僅做文件查證，未執行分散式部署或故障實驗。
 - [訊息佇列與事件驅動架構知識索引](docs/event-driven-architecture/README.md)：已完成主線 12 篇；僅做文件查證與概念推演，未部署 broker 或執行故障實驗。
 - 網站：已實作靜態頁面、來源網址映射、定稿視覺、閱讀工具與全文搜尋，尚未發布。自動驗收及剩餘缺口見 [網站驗收紀錄](docs/site-validation.md)。介面設計交接見 [網站設計](docs/site-design.md)，本機命令見 [專案入口](README.md#本機建置與驗證)。
 
