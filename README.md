@@ -17,6 +17,7 @@
 - [分散式系統知識索引](docs/distributed-systems/README.md)：完整主線 18 篇已撰寫，從部分失敗、冪等、時鐘與多副本契約，深入共識、Raft、租約與分片，接續原子提交、Saga、Outbox／Inbox、CRDT、故障歷程驗證及文章匯出整合案例。
 - [訊息佇列與事件驅動架構知識索引](docs/event-driven-architecture/README.md)：已完成 12 篇，從非同步工作邊界、命令與事件、傳遞模型與確認，深入並行順序、重試與死信、Outbox、Schema 演進、訂閱隔離、重播、觀測及多下游匯出整合。
 - [快取與資料存取架構知識索引](docs/caching/README.md)：已完成主線 12 篇，涵蓋記憶體階層、讀寫模式（Cache-Aside 至 Write-Behind）、過期機制與 TTL 抖動、穿透／擊穿／雪崩防禦（空值快取、Bloom Filter、Mutex、Lease）、LRU 至 W-TinyLFU 逐出演算法、記憶體碎片與序列化、Redis 執行模型與資料結構、持久化複寫與 Cluster 槽位路由，以及雙寫一致性（CDC）與三層快取端到端實踐。
+- [程式執行與並行處理知識索引](docs/concurrency/README.md)：已完成主線 12 篇，涵蓋程式執行本質與行程空間、Process vs Thread 排程與 Context Switch、協程與虛擬執行緒（M:N 排程）、CPU 快取階層與 MESI（False Sharing）、指令重排與 Happens-Before 記憶體模型、Mutex 與 Linux Futex、RWLock 與條件變數、死鎖防護與 Coffman 條件、CAS 原子操作與 ABA 防護、無鎖佇列與 Disruptor 環狀緩衝、I/O 多工模型演進（epoll 到 io_uring），以及生產環境執行緒池容量配置與背壓實務。
 
 各主題可以獨立閱讀與擴充，不要求先學完 Linux 才閱讀其他內容。需要其他主題的背景知識時，以相關文件連結補充。
 

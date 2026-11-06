@@ -204,6 +204,7 @@ Markdown 管線還須納入中文標點旁的粗體、數字範圍、表格與�
 - [分散式系統知識索引](docs/distributed-systems/README.md)：完整五階段共 18 篇已撰寫，於 2026-11-05 補齊原子提交、Saga、Outbox／Inbox、CRDT、故障歷程驗證與匯出整合案例。第三至第五階段由 agy 搜集整理研究與草稿，再由主編核對來源及改寫；僅做文件查證，未執行分散式部署或故障實驗。
 - [訊息佇列與事件驅動架構知識索引](docs/event-driven-architecture/README.md)：已完成主線 12 篇；僅做文件查證與概念推演，未部署 broker 或執行故障實驗。
 - [快取與資料存取架構知識索引](docs/caching/README.md)：已完成主線 12 篇；涵蓋存取模式、異常防禦、記憶體演算法、Redis 深度模型與多層一致性實踐，未執行生產壓測或故障注入。
+- [程式執行與並行處理知識索引](docs/concurrency/README.md)：已完成主線 12 篇；涵蓋程式執行本質與行程空間、Process vs Thread 排程與 Context Switch、協程與虛擬執行緒（M:N 排程）、CPU 快取階層與 MESI（False Sharing）、指令重排與 Happens-Before 記憶體模型、Mutex 與 Linux Futex、RWLock 與條件變數、死鎖防護與 Coffman 條件、CAS 原子操作與 ABA 防護、無鎖佇列與 Disruptor 環狀緩衝、I/O 多工模型演進（epoll 到 io_uring），以及生產環境執行緒池容量配置與背壓實務，未執行特定硬體微基準跑分。
 - 網站：已實作靜態頁面、來源網址映射、定稿視覺、閱讀工具與全文搜尋，尚未發布。自動驗收及剩餘缺口見 [網站驗收紀錄](docs/site-validation.md)。介面設計交接見 [網站設計](docs/site-design.md)，本機命令見 [專案入口](README.md#本機建置與驗證)。
 
 本文件是現行規劃。先前的學習產品決策地圖、練習流程、Multipass 環境選型、環境研究與互動原型已清理，不是目前文件站的必備需求；相關環境若有需要，須重新查證與驗證。
