@@ -193,9 +193,9 @@ Markdown 管線還須納入中文標點旁的粗體、數字範圍、表格與�
 - [專案入口](README.md)：定位與知識主題入口。
 - [Linux 知識索引](docs/linux/README.md)：已完成索引所列的 16 篇文章及一手來源，涵蓋九篇基礎與七篇深入主題；指令適用範圍與驗證情況見各篇，不代表已做 Linux 全環境實測。
 - [AWS 知識索引](docs/aws/README.md)：已完成索引所列的 22 篇文章及一手來源，涵蓋六篇基礎、十二篇服務分組與四篇服務關係；目前僅做文件查證，未建立 AWS 資源或驗證操作。
-- [API 共通知識索引](docs/api/README.md)：已完成索引所列的 21 篇概念文章及官方來源，涵蓋共通基礎、延伸議題（含身分授權、OAuth 2.0 授權模式、Token/JWT/JWKS 架構、微服務與 API 閘道授權）、HTTP、REST、gRPC 與 GraphQL；語言、框架與服務實作按需求補充。
+- [API 共通知識索引](docs/api/README.md)：已完成索引所列的 23 篇概念文章及官方來源，涵蓋共通基礎、延伸議題（含身分授權、OAuth 2.0 授權模式、Token/JWT/JWKS 架構、微服務與 API 閘道授權、細粒度 ReBAC 策略引擎、金融級 FAPI 與 DPoP）、HTTP、REST、gRPC 與 GraphQL；語言、框架與服務實作按需求補充。
 - [關聯式資料庫索引](docs/relational-databases/README.md)：已完成索引所列的 13 篇文章及一手來源；共通概念與 PostgreSQL 範例分開標示，本次未執行資料庫操作或效能測試。
-- [Web 應用資安索引](docs/web-security/README.md)：已完成索引所列的 14 篇文章及一手來源；聚焦 Web 信任邊界與防護原理（含 OIDC 身分聯邦與跨網域登出邊界），本次未部署應用或執行攻擊測試，不代表完整安全驗收。
+- [Web 應用資安索引](docs/web-security/README.md)：已完成索引所列的 16 篇文章及一手來源；聚焦 Web 信任邊界與防護原理（含 OIDC 身分聯邦、Passkeys/WebAuthn 防釣魚、企業級 SSO/SAML 橋接與 SCIM 2.0 帳號配置），本次未部署應用或執行攻擊測試，不代表完整安全驗收。
 - [電腦網路知識索引](docs/networking/README.md)：已完成索引所列的 16 篇基礎與進階架構文章及官方 RFC 來源，涵蓋封包交換、IP/CIDR、路由轉送、TCP/UDP、DNS、TLS 1.2/1.3 安全傳輸、HTTP 演進（HTTP/1.1~HTTP/3）、L4/L7 負載平衡與反向代理、ICMP 與 tcpdump 診斷觀測、NAT 穿透技術、IPv6 雙堆疊架構、BGP 跨域路由與 Anycast、SDN 與 Overlay 虛擬化（VXLAN/Geneve）、零信任與 mTLS 雙向認證，以及 CDN 階層快取與邊緣傳遞。
 - [分散式系統知識索引](docs/distributed-systems/README.md)：完整五階段共 18 篇已撰寫，於 2026-11-05 補齊原子提交、Saga、Outbox／Inbox、CRDT、故障歷程驗證與匯出整合案例。第三至第五階段由 agy 搜集整理研究與草稿，再由主編核對來源及改寫；僅做文件查證，未執行分散式部署或故障實驗。
 - [訊息佇列與事件驅動架構知識索引](docs/event-driven-architecture/README.md)：已完成主線 12 篇；僅做文件查證與概念推演，未部署 broker 或執行故障實驗。

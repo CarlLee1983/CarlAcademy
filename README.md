@@ -10,9 +10,9 @@
 
 - [Linux 知識索引](docs/linux/README.md)：已有索引所列的 16 篇文章，從系統與 Shell 基礎延伸至管理、儲存、效能、核心、容器隔離與 SSH 遠端連線邊界。
 - [AWS 知識索引](docs/aws/README.md)：已有索引所列的 22 篇文章，涵蓋雲端基礎、代表服務（含 KMS／Secrets Manager／Parameter Store 與 SQS／SNS／EventBridge）與服務組合。
-- [API 共通知識索引](docs/api/README.md)：已有 21 篇概念文章，涵蓋共通基礎、延伸議題（含身分授權、OAuth 2.0 許可模式、Token/JWT/JWKS 架構、微服務與 API 閘道授權、長時間操作與 Webhook 事件回呼）、HTTP、REST、gRPC 與 GraphQL；語言實作按需求補充。
+- [API 共通知識索引](docs/api/README.md)：已有 23 篇概念文章，涵蓋共通基礎、延伸議題（含身分授權、OAuth 2.0 許可模式、Token/JWT/JWKS 架構、微服務授權、細粒度 ReBAC 策略引擎、金融級 FAPI/DPoP、長時間操作與 Webhook 事件回呼）、HTTP、REST、gRPC 與 GraphQL；語言實作按需求補充。
 - [關聯式資料庫索引](docs/relational-databases/README.md)：已有 13 篇文章，涵蓋資料模型、鍵與關聯、SQL、約束、正規化、交易隔離、索引、MVCC 與鎖定、結構演進與遷移、檢視表與觸發器、CTE 與視窗函數、JSONB 混合建模，以及分割表與連線資源管理；產品範例明示適用範圍。
-- [Web 應用資安索引](docs/web-security/README.md)：已有 14 篇文章，涵蓋信任邊界、登入與 Session、存取控制、SQL Injection、XSS、CSRF、機密與敏感資料、檔案上傳、SSRF、第三方登入與 OIDC 身分聯邦／單一登出、TLS 與傳輸邊界、限流與配額防護，以及軟體供應鏈與第三方腳本邊界。
+- [Web 應用資安索引](docs/web-security/README.md)：已有 16 篇文章，涵蓋信任邊界、登入與 Session、存取控制、SQL Injection、XSS、CSRF、機密與敏感資料、檔案上傳、SSRF、第三方登入與 OIDC 身分聯邦、Passkeys 無密碼防釣魚（WebAuthn/FIDO2）、企業級 SSO/SAML 橋接與 SCIM 2.0 帳號配置、TLS 傳輸邊界、限流與配額防護，以及軟體供應鏈邊界。
 - [電腦網路知識索引](docs/networking/README.md)：已有 16 篇文章，涵蓋封包交換與網路模型、IP 位址與 CIDR、路由轉送、TCP／UDP 傳輸、DNS 解析、TLS 1.2／1.3 安全傳輸、HTTP 協定演進（HTTP/1.1~HTTP/3 QUIC）、L4／L7 負載平衡與反向代理、網路診斷與 ICMP／tcpdump 觀測、NAT 穿透（STUN／TURN／ICE）、IPv6 架構與雙堆疊過渡、BGP 跨域路由與 Anycast、SDN 與 Overlay 虛擬化（VXLAN／Geneve）、零信任與 mTLS 雙向認證，以及 CDN 邊緣快取與動態傳遞架構。
 - [分散式系統知識索引](docs/distributed-systems/README.md)：完整主線 18 篇已撰寫，從部分失敗、冪等、時鐘與多副本契約，深入共識、Raft、租約與分片，接續原子提交、Saga、Outbox／Inbox、CRDT、故障歷程驗證及文章匯出整合案例。
 - [訊息佇列與事件驅動架構知識索引](docs/event-driven-architecture/README.md)：已完成 12 篇，從非同步工作邊界、命令與事件、傳遞模型與確認，深入並行順序、重試與死信、Outbox、Schema 演進、訂閱隔離、重播、觀測及多下游匯出整合。

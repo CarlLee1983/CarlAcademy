@@ -3,8 +3,8 @@
 從介面與契約理解 API，再依需要閱讀 HTTP、設計風格與具體技術。
 本索引不指定主要程式語言或框架。
 
-**目前狀態：本索引列出的 21 篇概念文章已整理；各語言、框架與服務的實作範例按需求另行補充。**
-內容涵蓋五篇共通基礎、八篇共通延伸、五篇 HTTP，以及 REST、gRPC、GraphQL 三篇專題。
+**目前狀態：本索引列出的 23 篇概念文章已整理；各語言、框架與服務的實作範例按需求另行補充。**
+內容涵蓋五篇共通基礎、十篇共通延伸、五篇 HTTP，以及 REST、gRPC、GraphQL 三篇專題。
 
 查證日期：2026-11-02。分類與閱讀順序是本站的編輯提案，並非通用標準分類。
 
@@ -62,6 +62,8 @@ GraphQL 定義查詢語言與執行語意，官方文件說明它不要求特定
 - **[OAuth 2.0 授權模式與許可類型](oauth-authorization-flows-and-grant-types.md)**：在需要委託存取或服務間授權時，深入四大角色、PKCE、M2M 憑證、裝置流程與 Refresh Token 輪替。
 - **[Token 架構、JWT 簽章與 JWKS 金鑰輪替](tokens-jwt-and-jwks-architecture.md)**：需要選擇與驗證權杖時，比較 Reference Token 與 JWT，解析內省端點、非對稱簽章演算法與 JWKS 動態公鑰輪替。
 - **[微服務與 API 閘道授權架構](microservices-and-api-gateway-authorization.md)**：在分散式系統與微服務中，處理閘道邊界驗簽、Token 降級交換（Token Exchange）、內部簽章防偽與鏈式呼叫的身分委託（Actor）。
+- **[細粒度授權、ReBAC 與策略引擎](fine-grained-authorization-and-policy-engines.md)**：超出粗粒度 Scope 時，探討 RBAC/ABAC 到 Zanzibar 關係圖譜模型（ReBAC），以及 Partial Evaluation 如何將策略編譯為 SQL。
+- **[金融級 OAuth：DPoP、mTLS 與推播授權請求](fapi-dpop-and-mtls-oauth-security.md)**：在金融與高安全需求下，掌握持有者證明（RFC 9449 DPoP 與 RFC 8705 mTLS 憑證綁定），以及 PAR/JAR 防範前端參數洩漏。
 - **[逾時、重試與冪等性](timeouts-retries-and-idempotency.md)**：以遠端操作為重點，整理重複執行、部分失敗及副作用。
 - **[集合查詢設計](collection-query-design.md)**：有集合介面時，整理篩選、排序、分頁與一致性的取捨。
 - **[長時間執行操作與非同步 API 契約](long-running-operations-and-async-apis.md)**：操作無法在單次請求期限內完成時，分離受理請求與完成工作，整理操作資源、輪詢、取消與保留期。
