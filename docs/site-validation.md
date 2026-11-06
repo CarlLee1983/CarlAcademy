@@ -103,3 +103,26 @@ pnpm run verify
 | `tests/search.test.mjs` | 同檔，範例 `/academy/`；根路徑搜尋的執行期 base 由 `tests/integration.test.mjs` 驗證 |
 
 本次結果：code review 修正後的最終版本 `pnpm run verify` 連續兩次 **56／56 通過**，牆鐘 60.6、57.9 秒（精簡前約 150 秒），macOS arm64 本機、無其他負載。CI 結果見整合分支的 PR。
+
+
+## 教材圖解介面更新（2026-11-05）
+
+- 對應設計：`docs/site-design.md` 的「現行設計」，v7 原型正式實作。保留淺色／深色／跟隨系統、現有 Pagefind 與全部閱讀工具。
+- 最終功能來源：本輪未提交變更（基底 `e3073d8`）。`pnpm run verify` 成功：Astro **0 errors / 0 warnings / 0 hints**；**57 tests / 57 pass / 0 fail**。測試段約 79.2 秒；包含 137 個公開網址與 548 組頁面／尺寸／base 檢查。
+- 新增外觀檢查：兩個代表 API 頁面的圖解可存取名稱、圖說、淺／深／系統切換與重新整理後文字對比至少 4.5:1；360／768／1440 寬的圖中文字至少 14px、文件標題點擊高度至少 44px；停用 JS 時圖解配色跟隨系統。
+- 外觀測試新增部分使用真實 API 文件（原有基本外觀測試仍用範例），以覆蓋指定文章的概念圖。這是前述範例／真實內容分層的有界擴充。
+- 代理畫面檢查：首頁、API 主題與代表文章，1440／390 寬、淺／深；另查 768 平板圖解。截圖與執行紀錄保存在 `~/Documents/design-experience/CarlAcademy/visual-language/prototypes/v7/production-shots/`。
+- 修正過的回歸：正文起點超過 610px、表頭分隔由 2px 變成 1px、平板圖解縮小、文件連結點擊高度不足。前兩項由既有測試抓出，後兩項由獨立唯讀審查指出；修正後針對性 7/7、完整 57/57 通過，複查沒有剩餘 material findings。
+- 已知測試不穩定：完整驗證有一次在 200% 模擬中，原生主題選單輸入 API 時跳到 AWS，導致等候網址逾時；未修改產品或放寬測試，原案例單獨重跑及後續完整驗證皆通過。保留這項時序現象，不把重跑當成已修復測試不穩定。
+- 未執行正式部署、實機 Safari／Android 或真人長文試讀；桌面／手機結果來自 Chromium。沒有新增依賴。
+
+
+## 首頁紙雕小卡上線（2026-11-06）
+
+- 使用者接受 v10 並授權部署；首頁整合真實標題、篇數與首篇閱讀路徑，新增最佳化 WebP 圖集與首頁專屬樣式。
+- `pnpm run verify`：57/57 通過，Astro 0 errors / warnings / hints；137 個公開網址、548 組尺寸／base 檢查。新增桌面字級、手機溢出／觸控目標、閱讀入口無下劃線及兩種 base 圖集載入檢查。
+- 獨立唯讀複查修正舊大圖測試與搜尋結果下劃線後，沒有剩餘 material findings。瀏覽器人工確認候選首頁與搜尋，正式首頁已載入；手機尺寸由 Chromium 自動測試覆蓋，未聲稱實機驗證。
+- 以 `SITE_URL=https://academy.gravito.dev BASE_PATH=/ pnpm run build` 建置；來源為基底 `e3073d84c5a6c487ce7368ed01120f2d8aba6254` 上的未提交工作。未 commit 或 push。
+- Cloudflare `carlacademy` 正式網址：<https://academy.gravito.dev/>。版本 `93762a74-0b31-45ae-9542-81a716dfc111`，部署 `3f10a8ee-43a8-44fe-a68b-0ceb1f507927`，100% 流量。
+- 候選與正式端均逐檔比對 339 個檔案／137 頁，SHA-256 `677c20732d40af1b70b0784ffdf35065743020d4ac003eda157fcaffba43c429`；內部文件與不存在路徑回應 404，無尾斜線網址正常轉址。正式驗證時間 `2026-11-06T02:11:07Z`。
+- 封存產物、來源指紋、上傳／部署紀錄及 HTTP 驗證收據：`.wrangler/releases/carlacademy-home-cgq3t_i3/`（本機忽略目錄）。前版 `07a63098-f990-4411-aba9-a4fca0d7c6de` 保留供必要時回復；本輪未執行回復。

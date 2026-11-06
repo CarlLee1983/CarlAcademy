@@ -2,26 +2,47 @@
 import DocumentLayout from '../layouts/DocumentLayout.astro';
 import { getDocuments, topicName } from '../utils/collections';
 import { withBase } from '../utils/urls';
-import { Image } from 'astro:assets';
-import knowledgeFolio from '../assets/knowledge-folio.png';
+import '../styles/home.css';
 const documents = await getDocuments();
 const indexes = documents.filter(entry => entry.data.isIndex);
 ---
 <DocumentLayout title="首頁">
   <div class="shell home-content">
     <section class="home-masthead" aria-labelledby="home-title">
-      <p class="kicker">CARLACADEMY <span>知識文件</span></p>
-      <div class="masthead-grid"><h1 id="home-title">工程與技術<br />知識索引</h1><div class="home-intro"><Image src={knowledgeFolio} width={480} format="webp" alt="" aria-hidden="true" class="home-illustration" loading="eager" /><div class="abstract"><p class="abstract-label">閱讀起點</p><p>Linux、AWS、API、關聯式資料庫與 Web 應用資安。從基礎概念讀起，也能直接查找工作中的問題。</p></div></div></div>
+      <div class="hero-copy">
+        <h1 id="home-title">工程與技術<br />知識索引</h1>
+        <div class="abstract"><p>從基礎概念讀起，理解系統如何運作。依主題探索，也能直接查找工作中的問題。</p></div>
+        <a class="topic-begin" href="#catalogue-title">
+          <svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="6" height="6" rx="1.5" /><rect x="14" y="4" width="6" height="6" rx="1.5" /><rect x="4" y="14" width="6" height="6" rx="1.5" /><rect x="14" y="14" width="6" height="6" rx="1.5" /></svg>
+          探索知識主題
+        </a>
+      </div>
     </section>
     <form class="home-search" role="search" data-search-form hidden data-pagefind-ignore>
       <label for="home-query">查找概念、服務與問題</label>
-      <div><input id="home-query" name="query" type="search" placeholder="搜尋中文或英文關鍵字" /><button type="submit">搜尋</button></div>
+      <div>
+        <input id="home-query" name="query" type="search" placeholder="搜尋中文或英文關鍵字" />
+        <button type="submit"><svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6" /><path d="m15 15 4.5 4.5" /></svg>搜尋</button>
+      </div>
     </form>
     <section class="home-catalogue" aria-labelledby="catalogue-title">
       <div class="catalogue-heading"><h2 id="catalogue-title">依主題閱讀</h2><p>目前收錄 {documents.filter(entry => !entry.data.isIndex).length} 篇文件</p></div>
-      <div class="home-topic-list">{indexes.map(entry => {
+      <div class="home-topic-list">{indexes.map((entry, index) => {
         const articles = documents.filter(doc => doc.data.topic === entry.data.topic && !doc.data.isIndex);
-        return <article class="topic-row"><div><h3 class="topic-name"><a href={withBase(entry.data.route, import.meta.env.BASE_URL)} aria-label={entry.data.title}>{topicName(entry.data.title)}</a></h3><p class="topic-description">{entry.data.summary}</p></div><div class="topic-end"><span class="topic-count">{articles.length} 篇文件</span><a class="topic-start" href={withBase(articles[0].data.route, import.meta.env.BASE_URL)}>從 {articles[0].data.title} 開始</a></div></article>;
+        const route = withBase(entry.data.route, import.meta.env.BASE_URL);
+        const name = topicName(entry.data.title);
+        return <article class="topic-row">
+          <a class="paper-cover" href={route} aria-label={`探索 ${name}`} style={`--x:${index % 4 / 3 * 100}%;--y:${Math.floor(index / 4) * 100}%`} />
+          <div class="card-copy">
+            <h3 class="topic-name"><a href={route} aria-label={entry.data.title}>{name}</a></h3>
+            <span class="topic-count"><span class="count-value">{articles.length}</span><span>篇文件</span></span>
+            <p class="topic-description">{entry.data.summary}</p>
+          </div>
+          <a class="topic-start" href={withBase(articles[0].data.route, import.meta.env.BASE_URL)}>
+            <span class="reading-label">從 {articles[0].data.title} 開始</span>
+            <span class="reading-seal"><svg class="detail-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path class="book-fill" d="M4 5.5h5.5c1 0 1.8.4 2.5 1.1.7-.7 1.5-1.1 2.5-1.1H20v13h-5.5c-1 0-1.8.3-2.5 1-.7-.7-1.5-1-2.5-1H4Z" /><path d="M12 6.6v12.9M7 9h2m-2 3h2m6-3h2" /><path class="book-tab" d="M16 5.5v7l1.5-1 1.5 1v-7" /></svg></span>
+          </a>
+        </article>;
       })}</div>
     </section>
   </div>
