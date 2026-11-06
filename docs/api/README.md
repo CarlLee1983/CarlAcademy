@@ -3,8 +3,8 @@
 從介面與契約理解 API，再依需要閱讀 HTTP、設計風格與具體技術。
 本索引不指定主要程式語言或框架。
 
-**目前狀態：本索引列出的 20 篇概念文章已整理；各語言、框架與服務的實作範例按需求另行補充。**
-內容涵蓋五篇共通基礎、七篇共通延伸、五篇 HTTP，以及 REST、gRPC、GraphQL 三篇專題。
+**目前狀態：本索引列出的 21 篇概念文章已整理；各語言、框架與服務的實作範例按需求另行補充。**
+內容涵蓋五篇共通基礎、八篇共通延伸、五篇 HTTP，以及 REST、gRPC、GraphQL 三篇專題。
 
 查證日期：2026-11-02。分類與閱讀順序是本站的編輯提案，並非通用標準分類。
 
@@ -61,6 +61,7 @@ GraphQL 定義查詢語言與執行語意，官方文件說明它不要求特定
 - **[身分驗證與授權](authentication-and-authorization.md)**：在有身分與存取控制需求時，整理身分、操作與資源的關係。
 - **[OAuth 2.0 授權模式與許可類型](oauth-authorization-flows-and-grant-types.md)**：在需要委託存取或服務間授權時，深入四大角色、PKCE、M2M 憑證、裝置流程與 Refresh Token 輪替。
 - **[Token 架構、JWT 簽章與 JWKS 金鑰輪替](tokens-jwt-and-jwks-architecture.md)**：需要選擇與驗證權杖時，比較 Reference Token 與 JWT，解析內省端點、非對稱簽章演算法與 JWKS 動態公鑰輪替。
+- **[微服務與 API 閘道授權架構](microservices-and-api-gateway-authorization.md)**：在分散式系統與微服務中，處理閘道邊界驗簽、Token 降級交換（Token Exchange）、內部簽章防偽與鏈式呼叫的身分委託（Actor）。
 - **[逾時、重試與冪等性](timeouts-retries-and-idempotency.md)**：以遠端操作為重點，整理重複執行、部分失敗及副作用。
 - **[集合查詢設計](collection-query-design.md)**：有集合介面時，整理篩選、排序、分頁與一致性的取捨。
 - **[長時間執行操作與非同步 API 契約](long-running-operations-and-async-apis.md)**：操作無法在單次請求期限內完成時，分離受理請求與完成工作，整理操作資源、輪詢、取消與保留期。
