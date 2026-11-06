@@ -113,9 +113,9 @@ main:focus {
   outline: none;
 }
 .shell {
-  max-width: 1296px;
+  max-width: 1400px;
   margin: auto;
-  padding: 0 48px;
+  padding: 0 40px;
 }
 .skip {
   position: fixed;
@@ -134,8 +134,8 @@ main:focus {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: 24px;
-  padding: 24px 0;
+  gap: 16px 20px;
+  padding: 20px 0;
   border-bottom: 1px solid var(--line);
 }
 .wordmark {
@@ -147,7 +147,7 @@ main:focus {
   text-decoration: none;
   display: flex;
   align-items: center;
-  min-height: 44px;
+  min-height: 40px;
   gap: 10px;
 }
 .wordmark > img {
@@ -162,15 +162,15 @@ main:focus {
 .global-nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 24px;
+  gap: 14px;
   align-items: center;
   min-width: 0;
 }
 .global-nav a {
   display: flex;
   align-items: center;
-  font-size: 14px;
-  min-height: 44px;
+  font-size: 13.5px;
+  min-height: 40px;
   white-space: nowrap;
   font-weight: 600;
   text-decoration: none;
@@ -450,15 +450,16 @@ img {
 code {
   font-family: ui-monospace, monospace;
 }
-@media (max-width: 1250px) {
+@media (max-width: 1320px) {
   .global-nav {
-    gap: 16px;
+    gap: 10px;
+    font-size: 13px;
   }
   .theme-control > span {
     display: none;
   }
 }
-@media (max-width: 1050px) {
+@media (max-width: 1180px) {
   .shell {
     padding: 0 32px;
   }
