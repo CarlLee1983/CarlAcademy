@@ -188,6 +188,10 @@ Markdown 管線還須納入中文標點旁的粗體、數字範圍、表格與�
 
 2026-11-06 接續完成「快取與資料存取架構」主題。已完善 [12 篇內容規劃](docs/research/caching-plan.md)，並依 [一手來源查核](docs/research/caching-sources.md) 完成全部 12 篇與 [公開主題索引](docs/caching/README.md)。主線涵蓋記憶體階層、讀寫模式（Cache-Aside 到 Write-Behind）、TTL 與清除機制、快取穿透（Bloom Filter）、快取擊穿（Mutex / SingleFlight / Lease）、快取雪崩（Jitter / 熔斷降級）、逐出演算法（LRU 至 W-TinyLFU）、記憶體碎片與序列化、Redis 核心資料結構與執行模型、Redis 持久化複寫與 Cluster、雙寫一致性（CDC），以及多層快取整合實踐。
 
+### 下一個主題：程式執行與並行處理
+
+2026-11-06 接續啟動「程式執行與並行處理」主題。已完善 [12 篇內容規劃](docs/research/concurrency-runtime-plan.md)，並依 [一手來源查核](docs/research/concurrency-runtime-sources.md) 定位核心規範。主線涵蓋程式執行本質與行程空間、Process vs Thread 排程與 Context Switch、協程與虛擬執行緒（M:N 排程）、CPU 快取階層與 MESI（False Sharing）、指令重排與 Happens-Before 記憶體模型、Mutex 與 Linux Futex、RWLock 與條件變數、死鎖防護與 Coffman 條件、CAS 原子操作與 ABA 防護、無鎖佇列與 Disruptor 環狀緩衝、I/O 多工模型演進（epoll 到 io_uring），以及生產環境執行緒池容量配置與背壓實務。完成狀態由 [公開主題索引](docs/concurrency/README.md) 維護。
+
 ## 目前狀態與文件入口
 
 - [專案入口](README.md)：定位與知識主題入口。
