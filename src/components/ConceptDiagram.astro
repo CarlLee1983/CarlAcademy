@@ -1,0 +1,54 @@
+---
+interface Props { topic?: string; variant?: 'http'; compact?: boolean }
+const { topic = 'api', variant, compact = false } = Astro.props;
+// These are deliberately small concept overviews, not deployment architectures.
+const overviews: Record<string, { labels: [string, string, string]; caption: string; flow?: boolean }> = {
+  api: { labels: ['使用者', '公開契約', '提供者'], caption: '使用者依照公開契約使用能力；實作細節留在介面後方。', flow: true },
+  linux: { labels: ['應用程式', '系統呼叫', 'Linux 核心'], caption: '應用程式透過系統呼叫，使用核心提供的能力。', flow: true },
+  aws: { labels: ['運算', '網路', '儲存'], caption: '從運算、網路與儲存等基礎能力，理解雲端服務的組合。' },
+  'relational-databases': { labels: ['資料模型', 'SQL', '交易'], caption: '從資料模型、查詢與交易，理解資料的組織與一致性。' },
+  'web-security': { labels: ['身分', '權限', '信任邊界'], caption: '辨識身分、限制權限，並在跨越信任邊界時驗證資料。' },
+  networking: { labels: ['應用', '通訊協定', '封包傳輸'], caption: '把應用需求、通訊規則與封包傳輸連起來理解。' },
+  'distributed-systems': { labels: ['節點', '通訊', '一致性'], caption: '當工作分散到多個節點，通訊與一致性成為核心問題。' },
+  'event-driven-architecture': { labels: ['事件來源', '訊息通道', '處理者'], caption: '事件經由訊息通道傳遞；處理、重試與重播各有自己的責任。', flow: true },
+  caching: { labels: ['應用程式', '快取階層', '真實資料源'], caption: '以記憶體快取吸收高頻讀取；過期、逐出與一致性守護真實資料源。', flow: true },
+};
+const overview = variant === 'http'
+  ? { labels: ['用戶端', 'HTTP 訊息', '伺服器'], caption: '用戶端送出請求，伺服器以回應表達結果；本文再拆解訊息的組成。', flow: true }
+  : overviews[topic];
+---
+{overview && <figure class:list={['concept-diagram', { 'concept-diagram-compact': compact }]}>
+  <svg viewBox="0 0 520 190" role="img" aria-label={overview.caption}>
+    <path class="concept-connection" d="M148 92h44m132 0h44" />
+    {overview.flow && <path class="concept-connection" d="m182 85 10 7-10 7m176-14 10 7-10 7" />}
+    {overview.labels.map((label, index) => <g>
+      <rect class:list={['concept-node', { 'concept-node-emphasis': index === 1 }]} x={16 + index * 176} y="40" width="136" height="110" rx="12" />
+      <g class="concept-symbol" transform={`translate(${64 + index * 176}, 58)`} aria-hidden="true">
+        {index === 0 ? <><rect x="0" y="0" width="40" height="28" rx="3" /><path d="M-6 34h52" /></>
+          : index === 1 ? <><rect x="8" y="0" width="24" height="32" rx="3" /><path d="M0 8h8m24 0h8M0 24h8m24 0h8" /></>
+          : <><rect x="0" y="0" width="40" height="32" rx="3" /><path d="M0 16h40M7 8h3m-3 16h3" /></>}
+      </g>
+      <text class="concept-label" x={84 + index * 176} y="126" text-anchor="middle">{label}</text>
+    </g>)}
+    {variant === 'http' && <><path class="concept-connection" d="M436 158v18H84v-18m-7 10 7-10 7 10" /><text class="concept-return" x="260" y="184" text-anchor="middle">回應</text></>}
+  </svg>
+  <figcaption>{overview.caption}</figcaption>
+</figure>}
+<style>
+  .concept-diagram { margin:0; padding:24px; min-width:0; background:var(--wash); border:1px solid var(--line); border-radius:16px; }
+  .concept-diagram svg { display:block; width:100%; height:auto; overflow:visible; }
+  .concept-node { fill:var(--surface); stroke:var(--muted); stroke-width:1.2; }
+  .concept-node-emphasis { fill:var(--wash); stroke:var(--accent); stroke-width:1.8; }
+  .concept-connection,.concept-symbol { fill:none; stroke:var(--accent); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .concept-label { fill:var(--ink); font:700 22px 'Academy Sans',sans-serif; }
+  .concept-return { fill:var(--muted); stroke:var(--wash); stroke-width:8px; paint-order:stroke; font:22px 'Academy Sans',sans-serif; }
+  figcaption { color:var(--muted); font-size:14px; line-height:1.7; margin-top:12px; }
+  .concept-diagram-compact { margin:0 0 32px; padding:16px 24px; }
+  .concept-diagram-compact svg { max-width:460px; margin:auto; }
+  @media(max-width:700px) {
+    .concept-diagram { padding:16px 8px; border-radius:12px; }
+    .concept-label { font-size:25px; }
+    .concept-return { font-size:25px; }
+    figcaption { padding:0 8px; }
+  }
+</style>

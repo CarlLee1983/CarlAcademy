@@ -1,12 +1,12 @@
 [hidden] { display: none !important; }
-.search-open, .search-heading button { background: transparent; color: var(--accent); border: 0; border-bottom: 1px solid var(--line); padding: 8px; min-height: 44px; cursor: pointer; }
+.search-open, .search-heading button { background: var(--wash); color: var(--accent); border: 1px solid var(--line); border-radius: 8px; padding: 8px; min-height: 44px; cursor: pointer; }
 .home-search { padding: 40px 0; border-bottom: 1px solid var(--line); }
 .home-search label { display: block; margin-bottom: 16px; font-weight: 600; }
 .home-search > div { display: flex; gap: 16px; }
 .home-search input { flex: 1; min-width: 0; }
-.home-search input, #search-query { font: inherit; background: var(--wash); color: var(--ink); border: 1px solid var(--muted); padding: 12px 16px; min-height: 52px; border-radius: 0; }
-.home-search button, [data-search-retry] { background: var(--accent); color: var(--paper); border: 0; padding: 8px 24px; min-height: 44px; font: inherit; cursor: pointer; }
-.search-dialog { width: min(760px, calc(100% - 32px)); max-height: 85dvh; padding: 32px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-top: 4px solid var(--accent); overflow: auto; overscroll-behavior: contain; }
+.home-search input, #search-query { font: inherit; background: var(--wash); color: var(--ink); border: 1px solid var(--muted); padding: 12px 16px; min-height: 52px; border-radius: 8px; }
+.home-search button, [data-search-retry] { background: var(--accent); color: var(--paper); border: 0; border-radius: 8px; padding: 8px 24px; min-height: 44px; font: inherit; cursor: pointer; }
+.search-dialog { width: min(760px, calc(100% - 32px)); max-height: 85dvh; padding: 32px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 16px; overflow: auto; overscroll-behavior: contain; }
 .search-dialog::backdrop { background: rgb(10 20 40 / .65); }
 .search-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px; }
 .search-heading h2 { margin: 0; font-size: 24px; }

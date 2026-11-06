@@ -1,22 +1,23 @@
 .article-breadcrumb { display:flex; flex-wrap:wrap; gap:16px; font-size:14px; color:var(--muted); margin-top:24px; }
 .article-breadcrumb a { min-height:24px; text-decoration-color:var(--line); }
 .article-breadcrumb a:is(:hover,:focus-visible) { color:var(--accent); text-decoration-color:currentColor; }
-.article-page .article-masthead { padding:40px 0 44px; }
-.article-masthead .kicker { min-height:48px; margin:0; }
-.article-topic-number { margin-left:auto; font:700 64px/.75 "Academy Grotesk",sans-serif; letter-spacing:-2px; color:transparent; -webkit-text-stroke:1.5px var(--outline); }
-.article-masthead .masthead-grid { margin-top:24px; }
-.article-masthead h1 { font-size:64px; line-height:1.15; letter-spacing:-2px; animation:rise .7s cubic-bezier(.2,.7,.2,1) both; }
-.article-layout { display:grid; grid-template-columns:200px minmax(0,var(--reading-column-width,680px)); column-gap:64px; padding:8px 0 96px; container-type:inline-size; }
-.article-sidebar { align-self:start; position:sticky; top:24px; max-height:calc(100dvh - 48px); overflow:auto; scrollbar-width:thin; font-size:14px; }
+.article-page .article-masthead { margin-top:16px; padding:8px 0 16px; border-bottom:0; }
+.article-masthead .kicker { min-height:24px; margin:0; }
+.article-topic-number { margin-left:auto; font:500 14px/1.5 "Academy Grotesk",sans-serif; color:var(--muted); }
+.article-masthead .masthead-grid { margin-top:20px; grid-template-columns:minmax(0,1fr); gap:12px; }
+.article-masthead .abstract { max-width:850px; font-size:18px; }
+.article-masthead h1 { max-width:1000px; font-size:48px; line-height:1.35; letter-spacing:-1.4px; }
+.article-layout { display:grid; grid-template-columns:200px minmax(0,var(--reading-column-width,680px)); column-gap:64px; padding:40px 0 72px; border-top:3px solid var(--accent); container-type:inline-size; }
+.article-sidebar { align-self:start; position:sticky; top:24px; max-height:calc(100dvh - 48px); overflow:auto; scrollbar-width:thin; font-size:14px; padding-right:16px; border-right:1px solid var(--line); }
 .article-sidebar :focus-visible { outline-offset:-3px; }
 .article-sidebar ol,.mobile-chapters ol { list-style:none; margin:0; padding:0; }
 .article-toc { margin-bottom:40px; }
 .index-label { margin:0 0 16px; font-weight:700; font-family:"Academy Grotesk","Academy Sans",sans-serif; letter-spacing:1px; }
-.article-sidebar a,.mobile-chapters a { display:block; padding:6px 0; min-height:36px; color:var(--muted); text-decoration:none; overflow-wrap:anywhere; }
+.article-sidebar a,.mobile-chapters a { display:block; padding:8px 12px; min-height:36px; color:var(--muted); text-decoration:none; overflow-wrap:anywhere; }
 .article-toc li[data-depth="3"] { padding-left:12px; }
 .article-toc li[data-depth="4"],.article-toc li[data-depth="5"],.article-toc li[data-depth="6"] { padding-left:24px; }
 .article-sidebar a:hover,.mobile-chapters a:hover { color:var(--accent); text-decoration:underline; }
-.article-sidebar a[aria-current],.mobile-chapters a[aria-current] { color:var(--accent); font-weight:700; box-shadow:inset 2px 0 var(--accent); padding-left:12px; }
+.article-sidebar a[aria-current],.mobile-chapters a[aria-current] { color:var(--accent); font-weight:700; background:var(--wash); box-shadow:inset 3px 0 var(--accent); border-radius:0 6px 6px 0; }
 .topic-documents { border-top:1px solid var(--line); padding-top:16px; }
 .topic-documents summary,.mobile-chapters > summary { min-height:44px; padding:8px 0; cursor:pointer; }
 .topic-documents summary { margin-bottom:16px; color:var(--muted); }
@@ -25,29 +26,27 @@
 .mobile-chapters,.mobile-lede { display:none; }
 #article-body { min-width:0; font-size:var(--reading-font-size,1.125rem); line-height:var(--reading-line-height,1.8); }
 #article-body :is(h2,h3,h4,h5,h6) { scroll-margin-top:72px; }
-#article-body h2 { font-size:1.5em; line-height:1.4; letter-spacing:-.5px; margin:72px 0 24px; padding-top:24px; border-top:2px solid var(--ink); }
+#article-body h2 { font-size:1.5em; line-height:1.4; letter-spacing:-.5px; margin:56px 0 24px; padding-top:16px; border-top:1px solid var(--line); }
 #article-body h2:first-child { margin-top:0; }
-#article-body h2::before { content:""; display:block; width:48px; height:6px; background:var(--accent); margin:-27px 0 24px; }
 #article-body h3 { font-size:1.17em; line-height:1.5; margin:32px 0 16px; }
 #article-body :is(p,ul,ol) { margin:0 0 24px; text-wrap:pretty; }
 #article-body :is(ul,ol) { padding-left:24px; }
 #article-body li { margin-bottom:8px; }
 #article-body strong { font-weight:700; }
-#article-body code { font-size:.89em; background:var(--code); padding:2px 4px; overflow-wrap:anywhere; }
-#article-body pre { border-left:6px solid var(--accent); margin:32px 0; line-height:1.7; tab-size:4; }
+#article-body code { font-size:.89em; background:var(--code); padding:2px 4px; border-radius:3px; overflow-wrap:anywhere; }
+#article-body pre { border:1px solid var(--line); border-radius:10px; margin:32px 0; line-height:1.7; tab-size:4; }
 #article-body pre code { padding:0; background:transparent; overflow-wrap:normal; white-space:pre; }
 #article-body table { width:100%; margin:32px 0; font-size:.89em; line-height:1.7; font-variant-numeric:tabular-nums; }
 #article-body :is(th,td) { border:0; border-bottom:1px solid var(--line); padding:16px; min-width:160px; text-align:left; vertical-align:top; }
-#article-body th { background:var(--wash); border-bottom:2px solid var(--ink); }
+#article-body th { background:var(--wash); border-bottom:1px solid var(--line); }
 #article-body td:first-child { font-weight:600; }
 #article-body blockquote { margin:32px 0; padding-left:24px; border-left:2px solid var(--accent); color:var(--muted); }
 #article-body hr { border:0; border-top:1px solid var(--line); margin:48px 0; }
-.article-next { position:relative; display:flex; justify-content:space-between; gap:32px; padding:48px 0 56px 264px; background:var(--block); color:var(--on-block); box-shadow:0 0 0 100vmax var(--block); clip-path:inset(0 -100vmax); }
-.article-next a { max-width:48%; font:700 24px/1.4 "Academy Grotesk","Academy Sans",sans-serif; letter-spacing:-.5px; text-decoration:none; min-height:44px; }
+.article-next { display:flex; justify-content:space-between; gap:32px; margin-bottom:48px; padding:32px 0 0 264px; border-top:1px solid var(--line); }
+.article-next a { max-width:48%; font:700 20px/1.5 "Academy Grotesk","Academy Sans",sans-serif; letter-spacing:-.4px; text-decoration:none; min-height:44px; }
 .article-next a[rel="next"] { margin-left:auto; }
-.article-next small { display:block; margin-bottom:8px; font:500 14px/1.5 "Academy Grotesk","Academy Sans",sans-serif; letter-spacing:2px; color:var(--on-block-muted); }
-.article-next a:is(:hover,:focus-visible) > span { text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:.22em; }
-.article-next :focus-visible { outline-color:var(--on-block); }
+.article-next small { display:block; margin-bottom:8px; font:500 14px/1.5 "Academy Grotesk","Academy Sans",sans-serif; color:var(--muted); }
+.article-next a:is(:hover,:focus-visible) > span { color:var(--accent); text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:.22em; }
 @media (max-width:1050px) {
   .article-layout { grid-template-columns:168px minmax(0,var(--reading-column-width,680px)); column-gap:40px; }
   .article-next { padding-left:208px; }
@@ -56,11 +55,11 @@
   .article-breadcrumb { display:none; }
   .article-page .article-masthead { margin-top:16px; padding:24px 0 32px; }
   .article-masthead .kicker { min-height:32px; gap:12px; }
-  .article-topic-number { font-size:40px; }
+  .article-topic-number { font-size:14px; }
   .article-masthead .masthead-grid { margin-top:16px; }
-  .article-masthead h1 { font-size:40px; line-height:1.2; letter-spacing:-1px; text-wrap:balance; }
+  .article-masthead h1 { font-size:36px; line-height:1.35; letter-spacing:-1px; text-wrap:balance; }
   .article-masthead .abstract,.article-sidebar,.document-position { display:none; }
-  .mobile-chapters { display:block; margin-top:16px; padding-bottom:16px; border-bottom:1px solid var(--line); font-size:14px; }
+  .mobile-chapters { display:block; margin:16px 0 24px; padding:8px 16px; border-radius:8px; background:var(--wash); font-size:14px; }
   .mobile-chapters > summary { font-weight:700; }
   .mobile-chapters .article-toc { margin-top:24px; }
   .article-layout { display:block; padding:24px 0 56px; }
@@ -69,7 +68,7 @@
   #article-body h2 { margin-top:56px; }
   #article-body :is(p,ul,ol) { margin-bottom:20px; }
   #article-body li { margin-bottom:12px; }
-  #article-body pre { padding:16px; border-left-width:4px; }
+  #article-body pre { padding:16px; }
   .article-next { flex-direction:column; padding:32px 0 40px; }
   .article-next a { max-width:none; font-size:24px; }
   .article-next a[rel="next"] { margin-left:0; }

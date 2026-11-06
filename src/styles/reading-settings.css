@@ -5,10 +5,10 @@
 }
 .reading-settings-entry { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0; border-bottom:1px solid var(--line); font-size:14px; }
 .reading-settings-summary { color:var(--muted); }
-.reading-settings-trigger,.reading-settings-head button,.reading-settings-actions button { min-height:44px; padding:8px 16px; border:1px solid var(--line); background:var(--paper); color:var(--ink); font:inherit; }
+.reading-settings-trigger,.reading-settings-head button,.reading-settings-actions button { min-height:44px; padding:8px 16px; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; font:inherit; }
 .reading-settings-trigger { color:var(--accent); border-color:var(--accent); font-weight:600; }
 .reading-bar .reading-settings-trigger { flex:none; padding:0 8px; border:0; font-size:14px; }
-#reading-settings { width:min(840px,calc(100% - 32px)); max-height:calc(100dvh - 32px); overflow:auto; margin:auto; padding:24px; border:1px solid var(--line); border-top:4px solid var(--accent); background:var(--paper); color:var(--ink); font-size:1rem; overscroll-behavior:contain; }
+#reading-settings { width:min(840px,calc(100% - 32px)); max-height:calc(100dvh - 32px); overflow:auto; margin:auto; padding:24px; border:1px solid var(--line); border-top:3px solid var(--accent); border-radius:16px; background:var(--surface); color:var(--ink); font-size:1rem; overscroll-behavior:contain; }
 #reading-settings[open] { display:flex; flex-direction:column; gap:16px; }
 #reading-settings::backdrop { background:rgb(10 20 40 / .55); }
 .reading-settings-head { flex-shrink:0; display:flex; align-items:center; justify-content:space-between; gap:16px; }
@@ -17,7 +17,7 @@
 .reading-settings-status { margin:0; min-height:20px; flex-shrink:0; }
 .reading-settings-hint,.reading-settings-status { font-size:.875rem; color:var(--muted); }
 .reading-settings-controls > label { display:block; margin:24px 0 8px; font-weight:600; }
-#reading-settings select { width:100%; border:1px solid var(--line); padding:8px 12px; }
+#reading-settings select { width:100%; border:1px solid var(--muted); border-radius:8px; background:var(--surface); color:var(--ink); padding:8px 12px; }
 .reading-size-row { display:flex; align-items:center; gap:16px; }
 .reading-size-row input { flex:1; min-width:0; min-height:44px; accent-color:var(--accent); }
 .reading-size-row output { min-width:48px; font-variant-numeric:tabular-nums; }

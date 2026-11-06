@@ -3,6 +3,7 @@ import { render, type CollectionEntry } from 'astro:content';
 import { getDocuments, topicName } from '../utils/collections';
 import { withBase } from '../utils/urls';
 import TableTools from './TableTools.astro';
+import ConceptDiagram from './ConceptDiagram.astro';
 interface Props { entry: CollectionEntry<'documents'> }
 const { entry } = Astro.props;
 const { headings } = await render(entry);
@@ -18,11 +19,15 @@ const notes = (entry.rendered?.html ?? '').replace(/<h1[^>]*>[\s\S]*?<\/h1>/, ''
   <section class="masthead topic-masthead">
     <p class="kicker" data-topic-no={String(topicNumber).padStart(2, '0')}>知識主題</p>
     <div class="masthead-grid">
-      <h1 id={titleHeading.slug}>{topicName(entry.data.title)}</h1>
-      <div class="abstract">
-        <p>{entry.data.summary}</p>
-        <p class="topic-meta">{articles.length} 篇文件</p>
+      <div class="hero-copy">
+        <h1 id={titleHeading.slug}>{topicName(entry.data.title)}</h1>
+        <div class="abstract">
+          <p>{entry.data.summary}</p>
+          <p class="topic-meta">{articles.length} 篇文件</p>
+        </div>
+        <a class="topic-begin" href={href(articles[0].data.route)}>從基本概念開始</a>
       </div>
+      <ConceptDiagram topic={entry.data.topic} />
     </div>
   </section>
   <div class="topic-body">
@@ -35,7 +40,7 @@ const notes = (entry.rendered?.html ?? '').replace(/<h1[^>]*>[\s\S]*?<\/h1>/, ''
       <ol class="document-list">
         {articles.map(doc => (
           <li class="document-row">
-            <h2><a href={href(doc.data.route)}>{doc.data.title}</a></h2>
+            <h2><a href={href(doc.data.route)}>{doc.data.title}<svg class="document-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6" /></svg></a></h2>
             <p>{doc.data.summary}</p>
           </li>
         ))}

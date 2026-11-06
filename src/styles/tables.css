@@ -4,14 +4,14 @@
 :is(#article-body, #topic-reading) .table-scroll table { display:table; width:max-content; min-width:100%; max-width:none; overflow:visible; margin:0; border-collapse:collapse; font-variant-numeric:tabular-nums; }
 :is(#article-body, #topic-reading) .table-scroll :is(th,td) { white-space:nowrap; }
 :is(#article-body, #topic-reading) .table-scroll :is(a,code) { overflow-wrap:normal; }
-:is(#article-body, #topic-reading) .table-scroll th { background:var(--wash); border-bottom:2px solid var(--ink); }
+:is(#article-body, #topic-reading) .table-scroll th { background:var(--wash); border-bottom:2px solid var(--line); }
 :is(#article-body, #topic-reading) .table-scroll td:first-child { font-weight:600; }
 @media (max-width:1050px) {
   :is(#article-body, #topic-reading) .table-block { width:max(100%, min(880px, calc(100cqw - 208px))); }
 }
 @media (max-width:700px) {
   :is(#article-body, #topic-reading) .table-block { width:100%; }
-  :is(#article-body, #topic-reading) .table-tools { display:flex; justify-content:space-between; align-items:center; gap:8px; min-height:50px; margin-bottom:8px; padding-bottom:4px; border-bottom:2px solid var(--ink); font-size:14px; }
+  :is(#article-body, #topic-reading) .table-tools { display:flex; justify-content:space-between; align-items:center; gap:8px; min-height:50px; margin-bottom:8px; padding-bottom:4px; border-bottom:1px solid var(--line); font-size:14px; }
   :is(#article-body, #topic-reading) .table-label { font-weight:500; color:var(--muted); }
   :is(#article-body, #topic-reading) .table-toggle { flex:none; min-height:44px; padding:4px 8px; border:0; background:transparent; color:var(--accent); font:inherit; cursor:pointer; }
   :is(#article-body, #topic-reading) .table-scroll { overflow:visible; }
@@ -30,7 +30,7 @@
   :is(#article-body, #topic-reading) .is-comparing .table-scroll tbody { display:table-row-group; }
   :is(#article-body, #topic-reading) .is-comparing .table-scroll tr { display:table-row; padding:0; }
   :is(#article-body, #topic-reading) .is-comparing .table-scroll :is(th,td) { display:table-cell; min-width:140px; max-width:240px; padding:16px; border:0; border-bottom:1px solid var(--line); white-space:normal; }
-  :is(#article-body, #topic-reading) .is-comparing .table-scroll th { border-bottom:2px solid var(--ink); }
+  :is(#article-body, #topic-reading) .is-comparing .table-scroll th { border-bottom:1px solid var(--line); }
   :is(#article-body, #topic-reading) .is-comparing .table-scroll td + td::before { display:none; }
 }
 

@@ -15,8 +15,8 @@
 - [Web 應用資安索引](docs/web-security/README.md)：已有 13 篇文章，涵蓋信任邊界、登入與 Session、存取控制、SQL Injection、XSS、CSRF、機密與敏感資料、檔案上傳、SSRF、第三方登入（OAuth／OIDC）、TLS 與傳輸邊界、限流與配額防護，以及軟體供應鏈與第三方腳本邊界。
 - [電腦網路知識索引](docs/networking/README.md)：已有 16 篇文章，涵蓋封包交換與網路模型、IP 位址與 CIDR、路由轉送、TCP／UDP 傳輸、DNS 解析、TLS 1.2／1.3 安全傳輸、HTTP 協定演進（HTTP/1.1~HTTP/3 QUIC）、L4／L7 負載平衡與反向代理、網路診斷與 ICMP／tcpdump 觀測、NAT 穿透（STUN／TURN／ICE）、IPv6 架構與雙堆疊過渡、BGP 跨域路由與 Anycast、SDN 與 Overlay 虛擬化（VXLAN／Geneve）、零信任與 mTLS 雙向認證，以及 CDN 邊緣快取與動態傳遞架構。
 - [分散式系統知識索引](docs/distributed-systems/README.md)：完整主線 18 篇已撰寫，從部分失敗、冪等、時鐘與多副本契約，深入共識、Raft、租約與分片，接續原子提交、Saga、Outbox／Inbox、CRDT、故障歷程驗證及文章匯出整合案例。
-
 - [訊息佇列與事件驅動架構知識索引](docs/event-driven-architecture/README.md)：已完成 12 篇，從非同步工作邊界、命令與事件、傳遞模型與確認，深入並行順序、重試與死信、Outbox、Schema 演進、訂閱隔離、重播、觀測及多下游匯出整合。
+- [快取與資料存取架構知識索引](docs/caching/README.md)：已完成主線 12 篇，涵蓋記憶體階層、讀寫模式（Cache-Aside 至 Write-Behind）、過期機制與 TTL 抖動、穿透／擊穿／雪崩防禦（空值快取、Bloom Filter、Mutex、Lease）、LRU 至 W-TinyLFU 逐出演算法、記憶體碎片與序列化、Redis 執行模型與資料結構、持久化複寫與 Cluster 槽位路由，以及雙寫一致性（CDC）與三層快取端到端實踐。
 
 各主題可以獨立閱讀與擴充，不要求先學完 Linux 才閱讀其他內容。需要其他主題的背景知識時，以相關文件連結補充。
 
@@ -24,7 +24,7 @@
 
 文件著重概念、原理與具體例子，依需要補上指令、圖解、常見問題與參考來源。每篇聚焦一個概念、服務或問題，讓讀者可以循序閱讀，也可以直接查找。
 
-目前已實作靜態網站、定稿視覺、表格與程式碼閱讀工具、章節導覽、閱讀設定及全文搜尋，尚未發布。正式產物的驗收範圍與剩餘缺口見 [網站驗收紀錄](docs/site-validation.md)。先前學習產品方向的歷史紀錄與適用界線見 [現行規劃](PLAN.md#目前狀態與文件入口)。
+目前已實作靜態網站、教材圖解風格介面（保留淺色／深色／跟隨系統）、表格與程式碼閱讀工具、章節導覽、閱讀設定及全文搜尋，尚未發布。正式產物的驗收範圍與剩餘缺口見 [網站驗收紀錄](docs/site-validation.md)。先前學習產品方向的歷史紀錄與適用界線見 [現行規劃](PLAN.md#目前狀態與文件入口)。
 
 
 ## 本機建置與驗證

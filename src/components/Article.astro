@@ -9,6 +9,7 @@ import { topics, withBase } from '../utils/urls';
 import '../styles/article.css';
 import CodeTools from './CodeTools.astro';
 import ShareTools from './ShareTools.astro';
+import ConceptDiagram from './ConceptDiagram.astro';
 interface Props {
   entry: CollectionEntry<'documents'>;
   topicIndex: CollectionEntry<'documents'>;
@@ -58,6 +59,8 @@ const base = import.meta.env.BASE_URL;
       </aside>
       <div class="reading" id="article-body">
         <div class="mobile-lede" data-pagefind-ignore set:html={introduction} />
+        {entry.data.route === "/api/resources-representations-and-messages/" && <ConceptDiagram variant="http" compact />}
+        {entry.data.route === "/api/interface-contract-responsibility/" && <ConceptDiagram topic="api" compact />}
         <Fragment set:html={html} />
       </div>
     </div>

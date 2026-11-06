@@ -184,6 +184,10 @@ Markdown 管線還須納入中文標點旁的粗體、數字範圍、表格與�
 
 2026-11-04，分散式系統首批內容以 PR #10 合併後，選定「訊息佇列與事件驅動架構」為下一個主題。已完善 [12 篇內容規劃](docs/research/event-driven-architecture-plan.md)，並依[一手來源查核](docs/research/event-driven-architecture-sources.md)完成全部 12 篇與[公開主題索引](docs/event-driven-architecture/README.md)。主線涵蓋工作邊界、命令與事件、傳遞模型、確認、順序、重試與死信、Outbox、Schema、訂閱隔離、重播、觀測與整合。分散式系統後續篇章的完成狀態繼續由其索引維護，不因切換主題而視為完成。
 
+### 下一個主題：快取與資料存取架構
+
+2026-11-06 接續完成「快取與資料存取架構」主題。已完善 [12 篇內容規劃](docs/research/caching-plan.md)，並依 [一手來源查核](docs/research/caching-sources.md) 完成全部 12 篇與 [公開主題索引](docs/caching/README.md)。主線涵蓋記憶體階層、讀寫模式（Cache-Aside 到 Write-Behind）、TTL 與清除機制、快取穿透（Bloom Filter）、快取擊穿（Mutex / SingleFlight / Lease）、快取雪崩（Jitter / 熔斷降級）、逐出演算法（LRU 至 W-TinyLFU）、記憶體碎片與序列化、Redis 核心資料結構與執行模型、Redis 持久化複寫與 Cluster、雙寫一致性（CDC），以及多層快取整合實踐。
+
 ## 目前狀態與文件入口
 
 - [專案入口](README.md)：定位與知識主題入口。
@@ -195,6 +199,7 @@ Markdown 管線還須納入中文標點旁的粗體、數字範圍、表格與�
 - [電腦網路知識索引](docs/networking/README.md)：已完成索引所列的 16 篇基礎與進階架構文章及官方 RFC 來源，涵蓋封包交換、IP/CIDR、路由轉送、TCP/UDP、DNS、TLS 1.2/1.3 安全傳輸、HTTP 演進（HTTP/1.1~HTTP/3）、L4/L7 負載平衡與反向代理、ICMP 與 tcpdump 診斷觀測、NAT 穿透技術、IPv6 雙堆疊架構、BGP 跨域路由與 Anycast、SDN 與 Overlay 虛擬化（VXLAN/Geneve）、零信任與 mTLS 雙向認證，以及 CDN 階層快取與邊緣傳遞。
 - [分散式系統知識索引](docs/distributed-systems/README.md)：完整五階段共 18 篇已撰寫，於 2026-11-05 補齊原子提交、Saga、Outbox／Inbox、CRDT、故障歷程驗證與匯出整合案例。第三至第五階段由 agy 搜集整理研究與草稿，再由主編核對來源及改寫；僅做文件查證，未執行分散式部署或故障實驗。
 - [訊息佇列與事件驅動架構知識索引](docs/event-driven-architecture/README.md)：已完成主線 12 篇；僅做文件查證與概念推演，未部署 broker 或執行故障實驗。
+- [快取與資料存取架構知識索引](docs/caching/README.md)：已完成主線 12 篇；涵蓋存取模式、異常防禦、記憶體演算法、Redis 深度模型與多層一致性實踐，未執行生產壓測或故障注入。
 - 網站：已實作靜態頁面、來源網址映射、定稿視覺、閱讀工具與全文搜尋，尚未發布。自動驗收及剩餘缺口見 [網站驗收紀錄](docs/site-validation.md)。介面設計交接見 [網站設計](docs/site-design.md)，本機命令見 [專案入口](README.md#本機建置與驗證)。
 
 本文件是現行規劃。先前的學習產品決策地圖、練習流程、Multipass 環境選型、環境研究與互動原型已清理，不是目前文件站的必備需求；相關環境若有需要，須重新查證與驗證。
