@@ -3,7 +3,7 @@
 從瀏覽器、應用程式與資料庫之間的信任邊界，理解登入、權限及資料處理如何產生安全問題。
 本主題聚焦 Web 應用的基礎防護；網路設備、惡意程式分析與完整事件應變不是這一批的範圍。
 
-**目前狀態：已整理下列 13 篇文章。**
+**目前狀態：已整理下列 14 篇文章。**
 查證日期：2026-11-03。依據 OWASP、MITRE CWE、MDN 與文中列出的產品官方文件；持續更新的頁面以查證當日內容為準。
 本次只做文件查證，未部署應用、操作帳號或執行攻擊測試。文章中的筆記服務是自創教學情境，不是本站的產品規格。
 
@@ -21,6 +21,7 @@
 | [檔案上傳與內容處理邊界](file-uploads-and-content-handling.md) | 使用者上傳的檔案如何隔離儲存、驗證與回應，避免執行或觸發同源腳本？ |
 | [SSRF 與伺服器對外請求邊界](ssrf-and-outbound-requests.md) | 伺服器代取網址或觸發 Webhook 時，如何避免被借用去存取內部網路與中繼資料？ |
 | [第三方登入、OAuth 與 OIDC 邊界](oauth-and-federated-login.md) | 透過瀏覽器轉址串接外部登入時，如何驗證流程狀態並安全對應本地帳號？ |
+| [OpenID Connect 協定規範與身分聯邦邊界](oidc-protocols-and-identity-federation.md) | 在跨網域身分聯邦與單一登入中，如何透過 Discovery、Claims 與 Back-Channel 處理會話同步與登出？ |
 | [TLS、HTTPS 與傳輸安全邊界](tls-https-and-transport-boundaries.md) | HTTPS 保護了哪一段傳輸？反向代理終止 TLS、HSTS 與轉發標頭有何邊界？ |
 | [限流、配額與資源耗盡防護](rate-limiting-and-abuse-prevention.md) | 當合法介面遭遇暴力嘗試或高成本請求時，如何設定多維度限流與退避契約？ |
 | [軟體供應鏈、第三方套件與前端腳本邊界](supply-chain-and-dependency-security.md) | 引入開源套件、建置腳本與外部前端資源時，如何控管被授與的執行權限？ |
