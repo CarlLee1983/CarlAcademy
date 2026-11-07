@@ -367,11 +367,38 @@ sudo ufw enable
 - **跨站請求偽造（CSRF）**：依賴 `SameSite` Cookie 與 CSRF Token 機制。詳見 [Web 資安：CSRF 與瀏覽器信任邊界](../web-security/csrf-and-browser-boundaries.md)。
 
 #### 3. 自動化備份排程
-硬碟損壞與人為誤刪是資料庫的最大威脅。使用 Linux `cron` 每日自動匯出 PostgreSQL 備份：
+硬碟損壞與人為誤刪是資料庫的最大威脅。使用 Linux `cron` 每日自動匯出 PostgreSQL 備份。需特別注意：在非互動式的排程任務中，若僅依賴本機 Peer 認證或缺少連線主機宣告，可能因作業系統使用者不符導致認證失敗；若未啟用管線錯誤攔截，`gzip` 仍可能輸出一個空檔案而形成假備份。
+
+因此，應透過安全受保護的密碼檔與獨立備份腳本確保原子性與正確性：
 
 ```bash
-# 每日凌晨 3:00 執行 pg_dump 備份並壓縮
-0 3 * * * /usr/bin/pg_dump -U app_user -d production_db | gzip > /var/backups/db_$(date +\%Y\%m\%d).sql.gz
+# 1. 配置非互動式認證檔 ~/.pgpass（權限嚴格設為 0600，格式為 主機:連接埠:資料庫:使用者:密碼）
+echo "localhost:5432:production_db:app_user:YourStrongPassword" > ~/.pgpass
+chmod 0600 ~/.pgpass
+
+# 2. 建立具備錯誤攔截的備份腳本 /usr/local/bin/backup-db.sh
+cat << 'EOF' > /usr/local/bin/backup-db.sh
+#!/usr/bin/env bash
+set -eo pipefail # 任一環節（含 pg_dump）失敗即終止，避免產出損毀或空白備份檔
+
+BACKUP_DIR="/var/backups/postgres"
+mkdir -p "${BACKUP_DIR}"
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+TEMP_FILE="${BACKUP_DIR}/db_${TIMESTAMP}.sql.gz.tmp"
+FINAL_FILE="${BACKUP_DIR}/db_${TIMESTAMP}.sql.gz"
+
+# 經由本機 TCP 搭配 ~/.pgpass 完成非互動式驗證，輸出成功後原子替換
+/usr/bin/pg_dump -h localhost -U app_user -d production_db | gzip > "${TEMP_FILE}"
+mv "${TEMP_FILE}" "${FINAL_FILE}"
+EOF
+
+chmod +x /usr/local/bin/backup-db.sh
+```
+
+排程設定：
+```bash
+# 於使用者 crontab (crontab -e) 排定每日凌晨 3:00 執行
+0 3 * * * /usr/local/bin/backup-db.sh >> /var/log/backup.log 2>&1
 ```
 
 ---

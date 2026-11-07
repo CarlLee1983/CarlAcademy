@@ -76,9 +76,10 @@ Java 長期堅持 1:1 平台執行緒模型（Platform Thread），面對高吞�
 Java 21 正式引入 **虛擬執行緒 (Virtual Threads, JEP 444)**，採取了純粹的有棧 M:N 設計：
 - **載體執行緒 (Carrier Thread)**：由標準的 `ForkJoinPool` 維護固定數量的平台執行緒（通常等於 CPU 核心數）。
 - **Continuation 堆疊掛載 (Mount / Unmount)**：
-  - 當虛擬執行緒在 Carrier Thread 上執行遇到阻塞式 I/O（如呼叫阻塞 Socket 讀寫、資料庫查詢或進入 `synchronized`／Lock）時，JVM 核心的 Continuation 機制會攔截該事件，將當前虛擬執行緒的棧幀由 Carrier Thread 的原生堆疊**拷貝（Unmount）至 Java Heap** 中儲存。
+  - 當虛擬執行緒在 Carrier Thread 上執行遇到阻塞式 I/O（如呼叫阻塞 Socket 讀寫、資料庫查詢或使用 `ReentrantLock` 阻塞）時，JVM 核心的 Continuation 機制會攔截該事件，將當前虛擬執行緒的棧幀由 Carrier Thread 的原生堆疊**拷貝（Unmount）至 Java Heap** 中儲存。
   - Carrier Thread 立即被解放，轉頭去執行下一個就緒的虛擬執行緒。
   - 當底層的非同步網路多工器（如 Linux `epoll`）通知該 I/O 資料已抵達時，排程器重新挑選一個空閒的 Carrier Thread，將堆疊資料還原回原生堆疊（Mount），虛擬執行緒接續原行程式碼執行。
+  - **執行緒固定（Thread Pinning）陷阱**：在 Java 21 中，若在 `synchronized` 區塊／方法內部或 JNI 原生呼叫期間發生阻塞，虛擬執行緒將會**被鎖定（Pin）在 Carrier Thread 上無法 Unmount**，從而退化並阻塞底層的平台執行緒。因此在高並發場景下，應將包含 I/O 阻塞的 `synchronized` 替換為 `ReentrantLock`。
 
 這使得工程師可以用最直觀、易懂的同步阻塞式程式碼風格（`InputStream.read()`），取得與反應式非同步引擎同等的百萬並發吞吐量。
 

@@ -206,6 +206,7 @@ Markdown 管線還須納入中文標點旁的粗體、數字範圍、表格與�
 - [訊息佇列與事件驅動架構知識索引](docs/event-driven-architecture/README.md)：已完成主線 12 篇；僅做文件查證與概念推演，未部署 broker 或執行故障實驗。
 - [快取與資料存取架構知識索引](docs/caching/README.md)：已完成主線 12 篇；涵蓋存取模式、異常防禦、記憶體演算法、Redis 深度模型與多層一致性實踐，未執行生產壓測或故障注入。
 - [程式執行與並行處理知識索引](docs/concurrency/README.md)：已完成主線 12 篇；涵蓋程式執行本質與行程空間、Process vs Thread 排程與 Context Switch、協程與虛擬執行緒（M:N 排程）、CPU 快取階層與 MESI（False Sharing）、指令重排與 Happens-Before 記憶體模型、Mutex 與 Linux Futex、RWLock 與條件變數、死鎖防護與 Coffman 條件、CAS 原子操作與 ABA 防護、無鎖佇列與 Disruptor 環狀緩衝、I/O 多工模型演進（epoll 到 io_uring），以及生產環境執行緒池容量配置與背壓實務，未執行特定硬體微基準跑分。
+- [學習地圖知識索引](docs/roadmaps/README.md)：已整理端到端實踐路線，包含《架設網站從零到上線》（涵蓋 Ubuntu 24.04 LTS、systemd、Nginx、Let's Encrypt 與 PostgreSQL 非互動式認證備份），以及《前端系統設計實戰學習地圖》（涵蓋前後端邊界劃分視覺化、渲染管線、狀態正規化、離線 Outbox、DOM 虛擬化與 WebSocket 連線治理）。
 - 網站：已實作靜態頁面、來源網址映射、定稿視覺、閱讀工具與全文搜尋，尚未發布。自動驗收及剩餘缺口見 [網站驗收紀錄](docs/site-validation.md)。介面設計交接見 [網站設計](docs/site-design.md)，本機命令見 [專案入口](README.md#本機建置與驗證)。
 
 本文件是現行規劃。先前的學習產品決策地圖、練習流程、Multipass 環境選型、環境研究與互動原型已清理，不是目前文件站的必備需求；相關環境若有需要，須重新查證與驗證。

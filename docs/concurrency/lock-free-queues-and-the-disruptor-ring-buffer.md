@@ -37,8 +37,10 @@ Head ──▶ [ Dummy 節點 (value = null, next = null) ] ◀── Tail
   4. **協助機制 (Helping Mechanism)**：若步驟 2 中發現 `tail->next` 已經非空（說明有另一個執行緒剛接上新節點，但尚未推進 `tail` 就被中斷了），當前執行緒不會傻等，而是**主動協助那個慢速執行緒將 `tail` 推進至 `tail->next`**！這種自愈協同設計徹底消除了單點延遲。
 - **出隊演算法 (Dequeue)**：
   1. 讀取 `head`、`tail` 與首個有效資料節點 `first = head->next`。
-  2. 若 `head == tail` 且 `first == null`，佇列為空。
-  3. 透過原子 CAS 嘗試將 `head` 指針推進為 `first`。CAS 成功者獲得原 `first` 節點中的數值，並將原 `first` 節點晉升為新的 Dummy 哨兵節點。
+  2. 若 `head == tail`：
+     - 若 `first == null`，佇列為空（返回空值）。
+     - 若 `first != null`，說明有並行入隊操作接上了新節點但尚未推進 `tail`（Tail 落後）；此時出隊執行緒必須**主動協助透過 CAS 將 `tail` 推進至 `first`**，隨後重新嘗試。
+  3. 若 `head != tail`：透過原子 CAS 嘗試將 `head` 指針推進為 `first`。CAS 成功者獲得原 `first` 節點中的數值，並將原 `first` 節點晉升為新的 Dummy 哨兵節點。
 
 Michael-Scott 佇列全程零互斥鎖，只要有執行緒在嘗試，全系統就必定能在有限步數內完成入隊或出隊。
 
