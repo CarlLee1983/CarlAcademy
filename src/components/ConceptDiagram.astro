@@ -12,6 +12,7 @@ const overviews: Record<string, { labels: [string, string, string]; caption: str
   'distributed-systems': { labels: ['節點', '通訊', '一致性'], caption: '當工作分散到多個節點，通訊與一致性成為核心問題。' },
   'event-driven-architecture': { labels: ['事件來源', '訊息通道', '處理者'], caption: '事件經由訊息通道傳遞；處理、重試與重播各有自己的責任。', flow: true },
   caching: { labels: ['應用程式', '快取階層', '真實資料源'], caption: '以記憶體快取吸收高頻讀取；過期、逐出與一致性守護真實資料源。', flow: true },
+  roadmaps: { labels: ['實踐目標', '端到端驗證', '系統原理'], caption: '以可驗證的里程碑為骨幹，在推進實作中及時解開底層原理黑盒子。', flow: true },
 };
 const overview = variant === 'http'
   ? { labels: ['用戶端', 'HTTP 訊息', '伺服器'], caption: '用戶端送出請求，伺服器以回應表達結果；本文再拆解訊息的組成。', flow: true }
